@@ -446,15 +446,7 @@
       if (result.error) { $("loadError").textContent = "Parse error: " + result.error; return; }
       if (!result.rows.length) { $("loadError").textContent = "CSV fetched but no usable rows found."; return; }
       $("loadError").textContent = "";
-      if (!dataLoaded) {
-        onDataLoaded(result.rows); // sets dataLoaded=true only on success
-      } else {
-        allRows = result.rows;
-        modes = buildModes(result.rows);
-        // Restart display from the default mode with fresh data
-        modeIndex = 0;
-        goToMode(defaultModeIndex(modes));
-      }
+      onDataLoaded(result.rows); // always rebuilds bars/locations/modes correctly
     }
 
     function loadFromSheets() {
@@ -706,13 +698,8 @@
     // than happening independently of it. Guards against a stale playback
     // (the mode or loop moved on while this row's effect was still in
     // flight) so a late arrival can't corrupt the next cycle's counts.
-    var _debugCommit = 0;
     function commitRowToCounts(pb, row, key) {
-      if (!pb || pb !== playback) {
-        if (_debugCommit++ < 5) console.log("DEBUG commitRowToCounts REJECTED", { pbNull: !pb, pbMismatch: pb !== playback, key: key });
-        return;
-      }
-      if (_debugCommit++ < 5) console.log("DEBUG commitRowToCounts OK", { key: key, row_quad: row.quad, row_rowNum: row.rowNum, row_colNum: row.colNum });
+      if (!pb || pb !== playback) return;
       var segArr = pb.counts[key] || (pb.counts[key] = new Array(Math.max(1, allLocations.length)).fill(0));
       var li = locIdxFor(row);
       segArr[li] = (segArr[li] || 0) + 1;
@@ -823,7 +810,6 @@
           // grows once that flourish actually lands on the cell, via
           // commitRowToCounts, so the two always stay in sync.
           if (key) spawnEffect(r, key);
-          else if (playback.revealedIdx < 3) console.log("DEBUG null key for row", r);
           playback.revealedIdx++;
           changed = true;
         }
@@ -1140,25 +1126,8 @@
       });
     }
 
-    var _debugLogged = false;
     function updateBarTargets(counts, max) {
       var denom = Math.max(1, max);
-      var nonZeroKeys = Object.keys(counts).filter(function(k){ return counts[k] && counts[k].some(function(v){return v>0;}); });
-      if (!_debugLogged && nonZeroKeys.length > 0) {
-        _debugLogged = true;
-        var k = nonZeroKeys[0];
-        var entry = barsByKey[k];
-        console.log("DEBUG updateBarTargets:", {
-          sampleKey: k,
-          foundInBarsByKey: !!entry,
-          segCount: entry ? entry.segs.length : "n/a",
-          counts: counts[k],
-          max: max,
-          denom: denom,
-          allBarsByKeyCount: Object.keys(barsByKey).length,
-          allLocations: allLocations,
-        });
-      }
       Object.keys(barsByKey).forEach(function (key) {
         var entry = barsByKey[key];
         var segArr = counts[key];
@@ -1756,7 +1725,6 @@
     }
 
     function onDataLoaded(rows) {
-      console.log("DEBUG onDataLoaded", rows.length, "rows, sample:", rows[0]);
       allRows = rows;
       allLocations = MoodData.locationsPresent(rows);
       modes = buildModes(rows);
