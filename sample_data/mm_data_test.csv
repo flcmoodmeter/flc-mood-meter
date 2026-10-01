@@ -1,0 +1,2761 @@
+timestamp,session,respondent,button_id,label,seconds_on_grid,language
+2023-06-05T06:58:14.000Z,Library,6,quad1_r3_c2,Lively,1.3,en
+2023-06-05T15:52:16.000Z,Library,1,quad4_r1_c1,At Ease,4.9,en
+2023-06-06T11:55:45.000Z,Innovation Center,2,quad4_r3_c4,Blessed,1.8,en
+2023-06-06T12:49:35.000Z,Library,1,quad1_r2_c4,Inspired,2.2,en
+2023-06-06T14:28:30.000Z,Library,2,quad4_r5_c4,Cozy,4.1,en
+2023-06-07T12:38:32.000Z,Innovation Center,2,quad2_r3_c2,Miserable,8.9,en
+2023-06-07T14:09:09.000Z,Library,1,quad1_r4_c2,Focused,8.4,en
+2023-06-07T21:20:18.000Z,Library,1,quad4_r2_c5,Touched,1.3,en
+2023-06-08T11:54:21.000Z,Library,1,quad4_r2_c3,Satisfecho,2.5,es
+2023-06-08T12:58:51.000Z,Library,1,quad3_r3_c3,Angry,4.6,en
+2023-06-08T13:27:50.000Z,Innovation Center,2,quad2_r4_c2,Depressed,0.9,en
+2023-06-08T13:53:23.000Z,Innovation Center,2,quad4_r4_c1,Mellow,7.8,en
+2023-06-09T11:48:21.000Z,Library,6,quad1_r3_c4,Optimistic,1.7,en
+2023-06-09T14:07:33.000Z,Science Center,1,quad4_r4_c2,Thoughtful,2.6,en
+2023-06-10T11:24:36.000Z,Library,1,quad1_r4_c3,Happy,5.6,en
+2023-06-10T12:34:29.000Z,Science Center,1,quad4_r3_c5,Balanced,5.5,en
+2023-06-10T13:08:38.000Z,Science Center,1,quad4_r5_c5,Serene,7.1,en
+2023-06-11T11:38:55.000Z,Innovation Center,1,quad4_r1_c1,Tranquilo,3.9,es
+2023-06-11T12:26:26.000Z,Science Center,1,quad2_r3_c3,Lonely,1.3,en
+2023-06-11T13:04:36.000Z,Library,2,quad3_r2_c4,Tenso,2.8,es
+2023-06-11T16:45:06.000Z,Science Center,1,quad1_r4_c5,Thrilled,3.6,en
+2023-06-13T02:44:06.000Z,Library,3,quad2_r1_c3,Disappointed,7.3,en
+2023-06-13T13:02:28.000Z,Innovation Center,1,quad1_r1_c5,Ecstatic,1.9,en
+2023-06-13T14:53:14.000Z,Science Center,1,quad4_r5_c4,Cozy,2.2,en
+2023-06-14T13:35:38.000Z,Innovation Center,1,quad2_r4_c3,Sullen,3.8,en
+2023-06-14T16:24:12.000Z,Science Center,2,quad2_r2_c2,Melancólico,4.2,es
+2023-06-14T16:46:20.000Z,Innovation Center,2,quad2_r3_c2,Miserable,6.6,en
+2023-06-14T19:28:20.000Z,Science Center,1,quad1_r4_c5,Emocionadísimo,6.2,es
+2023-06-15T20:08:09.000Z,Innovation Center,1,quad4_r3_c3,Descansado,2.2,es
+2023-06-17T04:46:42.000Z,Library,1,quad4_r3_c5,Equilibrado,2.2,es
+2023-06-17T14:38:10.000Z,Library,1,quad1_r5_c3,Esperanzado,4.9,es
+2023-06-17T15:51:24.000Z,Innovation Center,1,quad2_r5_c5,Drained,2.4,en
+2023-06-17T20:01:42.000Z,Innovation Center,2,quad2_r5_c1,Desesperado,1.6,es
+2023-06-18T13:46:31.000Z,Library,1,quad2_r1_c3,Disappointed,1.7,en
+2023-06-18T14:39:14.000Z,Library,1,quad1_r1_c3,Festive,3.4,en
+2023-06-19T11:52:15.000Z,Library,3,quad2_r1_c2,Glum,6.1,en
+2023-06-19T21:04:52.000Z,Library,2,quad1_r2_c1,Hyper,1.8,en
+2023-06-20T21:01:47.000Z,Library,2,quad3_r2_c4,Tense,2.9,en
+2023-06-21T12:27:08.000Z,Library,1,quad3_r3_c4,Nervioso,4.2,es
+2023-06-21T12:36:35.000Z,Library,1,quad2_r1_c2,Glum,5.9,en
+2023-06-22T01:29:26.000Z,Innovation Center,2,quad1_r2_c4,Inspired,6.4,en
+2023-06-23T10:33:36.000Z,Library,1,quad1_r2_c3,Motivated,3.1,en
+2023-06-24T02:29:59.000Z,Science Center,2,quad3_r4_c3,Worried,4.2,en
+2023-06-24T10:39:35.000Z,Innovation Center,3,quad4_r4_c2,Thoughtful,5.6,en
+2023-06-24T17:55:55.000Z,Innovation Center,2,quad1_r3_c2,Lively,2.5,en
+2023-06-25T11:20:15.000Z,Science Center,1,quad2_r5_c4,Spent,1.8,en
+2023-06-26T09:48:14.000Z,Innovation Center,1,quad1_r3_c5,Enthusiastic,4.4,en
+2023-06-26T15:10:00.000Z,Science Center,1,quad3_r2_c2,Furious,6.7,en
+2023-06-26T17:04:30.000Z,Library,2,quad2_r2_c4,Sad,7.9,en
+2023-06-26T18:13:33.000Z,Science Center,1,quad3_r4_c5,Annoyed,3.9,en
+2023-06-26T19:19:10.000Z,Innovation Center,1,quad2_r2_c5,Bored,7.8,en
+2023-06-28T06:36:05.000Z,Library,1,quad1_r2_c5,Elated,3.1,en
+2023-06-28T12:17:32.000Z,Innovation Center,1,quad4_r4_c1,Mellow,4.4,en
+2023-06-28T12:25:49.000Z,Science Center,2,quad2_r3_c2,Miserable,3.9,es
+2023-06-28T13:52:57.000Z,Innovation Center,1,quad1_r2_c2,Cheerful,5.0,en
+2023-06-28T19:22:24.000Z,Library,1,quad4_r3_c4,Bendecido,2.2,es
+2023-06-29T14:17:46.000Z,Innovation Center,1,quad1_r4_c4,Orgulloso,3.4,es
+2023-06-29T21:13:35.000Z,Library,1,quad2_r3_c3,Lonely,3.2,en
+2023-06-30T13:50:13.000Z,Innovation Center,1,quad2_r3_c3,Lonely,1.6,en
+2023-06-30T14:06:14.000Z,Library,1,quad3_r2_c1,Livid,3.9,en
+2023-06-30T14:43:33.000Z,Innovation Center,1,quad2_r1_c5,Apathetic,4.7,en
+2023-07-01T12:44:52.000Z,Innovation Center,2,quad2_r3_c5,Tired,2.9,en
+2023-07-01T14:23:07.000Z,Science Center,1,quad1_r4_c3,Happy,3.6,en
+2023-07-01T18:07:32.000Z,Innovation Center,3,quad3_r4_c3,Worried,8.2,en
+2023-07-03T11:37:38.000Z,Library,2,quad4_r1_c5,Fulfilled,3.2,en
+2023-07-05T09:57:07.000Z,Innovation Center,1,quad3_r3_c2,Frightened,4.9,en
+2023-07-05T11:08:50.000Z,Library,3,quad2_r3_c5,Tired,6.4,en
+2023-07-05T13:27:01.000Z,Library,2,quad2_r4_c4,Exhausted,4.8,en
+2023-07-05T14:39:41.000Z,Science Center,3,quad2_r4_c2,Depressed,2.7,en
+2023-07-05T19:16:13.000Z,Innovation Center,1,quad4_r4_c2,Thoughtful,1.6,en
+2023-07-06T11:38:38.000Z,Innovation Center,1,quad1_r2_c5,Elated,7.9,en
+2023-07-07T15:25:00.000Z,Library,2,quad3_r2_c5,Stunned,5.9,en
+2023-07-07T16:43:53.000Z,Innovation Center,1,quad3_r2_c1,Livid,1.0,en
+2023-07-09T12:49:34.000Z,Innovation Center,2,quad3_r2_c3,Frustrado,4.5,es
+2023-07-09T14:34:09.000Z,Library,1,quad4_r5_c5,Sereno,7.1,es
+2023-07-09T18:20:12.000Z,Innovation Center,3,quad3_r5_c4,Uneasy,3.3,en
+2023-07-10T13:14:01.000Z,Innovation Center,1,quad4_r2_c2,Seguro,7.6,es
+2023-07-10T15:01:05.000Z,Innovation Center,1,quad1_r2_c3,Motivado,3.7,es
+2023-07-10T15:11:55.000Z,Library,2,quad1_r4_c4,Proud,2.0,en
+2023-07-10T17:03:15.000Z,Innovation Center,1,quad2_r4_c3,Sullen,6.1,en
+2023-07-11T09:05:47.000Z,Library,1,quad4_r3_c4,Blessed,2.2,en
+2023-07-11T15:06:42.000Z,Innovation Center,2,quad1_r2_c4,Inspired,3.0,en
+2023-07-11T17:09:04.000Z,Science Center,1,quad3_r4_c4,Irritated,8.7,en
+2023-07-12T15:09:55.000Z,Library,1,quad3_r2_c3,Frustrated,2.5,en
+2023-07-13T11:49:37.000Z,Science Center,1,quad3_r1_c4,Jittery,6.6,en
+2023-07-13T12:33:52.000Z,Science Center,3,quad1_r4_c4,Orgulloso,1.7,es
+2023-07-13T14:43:12.000Z,Library,1,quad4_r5_c2,Complacent,2.5,en
+2023-07-13T18:15:54.000Z,Science Center,2,quad1_r4_c1,Pleased,8.8,en
+2023-07-14T10:44:06.000Z,Science Center,2,quad2_r4_c4,Exhausted,2.9,en
+2023-07-14T13:19:15.000Z,Innovation Center,1,quad2_r1_c4,Decaído,4.3,es
+2023-07-14T14:54:27.000Z,Science Center,1,quad1_r3_c3,Excited,2.6,en
+2023-07-15T16:55:54.000Z,Science Center,2,quad3_r3_c1,Encolerizado,8.1,es
+2023-07-15T18:55:55.000Z,Innovation Center,1,quad4_r5_c2,Complaciente,7.6,es
+2023-07-16T22:24:32.000Z,Library,1,quad4_r4_c4,Comfortable,3.2,en
+2023-07-17T12:10:40.000Z,Science Center,2,quad2_r5_c1,Despairing,3.6,en
+2023-07-18T12:44:31.000Z,Innovation Center,1,quad3_r4_c1,Anxious,1.0,en
+2023-07-19T10:49:50.000Z,Innovation Center,2,quad1_r5_c3,Hopeful,8.8,en
+2023-07-19T20:48:07.000Z,Innovation Center,2,quad1_r3_c3,Excited,2.8,en
+2023-07-20T13:30:25.000Z,Library,1,quad4_r3_c4,Blessed,3.2,en
+2023-07-21T12:46:24.000Z,Library,1,quad1_r2_c1,Hyper,4.2,en
+2023-07-21T15:44:18.000Z,Science Center,1,quad4_r3_c5,Balanced,7.0,en
+2023-07-21T17:17:17.000Z,Science Center,1,quad3_r4_c2,Aprensivo,7.9,es
+2023-07-22T12:42:23.000Z,Innovation Center,3,quad2_r5_c2,Hopeless,1.3,en
+2023-07-22T14:12:15.000Z,Innovation Center,2,quad1_r4_c2,Focused,7.7,en
+2023-07-22T20:06:51.000Z,Innovation Center,1,quad2_r2_c2,Morose,1.0,en
+2023-07-23T11:07:55.000Z,Science Center,2,quad1_r1_c1,Surprised,2.0,en
+2023-07-23T12:18:50.000Z,Innovation Center,1,quad1_r4_c4,Proud,3.3,en
+2023-07-23T16:32:25.000Z,Library,3,quad4_r5_c5,Serene,3.9,en
+2023-07-24T12:16:05.000Z,Library,3,quad4_r1_c4,Loving,6.7,en
+2023-07-24T15:52:26.000Z,Library,3,quad1_r1_c4,Exhilarated,6.8,en
+2023-07-24T15:56:02.000Z,Innovation Center,1,quad3_r1_c4,Jittery,1.2,en
+2023-07-24T19:46:53.000Z,Library,1,quad1_r4_c1,Pleased,1.1,en
+2023-07-25T03:05:47.000Z,Science Center,4,quad3_r1_c1,Enfurecido,7.8,es
+2023-07-25T11:48:22.000Z,Innovation Center,3,quad2_r3_c4,Disheartened,1.4,en
+2023-07-25T13:25:35.000Z,Library,3,quad3_r2_c5,Stunned,6.6,en
+2023-07-25T13:31:30.000Z,Science Center,1,quad4_r1_c4,Loving,1.8,en
+2023-07-25T14:10:08.000Z,Library,1,quad3_r5_c4,Uneasy,4.1,en
+2023-07-25T14:39:42.000Z,Library,1,quad2_r3_c4,Disheartened,6.4,en
+2023-07-25T16:43:02.000Z,Science Center,3,quad3_r2_c1,Livid,1.5,en
+2023-07-25T17:33:09.000Z,Innovation Center,3,quad2_r5_c4,Sin energía,6.8,es
+2023-07-25T17:57:58.000Z,Library,4,quad4_r2_c5,Touched,3.7,en
+2023-07-26T10:19:50.000Z,Innovation Center,1,quad3_r4_c3,Preocupado,2.1,es
+2023-07-26T13:45:58.000Z,Library,2,quad3_r1_c5,Shocked,9.6,en
+2023-07-26T16:03:05.000Z,Library,1,quad2_r4_c4,Exhausted,2.6,en
+2023-07-26T18:19:37.000Z,Library,1,quad3_r3_c2,Asustado,6.8,es
+2023-07-26T18:25:03.000Z,Library,2,quad3_r4_c3,Worried,3.7,en
+2023-07-27T11:26:41.000Z,Science Center,2,quad1_r1_c4,Exhilarated,0.6,en
+2023-07-27T12:08:12.000Z,Library,1,quad4_r2_c2,Secure,7.2,en
+2023-07-27T12:14:07.000Z,Science Center,1,quad3_r3_c5,Inquieto,7.4,es
+2023-07-27T12:43:07.000Z,Library,2,quad2_r4_c2,Depressed,1.6,en
+2023-07-28T13:58:12.000Z,Library,1,quad2_r3_c4,Disheartened,3.6,en
+2023-07-28T17:43:51.000Z,Innovation Center,2,quad3_r2_c1,Livid,1.5,en
+2023-07-28T19:06:17.000Z,Library,1,quad2_r1_c3,Disappointed,4.5,en
+2023-07-29T12:42:51.000Z,Library,3,quad2_r4_c2,Depressed,5.2,en
+2023-07-29T14:54:51.000Z,Library,1,quad4_r4_c1,Mellow,1.9,en
+2023-07-29T16:53:27.000Z,Innovation Center,4,quad3_r4_c3,Preocupado,1.3,es
+2023-07-29T17:35:36.000Z,Innovation Center,2,quad2_r1_c3,Disappointed,1.5,en
+2023-07-30T11:56:55.000Z,Science Center,1,quad2_r1_c4,Decaído,3.9,es
+2023-07-30T12:25:33.000Z,Library,1,quad3_r2_c2,Furious,6.6,en
+2023-07-30T15:51:58.000Z,Innovation Center,1,quad2_r2_c2,Melancólico,2.3,es
+2023-07-30T16:11:16.000Z,Library,1,quad2_r5_c3,Desolado,6.0,es
+2023-07-30T17:12:05.000Z,Library,3,quad2_r5_c1,Despairing,4.3,en
+2023-07-30T17:57:41.000Z,Library,2,quad3_r2_c3,Frustrated,1.2,en
+2023-07-30T18:59:35.000Z,Science Center,1,quad2_r2_c5,Bored,3.6,en
+2023-07-31T09:47:05.000Z,Library,2,quad1_r1_c5,Ecstatic,2.3,en
+2023-07-31T11:59:47.000Z,Library,2,quad4_r1_c3,Contento,4.8,es
+2023-07-31T14:55:32.000Z,Innovation Center,1,quad4_r4_c3,Peaceful,1.2,en
+2023-07-31T15:17:23.000Z,Library,1,quad4_r5_c1,Sleepy,6.2,en
+2023-07-31T16:25:23.000Z,Science Center,1,quad1_r3_c3,Excited,2.9,en
+2023-08-01T10:05:55.000Z,Library,4,quad3_r3_c2,Frightened,1.4,en
+2023-08-01T13:34:42.000Z,Library,4,quad2_r4_c3,Sullen,2.7,en
+2023-08-01T14:30:31.000Z,Innovation Center,3,quad4_r3_c2,Distendido,1.3,es
+2023-08-01T14:47:48.000Z,Science Center,1,quad2_r1_c5,Apathetic,2.5,en
+2023-08-02T10:18:15.000Z,Science Center,1,quad1_r1_c4,Exhilarated,7.8,en
+2023-08-02T15:39:19.000Z,Innovation Center,2,quad4_r3_c2,Chill,4.2,en
+2023-08-02T18:01:54.000Z,Library,1,quad4_r4_c5,Carefree,0.8,en
+2023-08-02T18:05:29.000Z,Innovation Center,3,quad2_r1_c5,Apathetic,1.5,en
+2023-08-02T18:31:57.000Z,Library,2,quad1_r2_c1,Hiperactivo,1.1,es
+2023-08-03T09:54:11.000Z,Library,2,quad4_r3_c2,Distendido,3.0,es
+2023-08-03T14:30:35.000Z,Library,2,quad3_r2_c1,Livid,4.1,en
+2023-08-03T17:09:26.000Z,Innovation Center,2,quad4_r2_c5,Touched,4.5,en
+2023-08-19T11:40:42.000Z,Science Center,2,quad3_r4_c1,Anxious,6.3,en
+2023-08-19T12:12:26.000Z,Innovation Center,3,quad4_r5_c2,Complacent,5.8,en
+2023-08-19T13:21:44.000Z,Library,1,quad1_r4_c2,Focused,2.4,en
+2023-08-19T13:37:28.000Z,Library,1,quad1_r3_c4,Optimistic,4.1,en
+2023-08-19T16:34:41.000Z,Innovation Center,2,quad4_r2_c3,Satisfecho,2.5,es
+2023-08-20T09:50:05.000Z,Library,2,quad4_r1_c3,Content,8.3,en
+2023-08-20T13:56:18.000Z,Innovation Center,1,quad4_r5_c3,Tranquil,8.6,en
+2023-08-20T16:07:32.000Z,Library,1,quad4_r1_c2,Easygoing,4.4,en
+2023-08-21T12:19:22.000Z,Innovation Center,1,quad1_r5_c3,Hopeful,2.6,en
+2023-08-21T15:28:28.000Z,Innovation Center,2,quad2_r2_c3,Discouraged,2.8,en
+2023-08-22T06:19:38.000Z,Library,1,quad4_r1_c2,Easygoing,3.6,en
+2023-08-22T10:05:32.000Z,Library,1,quad3_r4_c2,Apprehensive,5.7,en
+2023-08-23T13:54:01.000Z,Science Center,1,quad1_r2_c3,Motivated,2.9,en
+2023-08-23T15:42:14.000Z,Innovation Center,1,quad4_r2_c3,Satisfied,6.9,en
+2023-08-24T12:49:53.000Z,Science Center,2,quad2_r5_c3,Desolate,3.2,en
+2023-08-24T13:10:38.000Z,Library,1,quad2_r4_c1,Desesperanzado,3.7,es
+2023-08-24T13:27:00.000Z,Innovation Center,2,quad4_r3_c4,Blessed,4.9,en
+2023-08-24T15:18:34.000Z,Library,1,quad2_r4_c4,Exhausted,3.3,en
+2023-08-24T16:06:59.000Z,Library,1,quad4_r5_c1,Sleepy,4.6,en
+2023-08-24T16:45:45.000Z,Library,2,quad1_r1_c1,Surprised,3.1,en
+2023-08-24T18:55:51.000Z,Library,3,quad4_r3_c3,Restful,3.8,en
+2023-08-25T15:00:37.000Z,Library,3,quad2_r1_c1,Disgustado,1.7,es
+2023-08-26T13:01:13.000Z,Library,1,quad1_r2_c5,Elated,6.1,en
+2023-08-26T20:22:38.000Z,Science Center,1,quad4_r3_c4,Blessed,8.8,en
+2023-08-27T11:43:43.000Z,Science Center,1,quad2_r3_c5,Tired,5.2,en
+2023-08-27T13:58:34.000Z,Science Center,3,quad4_r3_c4,Blessed,4.0,en
+2023-08-27T16:40:15.000Z,Innovation Center,1,quad3_r3_c4,Nervous,7.4,en
+2023-08-28T20:26:38.000Z,Innovation Center,2,quad1_r1_c5,Ecstatic,4.0,en
+2023-08-29T20:05:54.000Z,Innovation Center,2,quad3_r3_c4,Nervous,7.4,en
+2023-08-30T15:26:50.000Z,Science Center,1,quad1_r4_c4,Orgulloso,5.9,es
+2023-08-31T09:56:10.000Z,Library,1,quad1_r2_c4,Inspired,4.6,en
+2023-08-31T14:30:04.000Z,Science Center,2,quad1_r4_c4,Orgulloso,8.6,es
+2023-08-31T18:42:30.000Z,Science Center,1,quad2_r5_c2,Hopeless,6.2,en
+2023-09-01T03:49:12.000Z,Library,1,quad4_r2_c3,Satisfied,8.1,en
+2023-09-01T08:24:29.000Z,Science Center,1,quad1_r4_c3,Happy,4.8,en
+2023-09-01T12:12:55.000Z,Library,2,quad3_r2_c1,Livid,2.3,en
+2023-09-01T14:19:13.000Z,Science Center,2,quad1_r2_c4,Inspired,2.8,en
+2023-09-01T14:34:02.000Z,Science Center,1,quad3_r4_c4,Irritated,5.8,en
+2023-09-01T18:15:47.000Z,Science Center,1,quad1_r4_c5,Thrilled,9.4,en
+2023-09-02T10:16:27.000Z,Library,1,quad1_r4_c2,Concentrado,2.9,es
+2023-09-02T11:24:00.000Z,Library,1,quad3_r2_c2,Furioso,4.4,es
+2023-09-02T13:09:26.000Z,Library,1,quad3_r4_c1,Ansioso,4.1,es
+2023-09-03T08:52:24.000Z,Innovation Center,3,quad1_r1_c1,Sorprendido,4.2,es
+2023-09-03T15:38:57.000Z,Innovation Center,1,quad4_r2_c4,Grateful,2.7,en
+2023-09-03T16:20:07.000Z,Library,3,quad2_r1_c4,Down,2.8,en
+2023-09-04T14:44:28.000Z,Innovation Center,1,quad3_r1_c5,Impactado,2.7,es
+2023-09-04T15:18:40.000Z,Science Center,1,quad2_r2_c3,Discouraged,3.3,en
+2023-09-05T10:09:03.000Z,Science Center,1,quad3_r4_c4,Irritated,7.2,en
+2023-09-05T15:14:40.000Z,Innovation Center,2,quad4_r3_c2,Distendido,4.8,es
+2023-09-05T15:49:53.000Z,Innovation Center,2,quad3_r3_c2,Frightened,1.7,en
+2023-09-05T18:42:01.000Z,Library,1,quad4_r4_c1,Mellow,4.0,en
+2023-09-06T13:54:30.000Z,Library,4,quad4_r3_c5,Balanced,1.9,en
+2023-09-06T17:04:15.000Z,Library,1,quad3_r4_c5,Molesto,5.1,es
+2023-09-07T14:59:18.000Z,Innovation Center,1,quad4_r2_c4,Agradecido,6.6,es
+2023-09-07T15:08:09.000Z,Innovation Center,3,quad3_r4_c1,Ansioso,5.0,es
+2023-09-08T09:43:20.000Z,Library,1,quad1_r4_c4,Orgulloso,3.8,es
+2023-09-08T12:58:30.000Z,Library,2,quad1_r1_c1,Surprised,4.5,en
+2023-09-08T14:17:00.000Z,Library,2,quad3_r2_c5,Stunned,3.5,en
+2023-09-08T18:41:02.000Z,Innovation Center,1,quad4_r5_c2,Complacent,1.8,en
+2023-09-08T19:26:32.000Z,Science Center,1,quad1_r2_c3,Motivated,2.9,en
+2023-09-09T14:42:46.000Z,Library,1,quad2_r2_c3,Discouraged,4.9,en
+2023-09-10T12:10:16.000Z,Library,1,quad4_r5_c5,Serene,2.9,en
+2023-09-11T16:00:12.000Z,Innovation Center,1,quad1_r4_c3,Feliz,3.1,es
+2023-09-12T11:19:21.000Z,Library,2,quad4_r3_c5,Balanced,2.3,en
+2023-09-12T14:03:28.000Z,Innovation Center,1,quad1_r1_c3,Festive,1.1,en
+2023-09-12T19:19:51.000Z,Science Center,3,quad1_r4_c3,Happy,3.1,en
+2023-09-13T11:25:22.000Z,Library,1,quad4_r5_c2,Complacent,1.5,en
+2023-09-13T12:46:56.000Z,Library,1,quad4_r5_c2,Complacent,1.6,en
+2023-09-13T13:41:44.000Z,Library,2,quad4_r4_c2,Thoughtful,6.6,en
+2023-09-13T15:25:44.000Z,Library,3,quad3_r2_c2,Furioso,1.9,es
+2023-09-14T14:13:35.000Z,Innovation Center,1,quad1_r4_c5,Thrilled,1.9,en
+2023-09-15T11:18:33.000Z,Science Center,2,quad1_r3_c3,Excited,8.9,en
+2023-09-15T13:14:10.000Z,Science Center,2,quad4_r5_c1,Sleepy,2.4,en
+2023-09-15T14:28:14.000Z,Library,1,quad3_r2_c5,Stunned,1.7,en
+2023-09-15T16:38:40.000Z,Library,3,quad3_r2_c5,Stunned,1.3,en
+2023-09-15T17:14:07.000Z,Science Center,3,quad3_r5_c3,Preocupado,8.9,es
+2023-09-16T11:44:30.000Z,Library,1,quad4_r3_c3,Restful,7.3,en
+2023-09-16T14:03:03.000Z,Library,1,quad4_r2_c3,Satisfied,7.1,en
+2023-09-17T10:49:08.000Z,Innovation Center,1,quad3_r4_c3,Preocupado,5.1,es
+2023-09-17T14:28:33.000Z,Library,1,quad3_r1_c2,Con pánico,2.6,es
+2023-09-17T15:31:58.000Z,Innovation Center,2,quad2_r3_c3,Lonely,3.7,en
+2023-09-17T15:53:05.000Z,Library,2,quad4_r3_c3,Restful,1.2,en
+2023-09-18T09:57:54.000Z,Library,1,quad2_r4_c4,Exhausted,1.7,en
+2023-09-18T12:11:36.000Z,Library,1,quad3_r2_c3,Frustrated,3.8,en
+2023-09-19T12:55:27.000Z,Innovation Center,1,quad4_r3_c2,Distendido,4.7,es
+2023-09-19T13:21:20.000Z,Library,3,quad4_r5_c4,Cozy,7.8,en
+2023-09-19T14:19:22.000Z,Library,1,quad1_r5_c2,Alegre,5.7,es
+2023-09-19T20:40:03.000Z,Science Center,1,quad1_r4_c4,Proud,3.5,en
+2023-09-20T13:59:36.000Z,Innovation Center,1,quad2_r2_c2,Morose,3.8,en
+2023-09-20T14:36:15.000Z,Library,1,quad2_r3_c3,Lonely,7.1,en
+2023-09-20T15:18:31.000Z,Science Center,1,quad2_r5_c5,Drenado,2.2,es
+2023-09-20T15:24:56.000Z,Library,1,quad2_r5_c4,Spent,5.9,en
+2023-09-21T12:58:54.000Z,Library,1,quad1_r1_c4,Exaltado,1.3,es
+2023-09-21T13:03:24.000Z,Innovation Center,1,quad3_r3_c5,Restless,8.4,en
+2023-09-21T14:14:05.000Z,Library,4,quad4_r1_c4,Loving,2.9,en
+2023-09-22T15:50:31.000Z,Innovation Center,1,quad4_r2_c4,Grateful,7.1,en
+2023-09-23T14:31:57.000Z,Innovation Center,1,quad1_r3_c4,Optimistic,7.0,en
+2023-09-24T10:47:59.000Z,Innovation Center,1,quad1_r4_c4,Proud,4.0,en
+2023-09-24T15:34:56.000Z,Library,2,quad3_r1_c2,Panicked,7.4,en
+2023-09-25T13:59:01.000Z,Library,1,quad3_r5_c3,Concerned,4.2,en
+2023-09-25T14:14:07.000Z,Innovation Center,2,quad1_r4_c5,Thrilled,3.1,en
+2023-09-25T15:15:25.000Z,Innovation Center,2,quad2_r2_c4,Sad,2.2,en
+2023-09-26T12:39:04.000Z,Innovation Center,1,quad1_r4_c1,Complacido,7.0,es
+2023-09-26T14:26:10.000Z,Library,3,quad2_r5_c5,Drenado,5.8,es
+2023-09-27T13:36:06.000Z,Library,3,quad1_r3_c2,Lively,1.9,en
+2023-09-27T15:16:52.000Z,Innovation Center,3,quad4_r3_c4,Blessed,2.6,en
+2023-09-27T16:07:50.000Z,Innovation Center,1,quad4_r3_c2,Distendido,7.5,es
+2023-09-28T11:34:37.000Z,Innovation Center,2,quad1_r5_c5,Blissful,6.3,en
+2023-09-28T18:37:59.000Z,Science Center,1,quad3_r1_c5,Shocked,6.5,en
+2023-09-29T12:59:33.000Z,Innovation Center,2,quad1_r3_c5,Enthusiastic,2.2,en
+2023-09-30T11:25:14.000Z,Library,1,quad3_r4_c2,Apprehensive,7.9,en
+2023-09-30T12:24:02.000Z,Innovation Center,2,quad4_r4_c2,Thoughtful,3.5,en
+2023-09-30T13:03:10.000Z,Innovation Center,2,quad3_r5_c3,Concerned,3.7,en
+2023-09-30T14:39:09.000Z,Science Center,2,quad3_r2_c4,Tense,5.1,en
+2023-10-02T11:44:47.000Z,Library,2,quad1_r4_c4,Proud,5.8,en
+2023-10-02T14:43:29.000Z,Library,2,quad1_r2_c1,Hiperactivo,4.9,es
+2023-10-03T12:27:19.000Z,Innovation Center,1,quad1_r1_c2,Upbeat,2.9,en
+2023-10-04T14:21:59.000Z,Innovation Center,2,quad4_r3_c1,Relaxed,6.3,en
+2023-10-04T17:03:51.000Z,Library,1,quad1_r3_c4,Optimistic,3.1,en
+2023-10-04T17:21:17.000Z,Science Center,3,quad1_r3_c4,Optimistic,7.7,en
+2023-10-05T18:16:36.000Z,Science Center,1,quad4_r2_c4,Grateful,2.7,en
+2023-10-06T13:27:06.000Z,Library,1,quad4_r4_c2,Thoughtful,2.9,en
+2023-10-06T17:52:40.000Z,Innovation Center,1,quad3_r1_c2,Con pánico,3.7,es
+2023-10-07T09:47:19.000Z,Innovation Center,1,quad2_r5_c2,Hopeless,6.1,en
+2023-10-07T10:34:42.000Z,Library,1,quad4_r2_c1,Calm,4.3,en
+2023-10-07T12:52:15.000Z,Innovation Center,5,quad3_r5_c3,Preocupado,6.0,es
+2023-10-07T15:07:40.000Z,Science Center,4,quad3_r4_c5,Molesto,3.8,es
+2023-10-08T10:15:34.000Z,Innovation Center,1,quad4_r3_c4,Blessed,0.7,en
+2023-10-08T12:03:38.000Z,Science Center,1,quad3_r1_c2,Panicked,4.0,en
+2023-10-08T13:28:59.000Z,Library,1,quad4_r1_c3,Contento,7.7,es
+2023-10-08T16:12:12.000Z,Science Center,2,quad3_r4_c2,Aprensivo,2.9,es
+2023-10-08T18:58:47.000Z,Science Center,2,quad4_r1_c4,Cariñoso,1.2,es
+2023-10-09T09:07:34.000Z,Innovation Center,2,quad3_r4_c5,Annoyed,2.0,en
+2023-10-09T12:49:52.000Z,Science Center,1,quad4_r2_c1,Calm,1.4,en
+2023-10-09T13:47:06.000Z,Innovation Center,1,quad2_r1_c5,Apathetic,2.9,en
+2023-10-09T13:52:41.000Z,Science Center,2,quad1_r2_c2,Cheerful,6.8,en
+2023-10-09T20:43:59.000Z,Innovation Center,1,quad4_r1_c1,At Ease,5.9,en
+2023-10-10T01:15:49.000Z,Innovation Center,2,quad3_r4_c5,Annoyed,6.5,en
+2023-10-10T02:24:48.000Z,Innovation Center,1,quad1_r4_c4,Orgulloso,1.6,es
+2023-10-10T11:36:56.000Z,Innovation Center,2,quad1_r5_c1,Pleasant,7.3,en
+2023-10-10T14:51:04.000Z,Innovation Center,1,quad3_r5_c4,Uneasy,5.8,en
+2023-10-10T19:02:10.000Z,Science Center,3,quad3_r3_c3,Enojado,1.6,es
+2023-10-10T19:31:01.000Z,Science Center,2,quad3_r1_c1,Enfurecido,6.8,es
+2023-10-11T08:47:12.000Z,Innovation Center,4,quad3_r4_c4,Irritado,1.3,es
+2023-10-11T12:51:01.000Z,Library,1,quad2_r1_c4,Down,5.8,en
+2023-10-11T13:21:06.000Z,Innovation Center,1,quad3_r2_c3,Frustrated,3.6,en
+2023-10-11T19:08:19.000Z,Innovation Center,1,quad2_r1_c2,Glum,6.8,en
+2023-10-12T10:31:29.000Z,Innovation Center,2,quad3_r5_c3,Concerned,1.6,en
+2023-10-12T14:59:59.000Z,Innovation Center,1,quad2_r2_c3,Discouraged,5.6,en
+2023-10-13T12:59:16.000Z,Library,2,quad3_r4_c1,Anxious,6.7,en
+2023-10-13T13:40:53.000Z,Library,2,quad4_r3_c4,Bendecido,3.0,es
+2023-10-13T18:47:02.000Z,Innovation Center,4,quad3_r3_c2,Asustado,2.2,es
+2023-10-13T20:03:19.000Z,Science Center,1,quad2_r1_c2,Apagado,2.2,es
+2023-10-14T12:25:27.000Z,Library,5,quad1_r2_c1,Hyper,4.1,en
+2023-10-14T13:29:05.000Z,Library,2,quad4_r2_c4,Agradecido,5.4,es
+2023-10-14T13:46:05.000Z,Innovation Center,4,quad3_r2_c3,Frustrated,2.0,en
+2023-10-14T14:13:26.000Z,Library,1,quad1_r3_c4,Optimistic,9.0,en
+2023-10-14T14:18:48.000Z,Innovation Center,2,quad4_r5_c5,Serene,4.3,en
+2023-10-14T23:59:59.000Z,Library,2,quad4_r2_c5,Conmovido,8.7,es
+2023-10-15T10:30:45.000Z,Library,1,quad1_r1_c5,Extasiado,2.5,es
+2023-10-15T11:13:35.000Z,Science Center,1,quad4_r3_c2,Distendido,3.8,es
+2023-10-15T17:27:23.000Z,Science Center,2,quad3_r2_c3,Frustrated,6.3,en
+2023-10-15T19:35:59.000Z,Science Center,1,quad3_r5_c1,Repulsed,4.5,en
+2023-10-16T09:59:37.000Z,Science Center,2,quad1_r4_c4,Proud,4.6,en
+2023-10-16T16:39:16.000Z,Innovation Center,1,quad3_r2_c2,Furious,2.1,en
+2023-10-17T12:23:36.000Z,Library,2,quad1_r2_c2,Cheerful,2.1,en
+2023-10-17T14:20:43.000Z,Innovation Center,1,quad3_r3_c3,Angry,3.4,en
+2023-10-17T17:24:26.000Z,Library,1,quad1_r4_c1,Complacido,2.9,es
+2023-10-17T19:11:56.000Z,Library,1,quad4_r3_c1,Relaxed,2.7,en
+2023-10-18T12:33:39.000Z,Library,1,quad3_r3_c5,Restless,5.7,en
+2023-10-19T10:24:55.000Z,Science Center,1,quad2_r4_c2,Depressed,3.7,en
+2023-10-19T16:43:36.000Z,Innovation Center,3,quad4_r3_c3,Restful,4.3,en
+2023-10-20T11:56:03.000Z,Innovation Center,1,quad3_r2_c4,Tense,5.8,en
+2023-10-20T15:01:13.000Z,Innovation Center,5,quad2_r5_c4,Spent,2.4,en
+2023-10-22T11:49:53.000Z,Innovation Center,1,quad4_r4_c3,Peaceful,6.9,en
+2023-10-22T12:03:40.000Z,Science Center,1,quad4_r2_c5,Touched,1.7,en
+2023-10-22T12:03:50.000Z,Innovation Center,1,quad3_r3_c4,Nervous,6.1,en
+2023-10-22T13:07:18.000Z,Science Center,1,quad3_r4_c2,Apprehensive,2.1,en
+2023-10-22T13:24:37.000Z,Science Center,1,quad4_r2_c3,Satisfied,5.1,en
+2023-10-22T14:25:26.000Z,Science Center,2,quad1_r3_c4,Optimistic,2.4,en
+2023-10-22T14:27:15.000Z,Library,1,quad1_r1_c4,Exhilarated,2.5,en
+2023-10-22T18:48:46.000Z,Science Center,1,quad3_r2_c4,Tense,5.9,en
+2023-10-23T10:02:59.000Z,Innovation Center,1,quad4_r3_c2,Chill,7.7,en
+2023-10-23T18:59:00.000Z,Science Center,2,quad1_r4_c1,Complacido,8.9,es
+2023-10-24T11:57:17.000Z,Library,1,quad4_r2_c1,Calm,4.8,en
+2023-10-24T12:10:38.000Z,Science Center,1,quad3_r1_c2,Panicked,3.2,en
+2023-10-24T12:29:35.000Z,Science Center,1,quad1_r5_c1,Agradable,4.1,es
+2023-10-24T16:09:48.000Z,Library,2,quad1_r2_c2,Cheerful,4.7,en
+2023-10-24T20:07:04.000Z,Library,1,quad3_r5_c4,Uneasy,5.0,en
+2023-10-25T01:23:47.000Z,Innovation Center,1,quad2_r1_c3,Disappointed,8.2,en
+2023-10-25T11:44:54.000Z,Library,2,quad3_r1_c3,Stressed,3.4,en
+2023-10-25T12:16:38.000Z,Science Center,1,quad3_r3_c4,Nervous,1.7,en
+2023-10-25T18:03:53.000Z,Library,1,quad1_r4_c2,Focused,4.4,en
+2023-10-26T13:38:23.000Z,Science Center,3,quad2_r4_c5,Fatigado,2.6,es
+2023-10-26T18:46:59.000Z,Library,1,quad1_r2_c3,Motivado,1.9,es
+2023-10-27T07:02:03.000Z,Library,1,quad1_r3_c5,Entusiasta,6.4,es
+2023-10-27T17:36:52.000Z,Innovation Center,2,quad1_r3_c4,Optimistic,4.1,en
+2023-10-27T17:42:12.000Z,Innovation Center,3,quad3_r4_c3,Worried,3.7,en
+2023-10-27T17:46:59.000Z,Science Center,1,quad1_r3_c2,Vivaz,5.3,es
+2023-10-27T19:14:38.000Z,Library,1,quad1_r4_c2,Focused,1.5,en
+2023-10-28T11:04:01.000Z,Library,2,quad3_r4_c5,Molesto,3.0,es
+2023-10-28T17:26:53.000Z,Library,3,quad1_r3_c4,Optimistic,5.5,en
+2023-10-29T10:02:52.000Z,Library,1,quad2_r3_c4,Disheartened,5.7,en
+2023-10-29T12:49:28.000Z,Innovation Center,1,quad1_r2_c4,Inspirado,4.0,es
+2023-10-29T15:13:25.000Z,Innovation Center,1,quad1_r2_c4,Inspired,3.9,en
+2023-10-29T15:26:08.000Z,Innovation Center,2,quad2_r2_c4,Sad,3.3,en
+2023-10-29T16:41:35.000Z,Science Center,3,quad4_r3_c1,Relaxed,8.3,en
+2023-10-30T16:30:14.000Z,Innovation Center,1,quad4_r4_c5,Despreocupado,5.3,es
+2023-11-01T12:45:13.000Z,Innovation Center,1,quad4_r5_c2,Complacent,1.8,en
+2023-11-01T13:11:08.000Z,Innovation Center,1,quad2_r2_c3,Discouraged,4.2,en
+2023-11-02T14:41:49.000Z,Innovation Center,1,quad1_r3_c3,Excited,9.0,en
+2023-11-02T15:21:37.000Z,Innovation Center,4,quad1_r2_c4,Inspired,5.3,en
+2023-11-03T10:43:35.000Z,Science Center,2,quad4_r2_c5,Touched,1.4,en
+2023-11-03T12:24:55.000Z,Science Center,1,quad2_r5_c2,Desahuciado,6.6,es
+2023-11-03T12:56:18.000Z,Library,1,quad1_r2_c5,Elated,6.8,en
+2023-11-04T00:40:21.000Z,Innovation Center,1,quad1_r2_c2,Cheerful,2.7,en
+2023-11-04T13:37:05.000Z,Innovation Center,2,quad4_r1_c4,Loving,3.1,en
+2023-11-05T18:12:56.000Z,Science Center,1,quad3_r2_c1,Livid,3.3,en
+2023-11-06T12:58:38.000Z,Library,1,quad3_r3_c1,Fuming,2.7,en
+2023-11-06T17:59:15.000Z,Library,2,quad4_r3_c3,Restful,6.1,en
+2023-11-07T12:59:51.000Z,Library,1,quad1_r1_c4,Exaltado,5.2,es
+2023-11-07T13:25:31.000Z,Science Center,2,quad3_r2_c2,Furious,4.1,en
+2023-11-07T14:21:33.000Z,Innovation Center,1,quad4_r5_c2,Complacent,5.1,en
+2023-11-07T16:56:16.000Z,Library,1,quad1_r4_c4,Proud,4.9,en
+2023-11-07T17:08:49.000Z,Innovation Center,1,quad4_r3_c4,Blessed,1.5,en
+2023-11-07T17:13:07.000Z,Library,1,quad4_r1_c1,At Ease,3.2,en
+2023-11-08T10:02:10.000Z,Science Center,1,quad4_r3_c3,Restful,4.7,en
+2023-11-08T14:40:35.000Z,Innovation Center,3,quad4_r1_c3,Content,3.4,en
+2023-11-08T16:54:42.000Z,Library,3,quad4_r4_c5,Carefree,1.5,en
+2023-11-09T16:31:04.000Z,Library,1,quad3_r3_c1,Fuming,2.5,en
+2023-11-10T20:45:04.000Z,Library,3,quad4_r3_c2,Chill,2.3,en
+2023-11-11T13:38:50.000Z,Science Center,2,quad4_r3_c5,Balanced,2.8,en
+2023-11-12T13:21:24.000Z,Science Center,1,quad1_r5_c2,Joyful,5.2,en
+2023-11-12T16:54:02.000Z,Innovation Center,1,quad4_r3_c5,Balanced,7.8,en
+2023-11-12T17:20:39.000Z,Innovation Center,1,quad1_r2_c2,Alegre,9.0,es
+2023-11-12T18:05:14.000Z,Library,2,quad1_r1_c4,Exhilarated,1.2,en
+2023-11-13T09:09:04.000Z,Innovation Center,1,quad2_r4_c5,Fatigado,2.4,es
+2023-11-13T12:45:40.000Z,Science Center,1,quad1_r5_c3,Hopeful,2.7,en
+2023-11-13T13:31:32.000Z,Innovation Center,1,quad3_r4_c5,Annoyed,5.1,en
+2023-11-13T16:46:26.000Z,Science Center,1,quad2_r1_c4,Down,7.6,en
+2023-11-13T17:05:31.000Z,Innovation Center,4,quad2_r2_c3,Discouraged,1.4,en
+2023-11-14T10:24:42.000Z,Library,2,quad1_r5_c2,Joyful,6.8,en
+2023-11-14T12:30:13.000Z,Innovation Center,1,quad3_r3_c3,Angry,7.1,en
+2023-11-14T12:51:28.000Z,Library,1,quad4_r2_c2,Secure,6.0,en
+2023-11-14T13:00:41.000Z,Innovation Center,1,quad4_r3_c5,Balanced,3.3,en
+2023-11-14T17:06:15.000Z,Library,1,quad2_r3_c1,Alienated,1.1,en
+2023-11-15T12:25:16.000Z,Innovation Center,1,quad2_r3_c2,Miserable,5.3,en
+2023-11-15T15:15:48.000Z,Innovation Center,1,quad2_r4_c3,Sullen,2.1,en
+2023-11-15T17:04:40.000Z,Library,1,quad1_r1_c4,Exaltado,1.9,es
+2023-11-15T19:10:05.000Z,Innovation Center,1,quad1_r2_c1,Hyper,2.9,en
+2023-11-16T11:03:24.000Z,Library,1,quad2_r3_c4,Desalentado,6.9,es
+2023-11-16T15:08:01.000Z,Innovation Center,1,quad4_r3_c5,Balanced,5.2,en
+2023-11-19T02:38:23.000Z,Science Center,1,quad1_r5_c5,Blissful,2.8,en
+2023-11-20T12:57:25.000Z,Innovation Center,3,quad3_r2_c2,Furioso,4.9,es
+2023-11-20T15:09:02.000Z,Science Center,1,quad3_r3_c3,Angry,5.7,en
+2023-11-20T18:31:25.000Z,Science Center,3,quad2_r1_c2,Apagado,2.3,es
+2023-11-21T00:43:56.000Z,Library,1,quad3_r1_c1,Enraged,3.2,en
+2023-11-21T09:21:14.000Z,Innovation Center,1,quad3_r1_c2,Panicked,3.4,en
+2023-11-22T14:29:48.000Z,Innovation Center,2,quad2_r1_c5,Apático,5.8,es
+2023-11-22T15:10:24.000Z,Science Center,2,quad4_r1_c1,At Ease,4.4,en
+2023-11-24T16:17:35.000Z,Innovation Center,2,quad2_r4_c2,Depressed,4.9,en
+2023-11-25T17:01:44.000Z,Science Center,2,quad1_r2_c2,Cheerful,7.2,en
+2023-11-26T12:44:15.000Z,Library,2,quad4_r2_c4,Grateful,4.1,en
+2023-11-26T13:10:39.000Z,Science Center,2,quad4_r2_c4,Grateful,5.7,en
+2023-11-26T13:34:22.000Z,Science Center,1,quad4_r2_c3,Satisfecho,3.4,es
+2023-11-26T13:42:01.000Z,Innovation Center,4,quad4_r1_c2,Easygoing,7.2,en
+2023-11-26T14:36:10.000Z,Innovation Center,2,quad2_r4_c3,Huraño,8.7,es
+2023-11-26T14:45:55.000Z,Science Center,1,quad3_r5_c4,Uneasy,2.3,en
+2023-11-27T11:57:20.000Z,Innovation Center,1,quad4_r2_c5,Conmovido,5.9,es
+2023-11-27T13:24:53.000Z,Library,1,quad2_r2_c5,Bored,4.8,en
+2023-11-28T12:32:00.000Z,Library,1,quad4_r3_c2,Chill,2.9,en
+2023-11-28T12:56:11.000Z,Innovation Center,2,quad2_r5_c1,Despairing,8.5,en
+2023-11-29T11:26:52.000Z,Innovation Center,2,quad2_r3_c2,Miserable,3.2,en
+2023-11-29T14:18:55.000Z,Library,1,quad4_r1_c1,At Ease,4.5,en
+2023-11-29T14:59:50.000Z,Innovation Center,2,quad4_r4_c2,Thoughtful,1.8,en
+2023-11-30T12:02:56.000Z,Innovation Center,2,quad1_r2_c3,Motivated,4.6,en
+2023-11-30T13:39:50.000Z,Science Center,2,quad4_r5_c1,Sleepy,3.6,en
+2023-12-01T10:15:19.000Z,Library,2,quad3_r1_c3,Stressed,5.6,en
+2023-12-02T10:50:17.000Z,Library,1,quad3_r3_c2,Asustado,1.9,es
+2023-12-02T13:41:18.000Z,Library,1,quad3_r1_c5,Shocked,5.4,en
+2023-12-03T08:13:59.000Z,Innovation Center,1,quad4_r1_c3,Content,4.7,en
+2023-12-03T09:58:54.000Z,Library,3,quad4_r5_c5,Sereno,4.1,es
+2023-12-03T11:20:17.000Z,Library,1,quad3_r5_c3,Concerned,3.9,en
+2023-12-03T12:03:00.000Z,Library,2,quad1_r1_c4,Exhilarated,1.2,en
+2023-12-03T17:32:56.000Z,Science Center,1,quad4_r1_c5,Fulfilled,4.7,en
+2023-12-03T19:25:52.000Z,Innovation Center,1,quad4_r5_c4,Cozy,4.3,en
+2023-12-04T11:24:31.000Z,Innovation Center,1,quad4_r4_c1,Sereno,1.6,es
+2023-12-04T13:03:45.000Z,Library,1,quad4_r5_c4,Cozy,6.0,en
+2023-12-04T13:37:31.000Z,Science Center,2,quad1_r3_c1,Energizado,2.3,es
+2023-12-04T14:04:58.000Z,Innovation Center,2,quad4_r4_c2,Reflexivo,1.8,es
+2023-12-04T14:11:56.000Z,Library,1,quad3_r5_c5,Peeved,7.8,en
+2023-12-04T14:56:06.000Z,Library,1,quad4_r5_c5,Serene,1.9,en
+2023-12-05T12:53:01.000Z,Science Center,1,quad4_r1_c5,Fulfilled,1.7,en
+2023-12-05T13:43:19.000Z,Science Center,2,quad1_r1_c1,Surprised,3.0,en
+2023-12-05T14:29:31.000Z,Innovation Center,1,quad1_r5_c3,Hopeful,5.8,en
+2023-12-05T18:19:52.000Z,Innovation Center,2,quad4_r4_c3,Peaceful,4.9,en
+2023-12-06T12:40:14.000Z,Science Center,2,quad2_r2_c3,Desanimado,5.7,es
+2023-12-06T21:19:50.000Z,Library,2,quad1_r3_c2,Lively,4.5,en
+2023-12-07T12:08:59.000Z,Science Center,1,quad1_r3_c1,Energizado,5.1,es
+2023-12-07T15:31:56.000Z,Library,1,quad2_r2_c3,Discouraged,1.6,en
+2023-12-07T15:42:31.000Z,Innovation Center,2,quad3_r1_c4,Jittery,5.7,en
+2023-12-07T18:41:55.000Z,Library,2,quad1_r2_c5,Eufórico,4.6,es
+2023-12-08T11:13:15.000Z,Innovation Center,1,quad2_r2_c3,Desanimado,6.4,es
+2023-12-08T14:53:10.000Z,Library,2,quad4_r4_c3,Peaceful,1.6,en
+2023-12-08T15:44:47.000Z,Science Center,1,quad2_r3_c5,Tired,1.6,en
+2023-12-08T16:14:31.000Z,Science Center,1,quad4_r5_c2,Complacent,4.1,en
+2023-12-09T09:54:47.000Z,Science Center,2,quad3_r3_c5,Inquieto,5.2,es
+2023-12-09T10:57:09.000Z,Innovation Center,1,quad2_r4_c1,Despondent,1.5,en
+2023-12-09T12:39:04.000Z,Science Center,2,quad3_r3_c3,Enojado,5.3,es
+2023-12-09T15:25:06.000Z,Science Center,3,quad3_r3_c3,Angry,6.8,en
+2023-12-10T12:03:42.000Z,Library,2,quad2_r3_c4,Disheartened,2.2,en
+2023-12-10T12:11:35.000Z,Science Center,3,quad2_r1_c1,Disgusted,1.3,en
+2023-12-10T17:27:45.000Z,Library,3,quad1_r4_c5,Emocionadísimo,2.2,es
+2023-12-11T13:11:02.000Z,Innovation Center,1,quad4_r3_c3,Restful,4.6,en
+2023-12-11T15:39:54.000Z,Library,1,quad3_r2_c2,Furious,3.2,en
+2023-12-11T16:48:21.000Z,Library,3,quad1_r4_c4,Proud,8.6,en
+2023-12-11T17:38:03.000Z,Innovation Center,1,quad3_r5_c5,Fastidiado,6.0,es
+2023-12-11T20:21:28.000Z,Science Center,1,quad4_r1_c5,Realizado,4.0,es
+2023-12-12T11:51:19.000Z,Innovation Center,1,quad3_r2_c1,Livid,6.9,en
+2023-12-14T08:35:16.000Z,Science Center,1,quad3_r1_c3,Estresado,3.4,es
+2023-12-14T10:25:16.000Z,Science Center,1,quad4_r2_c2,Secure,2.1,en
+2023-12-14T12:11:13.000Z,Library,2,quad4_r4_c3,Peaceful,1.9,en
+2023-12-14T14:28:22.000Z,Innovation Center,1,quad4_r1_c1,At Ease,4.6,en
+2023-12-14T15:28:23.000Z,Science Center,3,quad1_r5_c3,Hopeful,2.4,en
+2024-01-13T11:54:17.000Z,Science Center,1,quad1_r3_c2,Lively,2.5,en
+2024-01-13T13:16:07.000Z,Library,2,quad3_r5_c3,Concerned,4.4,en
+2024-01-13T14:50:42.000Z,Innovation Center,2,quad4_r3_c1,Relajado,3.5,es
+2024-01-14T11:15:10.000Z,Innovation Center,1,quad2_r3_c4,Desalentado,6.2,es
+2024-01-14T13:45:44.000Z,Library,4,quad1_r2_c4,Inspirado,5.2,es
+2024-01-14T18:33:51.000Z,Science Center,1,quad3_r1_c5,Impactado,2.5,es
+2024-01-15T11:58:58.000Z,Science Center,4,quad3_r1_c1,Enraged,4.4,en
+2024-01-15T13:54:12.000Z,Innovation Center,2,quad2_r4_c2,Depressed,3.2,en
+2024-01-15T14:18:30.000Z,Innovation Center,1,quad3_r1_c5,Impactado,4.2,es
+2024-01-15T14:30:36.000Z,Innovation Center,2,quad4_r2_c2,Secure,6.9,en
+2024-01-17T11:57:01.000Z,Library,1,quad2_r3_c3,Lonely,7.3,en
+2024-01-17T16:16:24.000Z,Science Center,2,quad3_r3_c4,Nervous,1.8,en
+2024-01-17T18:51:00.000Z,Science Center,1,quad3_r2_c1,Lívido,4.2,es
+2024-01-17T20:44:10.000Z,Library,1,quad1_r4_c3,Happy,5.5,en
+2024-01-18T15:31:50.000Z,Innovation Center,1,quad3_r4_c4,Irritated,6.1,en
+2024-01-18T20:20:34.000Z,Science Center,1,quad1_r2_c4,Inspired,3.3,en
+2024-01-19T14:02:11.000Z,Library,1,quad3_r3_c4,Nervioso,1.5,es
+2024-01-19T14:12:18.000Z,Library,2,quad1_r2_c5,Elated,2.9,en
+2024-01-20T10:13:35.000Z,Innovation Center,3,quad1_r1_c5,Ecstatic,4.9,en
+2024-01-20T12:26:42.000Z,Innovation Center,3,quad1_r5_c1,Pleasant,5.8,en
+2024-01-20T14:24:43.000Z,Science Center,2,quad2_r3_c2,Miserable,1.8,en
+2024-01-20T14:48:31.000Z,Science Center,1,quad2_r2_c2,Morose,2.2,en
+2024-01-20T15:06:16.000Z,Innovation Center,2,quad3_r2_c5,Stunned,2.8,en
+2024-01-21T13:25:55.000Z,Library,1,quad4_r3_c2,Chill,3.6,en
+2024-01-21T14:19:39.000Z,Innovation Center,1,quad3_r4_c1,Anxious,3.7,en
+2024-01-22T20:19:43.000Z,Science Center,1,quad4_r3_c2,Chill,1.3,en
+2024-01-23T15:36:20.000Z,Science Center,2,quad3_r1_c2,Panicked,3.4,en
+2024-01-24T11:54:42.000Z,Innovation Center,2,quad4_r1_c1,At Ease,7.0,en
+2024-01-25T12:42:42.000Z,Library,3,quad3_r5_c2,Troubled,3.7,en
+2024-01-26T15:30:46.000Z,Science Center,4,quad1_r4_c3,Happy,8.1,en
+2024-01-27T00:47:54.000Z,Innovation Center,1,quad1_r1_c4,Exaltado,5.5,es
+2024-01-28T12:19:45.000Z,Innovation Center,1,quad4_r3_c4,Bendecido,4.2,es
+2024-01-28T13:15:33.000Z,Library,3,quad1_r5_c2,Alegre,4.3,es
+2024-01-28T19:44:06.000Z,Science Center,3,quad3_r2_c2,Furioso,3.6,es
+2024-01-29T08:51:27.000Z,Library,3,quad4_r2_c1,Calmado,3.1,es
+2024-01-30T13:32:38.000Z,Science Center,4,quad3_r5_c4,Uneasy,3.9,en
+2024-01-30T17:32:48.000Z,Innovation Center,1,quad2_r4_c1,Despondent,6.8,en
+2024-01-31T09:56:56.000Z,Innovation Center,1,quad2_r1_c3,Disappointed,3.9,en
+2024-01-31T17:19:57.000Z,Innovation Center,1,quad4_r2_c2,Secure,3.2,en
+2024-02-01T13:02:51.000Z,Science Center,1,quad4_r3_c5,Balanced,5.1,en
+2024-02-01T13:39:58.000Z,Innovation Center,2,quad4_r3_c2,Chill,8.3,en
+2024-02-01T16:13:37.000Z,Science Center,1,quad2_r4_c2,Depressed,6.5,en
+2024-02-02T12:42:04.000Z,Innovation Center,2,quad1_r4_c3,Happy,3.1,en
+2024-02-03T14:02:38.000Z,Innovation Center,2,quad3_r1_c3,Stressed,6.1,en
+2024-02-03T14:45:54.000Z,Science Center,2,quad3_r2_c5,Stunned,2.7,en
+2024-02-04T13:23:31.000Z,Science Center,1,quad3_r4_c1,Anxious,4.2,en
+2024-02-04T15:35:18.000Z,Science Center,1,quad4_r1_c5,Realizado,5.7,es
+2024-02-05T07:32:50.000Z,Innovation Center,1,quad2_r1_c3,Disappointed,3.9,en
+2024-02-05T12:17:41.000Z,Library,1,quad4_r4_c3,Peaceful,2.2,en
+2024-02-06T19:18:40.000Z,Innovation Center,1,quad3_r2_c3,Frustrated,2.3,en
+2024-02-07T16:33:56.000Z,Library,2,quad4_r2_c4,Grateful,3.3,en
+2024-02-08T10:07:26.000Z,Library,1,quad3_r3_c4,Nervous,0.9,en
+2024-02-08T19:42:18.000Z,Science Center,2,quad1_r4_c3,Happy,7.4,en
+2024-02-09T13:50:03.000Z,Science Center,1,quad1_r1_c2,Upbeat,3.0,en
+2024-02-10T14:57:46.000Z,Library,2,quad2_r2_c2,Morose,2.3,en
+2024-02-10T16:42:50.000Z,Science Center,1,quad2_r2_c3,Desanimado,4.8,es
+2024-02-11T10:10:05.000Z,Science Center,1,quad2_r1_c1,Disgusted,3.0,en
+2024-02-12T10:33:39.000Z,Innovation Center,5,quad4_r4_c4,Comfortable,6.4,en
+2024-02-12T14:11:13.000Z,Library,2,quad4_r2_c1,Calm,8.1,en
+2024-02-13T11:12:20.000Z,Library,2,quad1_r2_c5,Elated,4.5,en
+2024-02-13T13:54:38.000Z,Science Center,2,quad1_r1_c3,Festive,4.2,en
+2024-02-13T14:01:25.000Z,Library,2,quad4_r4_c3,Pacífico,8.7,es
+2024-02-13T20:22:45.000Z,Library,3,quad1_r2_c3,Motivated,4.4,en
+2024-02-14T10:34:05.000Z,Science Center,1,quad3_r5_c3,Concerned,5.2,en
+2024-02-14T14:24:38.000Z,Innovation Center,3,quad4_r4_c4,Comfortable,5.2,en
+2024-02-14T18:32:22.000Z,Library,1,quad1_r3_c1,Energized,3.3,en
+2024-02-15T10:11:35.000Z,Science Center,1,quad4_r3_c2,Chill,4.3,en
+2024-02-15T16:42:53.000Z,Innovation Center,1,quad1_r2_c3,Motivated,7.1,en
+2024-02-15T17:48:40.000Z,Science Center,3,quad3_r3_c3,Angry,1.9,en
+2024-02-16T11:53:56.000Z,Science Center,2,quad4_r1_c2,Easygoing,2.5,en
+2024-02-17T12:48:42.000Z,Science Center,2,quad1_r2_c4,Inspired,3.9,en
+2024-02-17T13:36:41.000Z,Library,1,quad4_r3_c3,Restful,1.0,en
+2024-02-17T13:44:13.000Z,Innovation Center,1,quad4_r2_c4,Grateful,9.4,en
+2024-02-17T14:31:37.000Z,Library,1,quad2_r4_c4,Exhausted,3.3,en
+2024-02-17T16:09:20.000Z,Library,2,quad1_r4_c3,Happy,4.2,en
+2024-02-18T10:01:08.000Z,Library,1,quad4_r5_c4,Cozy,4.5,en
+2024-02-18T12:12:26.000Z,Innovation Center,1,quad3_r4_c5,Annoyed,1.2,en
+2024-02-18T16:26:51.000Z,Innovation Center,1,quad2_r2_c5,Aburrido,3.5,es
+2024-02-19T14:03:55.000Z,Innovation Center,1,quad2_r5_c3,Desolate,6.3,en
+2024-02-19T16:26:25.000Z,Library,1,quad1_r4_c2,Focused,2.1,en
+2024-02-21T13:24:31.000Z,Innovation Center,2,quad3_r2_c5,Stunned,5.3,en
+2024-02-21T18:26:39.000Z,Science Center,2,quad3_r5_c1,Repugnado,3.7,es
+2024-02-21T19:03:39.000Z,Innovation Center,1,quad1_r3_c2,Lively,8.8,en
+2024-02-22T10:53:39.000Z,Innovation Center,3,quad2_r2_c1,Pessimistic,3.5,en
+2024-02-22T12:43:53.000Z,Library,3,quad4_r2_c2,Secure,6.3,en
+2024-02-23T09:22:57.000Z,Innovation Center,1,quad1_r2_c2,Cheerful,6.5,en
+2024-02-23T10:06:41.000Z,Innovation Center,1,quad4_r2_c4,Grateful,2.6,en
+2024-02-23T16:09:39.000Z,Library,2,quad4_r3_c1,Relaxed,5.7,en
+2024-02-23T19:01:19.000Z,Library,1,quad1_r3_c4,Optimistic,6.1,en
+2024-02-24T11:53:34.000Z,Science Center,1,quad3_r2_c4,Tense,2.5,en
+2024-02-24T12:00:48.000Z,Library,1,quad2_r2_c5,Aburrido,2.8,es
+2024-02-24T12:15:14.000Z,Library,1,quad1_r5_c3,Hopeful,9.3,en
+2024-02-24T14:12:26.000Z,Science Center,1,quad2_r4_c4,Exhausted,1.9,en
+2024-02-25T10:12:35.000Z,Innovation Center,1,quad2_r3_c5,Cansado,6.8,es
+2024-02-25T16:51:57.000Z,Innovation Center,2,quad1_r4_c5,Thrilled,3.3,en
+2024-02-26T17:24:56.000Z,Library,1,quad1_r4_c5,Thrilled,4.2,en
+2024-02-27T17:25:01.000Z,Science Center,4,quad4_r3_c2,Chill,5.7,en
+2024-02-27T18:55:27.000Z,Science Center,1,quad4_r3_c2,Chill,1.7,en
+2024-02-28T17:00:43.000Z,Innovation Center,1,quad4_r3_c2,Distendido,2.7,es
+2024-02-29T11:22:15.000Z,Innovation Center,1,quad1_r3_c2,Lively,5.3,en
+2024-02-29T13:50:42.000Z,Library,1,quad3_r1_c5,Shocked,8.4,en
+2024-03-01T11:50:09.000Z,Science Center,3,quad3_r2_c5,Stunned,8.0,en
+2024-03-01T13:25:32.000Z,Library,1,quad3_r5_c1,Repulsed,9.6,en
+2024-03-02T12:37:39.000Z,Science Center,2,quad4_r1_c1,At Ease,3.8,en
+2024-03-02T15:20:17.000Z,Science Center,2,quad3_r2_c2,Furioso,3.9,es
+2024-03-02T16:55:14.000Z,Science Center,1,quad2_r4_c2,Deprimido,4.4,es
+2024-03-02T21:13:28.000Z,Innovation Center,1,quad1_r5_c2,Alegre,6.2,es
+2024-03-03T09:19:02.000Z,Innovation Center,3,quad3_r2_c5,Stunned,4.1,en
+2024-03-03T09:22:43.000Z,Science Center,1,quad3_r4_c4,Irritated,1.7,en
+2024-03-03T09:53:12.000Z,Library,1,quad3_r5_c5,Peeved,5.3,en
+2024-03-03T10:22:44.000Z,Library,2,quad3_r1_c2,Con pánico,5.2,es
+2024-03-03T13:19:17.000Z,Innovation Center,1,quad2_r2_c5,Bored,8.7,en
+2024-03-03T14:23:12.000Z,Library,2,quad3_r1_c3,Stressed,3.2,en
+2024-03-03T15:16:20.000Z,Innovation Center,2,quad1_r3_c5,Enthusiastic,4.2,en
+2024-03-03T15:16:54.000Z,Innovation Center,3,quad2_r1_c1,Disgusted,6.3,en
+2024-03-03T15:18:37.000Z,Library,2,quad3_r2_c5,Aturdido,2.8,es
+2024-03-03T15:49:57.000Z,Library,3,quad1_r3_c2,Lively,7.6,en
+2024-03-03T16:34:32.000Z,Innovation Center,4,quad2_r1_c5,Apathetic,4.0,en
+2024-03-03T19:09:04.000Z,Innovation Center,2,quad3_r4_c2,Apprehensive,3.3,en
+2024-03-04T09:59:50.000Z,Library,1,quad2_r2_c4,Triste,2.8,es
+2024-03-04T13:18:25.000Z,Innovation Center,1,quad1_r5_c3,Hopeful,1.9,en
+2024-03-04T15:39:34.000Z,Innovation Center,3,quad2_r5_c3,Desolate,2.3,en
+2024-03-04T20:02:59.000Z,Innovation Center,2,quad3_r1_c3,Stressed,2.9,en
+2024-03-05T00:28:52.000Z,Library,1,quad1_r5_c3,Hopeful,4.6,en
+2024-03-05T06:01:08.000Z,Library,4,quad3_r2_c4,Tenso,5.4,es
+2024-03-05T10:31:25.000Z,Library,2,quad3_r5_c1,Repulsed,4.3,en
+2024-03-05T13:55:26.000Z,Library,3,quad2_r3_c5,Tired,4.1,en
+2024-03-05T14:09:11.000Z,Science Center,1,quad4_r3_c1,Relaxed,1.2,en
+2024-03-05T17:10:56.000Z,Innovation Center,1,quad4_r1_c1,Tranquilo,1.8,es
+2024-03-05T18:32:50.000Z,Science Center,2,quad3_r5_c5,Peeved,3.1,en
+2024-03-06T13:24:45.000Z,Library,1,quad1_r3_c1,Energized,0.9,en
+2024-03-06T15:24:19.000Z,Innovation Center,1,quad3_r2_c5,Aturdido,7.6,es
+2024-03-06T15:46:30.000Z,Innovation Center,1,quad2_r4_c2,Depressed,1.7,en
+2024-03-06T15:51:23.000Z,Science Center,1,quad2_r1_c5,Apático,7.9,es
+2024-03-06T18:30:06.000Z,Science Center,2,quad3_r5_c1,Repugnado,2.5,es
+2024-03-06T20:34:12.000Z,Innovation Center,1,quad4_r5_c1,Somnoliento,2.7,es
+2024-03-07T10:34:12.000Z,Library,1,quad3_r1_c3,Stressed,7.0,en
+2024-03-07T10:37:37.000Z,Library,1,quad2_r3_c5,Tired,1.2,en
+2024-03-07T12:09:22.000Z,Library,2,quad3_r5_c5,Peeved,5.1,en
+2024-03-07T12:30:01.000Z,Science Center,1,quad3_r3_c4,Nervous,5.0,en
+2024-03-07T14:12:57.000Z,Innovation Center,2,quad3_r2_c4,Tense,1.3,en
+2024-03-07T14:20:12.000Z,Innovation Center,1,quad1_r5_c4,Playful,8.0,en
+2024-03-08T11:09:46.000Z,Science Center,1,quad3_r5_c2,Troubled,4.6,en
+2024-03-08T11:31:55.000Z,Innovation Center,2,quad3_r5_c3,Preocupado,3.7,es
+2024-03-08T12:26:33.000Z,Library,1,quad3_r2_c3,Frustrated,5.5,en
+2024-03-08T15:42:40.000Z,Innovation Center,1,quad3_r2_c3,Frustrated,7.2,en
+2024-03-08T15:51:30.000Z,Innovation Center,1,quad4_r3_c2,Chill,5.3,en
+2024-03-08T18:33:07.000Z,Library,2,quad3_r5_c4,Uneasy,4.2,en
+2024-03-09T15:40:43.000Z,Library,2,quad2_r5_c3,Desolate,4.9,en
+2024-03-10T12:40:13.000Z,Innovation Center,1,quad2_r3_c2,Miserable,3.6,en
+2024-03-10T13:29:42.000Z,Library,2,quad3_r4_c3,Worried,2.6,en
+2024-03-10T18:59:27.000Z,Science Center,1,quad2_r4_c3,Sullen,2.7,en
+2024-03-11T15:41:16.000Z,Library,1,quad4_r5_c1,Sleepy,3.1,en
+2024-03-11T16:13:08.000Z,Innovation Center,2,quad4_r5_c2,Complaciente,2.4,es
+2024-03-12T11:52:13.000Z,Science Center,1,quad1_r4_c4,Orgulloso,4.2,es
+2024-03-12T16:41:15.000Z,Science Center,2,quad4_r4_c1,Mellow,2.0,en
+2024-03-13T08:31:36.000Z,Innovation Center,1,quad2_r3_c2,Miserable,2.6,en
+2024-03-14T12:30:56.000Z,Library,1,quad2_r1_c1,Disgustado,2.9,es
+2024-03-14T14:51:16.000Z,Innovation Center,4,quad1_r1_c4,Exhilarated,5.6,en
+2024-03-15T10:50:55.000Z,Science Center,2,quad3_r4_c3,Worried,6.9,en
+2024-03-15T11:14:56.000Z,Library,1,quad2_r2_c2,Melancólico,4.1,es
+2024-03-15T11:43:31.000Z,Science Center,3,quad4_r1_c3,Content,1.6,en
+2024-03-15T18:00:42.000Z,Science Center,2,quad4_r3_c2,Chill,4.7,en
+2024-03-16T12:30:21.000Z,Library,1,quad1_r2_c2,Cheerful,6.8,en
+2024-03-16T14:04:45.000Z,Innovation Center,2,quad1_r2_c4,Inspired,5.1,en
+2024-03-16T14:27:10.000Z,Library,1,quad4_r5_c2,Complacent,6.3,en
+2024-03-16T14:50:00.000Z,Science Center,3,quad4_r3_c4,Bendecido,3.7,es
+2024-03-16T16:53:52.000Z,Library,4,quad2_r1_c4,Decaído,4.0,es
+2024-03-16T17:54:42.000Z,Library,2,quad3_r2_c5,Aturdido,9.1,es
+2024-03-17T13:04:36.000Z,Library,1,quad2_r2_c1,Pesimista,5.2,es
+2024-03-17T15:12:21.000Z,Innovation Center,2,quad4_r2_c4,Grateful,4.0,en
+2024-03-17T17:22:21.000Z,Innovation Center,1,quad4_r5_c2,Complaciente,1.5,es
+2024-03-18T13:59:54.000Z,Science Center,1,quad3_r4_c2,Apprehensive,5.4,en
+2024-03-19T13:18:58.000Z,Innovation Center,1,quad4_r2_c5,Conmovido,2.1,es
+2024-03-19T14:29:32.000Z,Science Center,2,quad2_r5_c2,Hopeless,4.0,en
+2024-03-20T12:11:53.000Z,Library,3,quad2_r2_c3,Desanimado,7.7,es
+2024-03-20T14:40:08.000Z,Innovation Center,1,quad1_r5_c2,Joyful,2.6,en
+2024-03-21T13:42:46.000Z,Library,2,quad3_r5_c3,Concerned,1.2,en
+2024-03-22T10:08:07.000Z,Library,1,quad2_r5_c1,Desesperado,2.4,es
+2024-03-22T13:47:50.000Z,Innovation Center,1,quad1_r4_c2,Focused,6.7,en
+2024-03-23T13:50:18.000Z,Innovation Center,2,quad4_r4_c2,Thoughtful,2.4,en
+2024-03-23T15:33:41.000Z,Innovation Center,1,quad4_r5_c3,Tranquil,2.1,en
+2024-03-23T17:42:19.000Z,Library,1,quad4_r4_c2,Thoughtful,4.4,en
+2024-03-24T16:42:34.000Z,Innovation Center,1,quad3_r1_c4,Jittery,1.5,en
+2024-03-25T12:52:06.000Z,Science Center,2,quad4_r4_c2,Thoughtful,7.4,en
+2024-03-26T09:05:52.000Z,Library,1,quad1_r1_c2,Upbeat,3.4,en
+2024-03-26T15:31:02.000Z,Innovation Center,1,quad4_r5_c3,Tranquil,3.2,en
+2024-03-26T16:59:17.000Z,Science Center,1,quad1_r2_c2,Cheerful,6.2,en
+2024-03-27T10:07:21.000Z,Innovation Center,1,quad1_r2_c5,Elated,5.8,en
+2024-03-29T03:59:53.000Z,Library,1,quad1_r3_c1,Energizado,8.5,es
+2024-03-29T14:51:11.000Z,Library,1,quad3_r3_c4,Nervous,1.2,en
+2024-03-30T13:13:52.000Z,Library,2,quad3_r5_c2,Troubled,1.8,en
+2024-03-30T14:28:08.000Z,Innovation Center,2,quad3_r5_c2,Troubled,2.6,en
+2024-03-30T15:54:03.000Z,Innovation Center,1,quad2_r5_c3,Desolate,3.4,en
+2024-03-30T16:34:07.000Z,Library,1,quad4_r3_c2,Chill,4.1,en
+2024-03-31T15:48:49.000Z,Science Center,1,quad1_r2_c4,Inspirado,6.2,es
+2024-03-31T17:57:42.000Z,Library,1,quad2_r3_c2,Miserable,2.0,es
+2024-03-31T23:59:59.000Z,Library,3,quad4_r2_c2,Secure,7.0,en
+2024-04-01T13:48:02.000Z,Science Center,1,quad4_r3_c3,Restful,6.3,en
+2024-04-01T15:14:07.000Z,Library,3,quad4_r1_c5,Realizado,7.8,es
+2024-04-01T16:43:26.000Z,Library,2,quad4_r4_c3,Peaceful,6.8,en
+2024-04-02T13:25:08.000Z,Innovation Center,1,quad1_r5_c2,Joyful,3.6,en
+2024-04-02T18:27:34.000Z,Innovation Center,1,quad4_r2_c4,Agradecido,5.7,es
+2024-04-02T18:29:36.000Z,Innovation Center,2,quad1_r4_c3,Feliz,5.2,es
+2024-04-02T18:30:29.000Z,Science Center,1,quad1_r5_c3,Hopeful,2.9,en
+2024-04-03T16:47:53.000Z,Science Center,2,quad2_r3_c5,Tired,1.8,en
+2024-04-04T09:57:11.000Z,Science Center,1,quad4_r2_c3,Satisfied,5.8,en
+2024-04-04T11:48:13.000Z,Innovation Center,1,quad4_r4_c3,Peaceful,1.3,en
+2024-04-04T13:19:05.000Z,Innovation Center,1,quad1_r2_c2,Cheerful,4.8,en
+2024-04-04T14:05:07.000Z,Library,3,quad1_r3_c4,Optimistic,9.3,en
+2024-04-04T15:02:51.000Z,Library,1,quad4_r4_c2,Reflexivo,5.8,es
+2024-04-05T12:08:12.000Z,Science Center,1,quad2_r5_c1,Desesperado,5.0,es
+2024-04-05T12:18:23.000Z,Innovation Center,2,quad2_r2_c4,Triste,1.2,es
+2024-04-05T12:27:06.000Z,Library,1,quad1_r1_c3,Festive,2.5,en
+2024-04-05T15:46:09.000Z,Library,1,quad3_r5_c5,Peeved,3.1,en
+2024-04-05T17:37:15.000Z,Library,2,quad3_r2_c1,Livid,8.9,en
+2024-04-06T15:24:07.000Z,Library,3,quad1_r5_c2,Joyful,5.6,en
+2024-04-06T16:05:28.000Z,Library,3,quad2_r4_c4,Exhausted,2.2,en
+2024-04-07T10:24:17.000Z,Science Center,2,quad4_r4_c5,Carefree,3.8,en
+2024-04-07T20:23:17.000Z,Science Center,2,quad2_r3_c1,Aislado,6.5,es
+2024-04-08T13:21:15.000Z,Library,2,quad4_r4_c1,Mellow,4.1,en
+2024-04-09T14:41:35.000Z,Science Center,1,quad2_r4_c3,Sullen,4.6,en
+2024-04-10T11:30:55.000Z,Innovation Center,3,quad1_r3_c1,Energized,2.5,en
+2024-04-10T12:48:31.000Z,Science Center,3,quad2_r2_c4,Sad,5.8,en
+2024-04-10T16:18:59.000Z,Library,2,quad1_r2_c3,Motivated,5.5,en
+2024-04-12T04:54:17.000Z,Innovation Center,1,quad4_r1_c4,Loving,2.6,en
+2024-04-12T12:30:31.000Z,Innovation Center,1,quad2_r4_c4,Exhausted,2.3,en
+2024-04-12T12:52:39.000Z,Innovation Center,2,quad3_r2_c4,Tenso,6.4,es
+2024-04-12T15:01:23.000Z,Science Center,2,quad1_r2_c3,Motivated,3.9,en
+2024-04-12T16:35:07.000Z,Innovation Center,5,quad1_r3_c4,Optimistic,5.0,en
+2024-04-12T18:01:20.000Z,Science Center,3,quad4_r2_c3,Satisfied,8.5,en
+2024-04-12T20:18:01.000Z,Innovation Center,1,quad1_r3_c5,Enthusiastic,4.7,en
+2024-04-13T10:32:43.000Z,Library,2,quad4_r3_c2,Chill,1.9,en
+2024-04-13T12:21:52.000Z,Innovation Center,1,quad2_r2_c4,Sad,2.0,en
+2024-04-13T14:37:28.000Z,Science Center,1,quad2_r3_c3,Lonely,3.8,en
+2024-04-13T14:51:49.000Z,Library,1,quad3_r5_c2,Troubled,5.9,en
+2024-04-13T14:59:36.000Z,Science Center,1,quad3_r5_c3,Concerned,3.8,en
+2024-04-13T17:34:52.000Z,Science Center,1,quad4_r4_c4,Comfortable,6.6,en
+2024-04-14T13:38:14.000Z,Science Center,1,quad1_r3_c3,Excited,6.4,en
+2024-04-15T13:32:17.000Z,Library,2,quad2_r1_c1,Disgusted,1.2,en
+2024-04-16T13:27:32.000Z,Library,1,quad3_r1_c3,Stressed,7.8,en
+2024-04-17T02:03:37.000Z,Science Center,1,quad1_r5_c1,Pleasant,1.7,en
+2024-04-17T14:42:41.000Z,Library,1,quad1_r2_c4,Inspired,3.1,en
+2024-04-17T15:46:18.000Z,Innovation Center,2,quad3_r1_c2,Panicked,2.4,en
+2024-04-18T12:37:29.000Z,Innovation Center,1,quad1_r3_c3,Excited,1.8,en
+2024-04-18T13:40:31.000Z,Science Center,2,quad1_r4_c3,Happy,7.6,en
+2024-04-18T15:30:01.000Z,Innovation Center,3,quad1_r1_c5,Ecstatic,3.0,en
+2024-04-19T09:28:30.000Z,Innovation Center,1,quad2_r2_c5,Bored,2.3,en
+2024-04-19T09:55:04.000Z,Innovation Center,2,quad3_r1_c1,Enfurecido,7.7,es
+2024-04-19T12:47:09.000Z,Library,1,quad3_r4_c4,Irritated,3.6,en
+2024-04-19T13:23:24.000Z,Science Center,1,quad3_r2_c1,Livid,3.3,en
+2024-04-19T15:23:27.000Z,Library,1,quad4_r1_c3,Contento,2.1,es
+2024-04-19T15:31:10.000Z,Library,4,quad2_r3_c3,Lonely,1.8,en
+2024-04-19T15:39:02.000Z,Innovation Center,1,quad4_r3_c3,Restful,7.7,en
+2024-04-20T09:38:36.000Z,Library,1,quad4_r3_c2,Distendido,5.1,es
+2024-04-20T16:50:30.000Z,Library,1,quad3_r4_c1,Anxious,5.9,en
+2024-04-20T19:42:02.000Z,Innovation Center,1,quad4_r5_c3,Tranquil,4.4,en
+2024-04-20T19:47:04.000Z,Library,1,quad3_r4_c5,Annoyed,1.1,en
+2024-04-21T01:31:05.000Z,Innovation Center,1,quad4_r5_c3,Tranquil,2.8,en
+2024-04-21T12:48:03.000Z,Science Center,1,quad3_r5_c2,Troubled,4.0,en
+2024-04-21T14:26:37.000Z,Library,1,quad2_r4_c5,Fatigado,6.3,es
+2024-04-22T12:32:47.000Z,Innovation Center,2,quad4_r5_c3,Tranquil,1.8,en
+2024-04-22T14:01:39.000Z,Innovation Center,1,quad2_r1_c5,Apathetic,8.6,en
+2024-04-22T14:47:48.000Z,Innovation Center,1,quad4_r3_c5,Balanced,4.4,en
+2024-04-22T14:48:54.000Z,Science Center,1,quad1_r2_c4,Inspired,3.5,en
+2024-04-22T17:13:54.000Z,Innovation Center,4,quad4_r1_c5,Fulfilled,1.7,en
+2024-04-23T16:25:35.000Z,Library,1,quad1_r2_c4,Inspired,2.1,en
+2024-04-23T17:49:20.000Z,Library,1,quad2_r5_c4,Sin energía,2.2,es
+2024-04-24T10:59:58.000Z,Innovation Center,1,quad3_r1_c4,Jittery,7.3,en
+2024-04-24T11:29:00.000Z,Library,2,quad3_r2_c5,Aturdido,5.9,es
+2024-04-24T12:09:49.000Z,Library,2,quad3_r4_c5,Annoyed,2.0,en
+2024-04-24T14:49:39.000Z,Library,3,quad1_r5_c5,Dichoso,3.8,es
+2024-04-24T18:04:24.000Z,Innovation Center,1,quad3_r2_c4,Tense,1.4,en
+2024-04-25T15:41:07.000Z,Innovation Center,1,quad2_r1_c3,Disappointed,5.3,en
+2024-04-26T09:51:32.000Z,Library,2,quad4_r5_c5,Sereno,5.7,es
+2024-04-26T13:07:01.000Z,Library,2,quad4_r3_c1,Relaxed,4.2,en
+2024-04-26T16:53:38.000Z,Science Center,1,quad4_r5_c5,Serene,6.4,en
+2024-04-27T17:01:29.000Z,Science Center,3,quad4_r3_c4,Blessed,4.0,en
+2024-04-29T14:07:31.000Z,Library,2,quad4_r4_c3,Peaceful,2.8,en
+2024-04-30T03:45:48.000Z,Innovation Center,1,quad4_r4_c3,Pacífico,3.5,es
+2024-04-30T04:36:16.000Z,Innovation Center,1,quad4_r4_c1,Mellow,5.5,en
+2024-04-30T12:55:37.000Z,Science Center,1,quad4_r2_c1,Calm,6.5,en
+2024-05-01T09:55:31.000Z,Library,2,quad3_r2_c5,Stunned,2.1,en
+2024-05-01T12:57:55.000Z,Library,1,quad1_r2_c5,Elated,2.7,en
+2024-05-01T21:01:07.000Z,Science Center,1,quad4_r2_c3,Satisfied,3.1,en
+2024-05-02T09:06:59.000Z,Library,1,quad3_r3_c3,Angry,3.2,en
+2024-05-02T15:36:37.000Z,Innovation Center,1,quad4_r2_c4,Grateful,7.5,en
+2024-05-03T10:51:47.000Z,Library,3,quad2_r2_c4,Sad,4.4,en
+2024-05-03T13:13:43.000Z,Science Center,1,quad1_r3_c4,Optimistic,2.9,en
+2024-05-03T17:01:54.000Z,Science Center,1,quad4_r3_c3,Descansado,1.0,es
+2024-05-03T18:04:19.000Z,Library,1,quad3_r2_c4,Tense,6.8,en
+2024-05-04T12:22:11.000Z,Science Center,1,quad2_r2_c4,Sad,9.1,en
+2024-05-05T15:38:02.000Z,Innovation Center,3,quad3_r5_c1,Repulsed,2.5,en
+2024-05-05T18:24:57.000Z,Innovation Center,1,quad4_r3_c2,Chill,5.1,en
+2024-05-05T19:22:08.000Z,Science Center,3,quad3_r3_c4,Nervous,6.6,en
+2024-05-07T16:00:08.000Z,Science Center,1,quad3_r4_c2,Apprehensive,7.1,en
+2024-05-08T09:32:24.000Z,Science Center,3,quad3_r1_c1,Enraged,7.2,en
+2024-05-08T12:47:05.000Z,Science Center,2,quad4_r3_c2,Chill,6.1,en
+2024-05-08T13:48:39.000Z,Science Center,1,quad1_r3_c1,Energized,8.6,en
+2024-05-08T16:06:04.000Z,Library,1,quad3_r4_c1,Ansioso,4.1,es
+2024-05-08T16:17:07.000Z,Innovation Center,1,quad4_r3_c4,Blessed,5.6,en
+2024-05-08T16:50:52.000Z,Library,2,quad1_r1_c5,Extasiado,2.3,es
+2024-05-09T10:52:04.000Z,Library,3,quad4_r5_c3,Tranquilo,2.8,es
+2024-05-10T10:45:42.000Z,Innovation Center,4,quad4_r2_c5,Conmovido,2.5,es
+2024-05-10T11:44:07.000Z,Innovation Center,1,quad1_r2_c5,Elated,2.2,en
+2024-05-11T19:21:33.000Z,Library,1,quad4_r3_c4,Blessed,5.4,en
+2024-05-12T10:50:10.000Z,Library,1,quad4_r2_c5,Touched,5.7,en
+2024-05-12T14:47:21.000Z,Library,1,quad4_r4_c5,Carefree,3.5,en
+2024-05-13T15:27:53.000Z,Innovation Center,2,quad4_r3_c4,Blessed,5.7,en
+2024-05-13T15:40:11.000Z,Library,2,quad4_r1_c2,Easygoing,2.9,en
+2024-05-14T12:35:40.000Z,Science Center,1,quad1_r2_c3,Motivado,2.2,es
+2024-05-14T16:52:49.000Z,Science Center,2,quad3_r4_c2,Apprehensive,3.0,en
+2024-05-15T11:11:25.000Z,Innovation Center,1,quad2_r3_c2,Miserable,3.3,en
+2024-05-15T14:38:05.000Z,Science Center,2,quad1_r1_c4,Exhilarated,9.0,en
+2024-05-15T15:13:14.000Z,Library,1,quad3_r4_c5,Annoyed,7.0,en
+2024-05-16T19:15:24.000Z,Innovation Center,1,quad4_r3_c4,Blessed,1.0,en
+2024-06-11T15:31:26.000Z,Science Center,1,quad4_r2_c2,Secure,6.8,en
+2024-06-11T16:26:55.000Z,Science Center,2,quad4_r2_c2,Seguro,2.7,es
+2024-06-12T10:22:12.000Z,Library,1,quad2_r5_c2,Desahuciado,3.4,es
+2024-06-13T11:18:01.000Z,Library,2,quad3_r4_c2,Apprehensive,7.0,en
+2024-06-14T08:21:43.000Z,Innovation Center,3,quad1_r3_c4,Optimistic,2.3,en
+2024-06-15T19:36:50.000Z,Innovation Center,2,quad4_r2_c5,Touched,4.4,en
+2024-06-16T12:40:32.000Z,Innovation Center,4,quad1_r2_c5,Elated,2.5,en
+2024-06-17T07:52:24.000Z,Library,1,quad1_r3_c5,Enthusiastic,4.8,en
+2024-06-17T09:53:21.000Z,Innovation Center,3,quad1_r2_c4,Inspired,5.5,en
+2024-06-18T17:48:34.000Z,Library,2,quad4_r2_c4,Agradecido,3.6,es
+2024-06-18T19:21:28.000Z,Library,1,quad1_r4_c2,Focused,2.7,en
+2024-06-18T19:48:43.000Z,Innovation Center,3,quad3_r5_c3,Concerned,1.6,en
+2024-06-19T14:16:03.000Z,Library,1,quad3_r3_c2,Frightened,6.1,en
+2024-06-19T14:39:48.000Z,Innovation Center,1,quad1_r2_c3,Motivated,3.2,en
+2024-06-20T09:39:39.000Z,Library,1,quad1_r5_c4,Playful,7.3,en
+2024-06-20T11:14:38.000Z,Science Center,1,quad1_r5_c3,Hopeful,1.5,en
+2024-06-20T12:22:19.000Z,Library,1,quad3_r2_c4,Tense,4.1,en
+2024-06-21T18:23:08.000Z,Innovation Center,2,quad4_r2_c3,Satisfied,4.9,en
+2024-06-22T11:25:14.000Z,Science Center,1,quad4_r1_c2,Easygoing,7.3,en
+2024-06-22T14:00:56.000Z,Library,3,quad4_r3_c2,Chill,2.1,en
+2024-06-23T14:20:14.000Z,Library,1,quad3_r2_c1,Lívido,2.9,es
+2024-06-23T15:40:53.000Z,Innovation Center,1,quad2_r4_c3,Sullen,1.3,en
+2024-06-24T11:12:27.000Z,Innovation Center,2,quad4_r3_c3,Descansado,2.4,es
+2024-06-24T11:58:07.000Z,Science Center,2,quad2_r2_c3,Discouraged,3.0,en
+2024-06-25T14:13:53.000Z,Library,2,quad3_r4_c4,Irritated,4.4,en
+2024-06-25T15:13:32.000Z,Science Center,2,quad1_r2_c4,Inspirado,1.5,es
+2024-06-26T17:33:48.000Z,Library,2,quad4_r3_c4,Blessed,8.4,en
+2024-06-26T17:44:18.000Z,Science Center,2,quad1_r3_c1,Energized,5.5,en
+2024-06-26T20:37:09.000Z,Library,1,quad1_r1_c1,Surprised,1.8,en
+2024-06-27T12:18:58.000Z,Science Center,1,quad2_r4_c4,Exhausted,8.5,en
+2024-06-27T13:12:58.000Z,Science Center,2,quad1_r1_c1,Surprised,7.3,en
+2024-06-27T14:55:22.000Z,Library,1,quad2_r5_c3,Desolate,6.3,en
+2024-06-27T16:36:48.000Z,Library,1,quad1_r2_c4,Inspired,9.1,en
+2024-06-29T14:37:15.000Z,Science Center,1,quad1_r2_c3,Motivated,7.7,en
+2024-06-29T14:46:04.000Z,Innovation Center,2,quad1_r2_c1,Hiperactivo,6.2,es
+2024-06-29T16:06:53.000Z,Innovation Center,1,quad1_r5_c1,Pleasant,1.8,en
+2024-07-02T10:38:28.000Z,Library,3,quad4_r3_c3,Descansado,7.9,es
+2024-07-04T12:52:34.000Z,Innovation Center,1,quad3_r4_c1,Anxious,1.0,en
+2024-07-06T13:26:51.000Z,Innovation Center,2,quad1_r2_c2,Cheerful,4.9,en
+2024-07-07T06:37:23.000Z,Science Center,2,quad4_r5_c4,Cozy,2.7,en
+2024-07-07T13:41:51.000Z,Innovation Center,1,quad1_r2_c4,Inspired,2.4,en
+2024-07-07T17:53:54.000Z,Innovation Center,1,quad3_r3_c4,Nervous,6.2,en
+2024-07-08T10:08:16.000Z,Science Center,2,quad2_r1_c5,Apathetic,2.8,en
+2024-07-10T06:52:45.000Z,Library,4,quad1_r3_c1,Energized,5.9,en
+2024-07-10T13:36:53.000Z,Innovation Center,3,quad2_r5_c2,Hopeless,5.6,en
+2024-07-10T14:30:22.000Z,Science Center,2,quad2_r4_c4,Exhausted,0.8,en
+2024-07-10T14:40:39.000Z,Science Center,1,quad3_r3_c5,Restless,6.0,en
+2024-07-11T14:19:26.000Z,Science Center,1,quad3_r4_c4,Irritated,1.2,en
+2024-07-12T13:34:00.000Z,Library,1,quad2_r2_c2,Morose,1.9,en
+2024-07-12T14:05:24.000Z,Science Center,2,quad4_r4_c3,Peaceful,2.0,en
+2024-07-13T17:02:38.000Z,Innovation Center,1,quad3_r4_c1,Anxious,5.3,en
+2024-07-13T20:23:39.000Z,Innovation Center,1,quad1_r4_c4,Proud,3.4,en
+2024-07-15T14:19:13.000Z,Library,1,quad1_r4_c3,Happy,2.1,en
+2024-07-16T12:44:33.000Z,Library,1,quad1_r3_c3,Excited,2.0,en
+2024-07-16T12:49:26.000Z,Library,1,quad1_r2_c4,Inspired,1.7,en
+2024-07-16T15:31:26.000Z,Science Center,2,quad2_r4_c3,Sullen,5.8,en
+2024-07-16T15:41:59.000Z,Innovation Center,1,quad4_r2_c4,Agradecido,3.4,es
+2024-07-16T16:43:24.000Z,Library,2,quad3_r5_c2,Troubled,5.4,en
+2024-07-16T20:07:07.000Z,Science Center,3,quad3_r3_c4,Nervous,4.5,en
+2024-07-17T10:47:48.000Z,Innovation Center,1,quad4_r2_c5,Conmovido,4.6,es
+2024-07-17T14:36:34.000Z,Library,1,quad4_r2_c4,Grateful,5.8,en
+2024-07-17T18:37:48.000Z,Innovation Center,1,quad1_r5_c4,Playful,2.3,en
+2024-07-18T14:27:04.000Z,Innovation Center,1,quad1_r2_c4,Inspired,0.7,en
+2024-07-19T16:48:57.000Z,Science Center,3,quad1_r2_c4,Inspired,3.7,en
+2024-07-19T17:38:14.000Z,Library,1,quad3_r5_c4,Uneasy,5.1,en
+2024-07-21T11:21:03.000Z,Science Center,2,quad2_r2_c3,Discouraged,8.9,en
+2024-07-22T01:39:57.000Z,Library,1,quad2_r3_c3,Solo,5.3,es
+2024-07-22T13:49:42.000Z,Innovation Center,1,quad4_r3_c4,Blessed,2.6,en
+2024-07-22T13:52:11.000Z,Library,2,quad2_r3_c2,Miserable,2.5,en
+2024-07-22T14:11:16.000Z,Library,3,quad3_r4_c1,Anxious,7.7,en
+2024-07-23T13:05:08.000Z,Library,1,quad2_r4_c5,Fatigued,1.5,en
+2024-07-23T15:17:45.000Z,Innovation Center,3,quad4_r3_c4,Blessed,3.5,en
+2024-07-23T15:23:46.000Z,Library,1,quad1_r2_c1,Hiperactivo,3.6,es
+2024-07-24T11:46:08.000Z,Science Center,1,quad1_r2_c2,Cheerful,9.5,en
+2024-07-24T14:08:50.000Z,Library,1,quad2_r4_c4,Exhausted,4.2,en
+2024-07-24T14:19:25.000Z,Innovation Center,2,quad4_r2_c4,Grateful,2.1,en
+2024-07-24T14:28:11.000Z,Science Center,1,quad1_r1_c4,Exhilarated,7.7,en
+2024-07-24T17:59:19.000Z,Innovation Center,2,quad1_r2_c2,Alegre,4.0,es
+2024-07-25T12:21:25.000Z,Innovation Center,1,quad2_r3_c3,Lonely,9.4,en
+2024-07-26T16:47:34.000Z,Innovation Center,5,quad2_r1_c5,Apathetic,1.0,en
+2024-07-27T10:39:36.000Z,Library,1,quad4_r1_c2,Relajado,6.4,es
+2024-07-28T12:08:34.000Z,Innovation Center,3,quad2_r4_c4,Agotado,5.3,es
+2024-07-28T16:09:08.000Z,Innovation Center,3,quad2_r5_c5,Drenado,6.5,es
+2024-07-28T17:11:01.000Z,Library,1,quad1_r2_c3,Motivated,2.4,en
+2024-07-28T17:48:20.000Z,Library,2,quad2_r2_c4,Sad,1.8,en
+2024-07-28T22:02:19.000Z,Library,1,quad3_r2_c4,Tense,3.9,en
+2024-07-29T10:51:25.000Z,Innovation Center,1,quad3_r3_c5,Restless,8.1,en
+2024-07-29T11:09:18.000Z,Innovation Center,1,quad1_r2_c4,Inspired,1.1,en
+2024-07-29T13:01:07.000Z,Innovation Center,3,quad2_r4_c5,Fatigado,2.6,es
+2024-07-29T13:29:25.000Z,Library,2,quad3_r4_c5,Annoyed,1.0,en
+2024-07-29T14:27:37.000Z,Science Center,1,quad4_r2_c5,Conmovido,5.3,es
+2024-07-29T15:01:13.000Z,Library,2,quad2_r1_c3,Disappointed,3.2,en
+2024-07-29T16:16:16.000Z,Innovation Center,1,quad4_r4_c2,Thoughtful,6.2,en
+2024-07-29T19:56:27.000Z,Library,1,quad2_r1_c1,Disgusted,4.9,en
+2024-07-30T10:03:11.000Z,Library,3,quad3_r3_c1,Fuming,2.4,en
+2024-07-30T10:30:25.000Z,Science Center,1,quad3_r4_c1,Anxious,2.9,en
+2024-07-30T11:47:59.000Z,Innovation Center,2,quad3_r4_c3,Worried,4.8,en
+2024-07-30T17:12:12.000Z,Innovation Center,1,quad1_r4_c4,Proud,5.1,en
+2024-07-30T20:18:00.000Z,Innovation Center,3,quad1_r4_c2,Focused,3.3,en
+2024-07-31T12:31:03.000Z,Library,1,quad3_r4_c1,Anxious,7.1,en
+2024-07-31T15:51:21.000Z,Library,1,quad2_r4_c3,Sullen,5.2,en
+2024-07-31T19:37:27.000Z,Science Center,1,quad4_r4_c4,Comfortable,0.8,en
+2024-08-01T10:00:59.000Z,Innovation Center,1,quad2_r4_c4,Exhausted,4.4,en
+2024-08-01T11:03:31.000Z,Library,3,quad2_r4_c3,Sullen,2.4,en
+2024-08-01T11:39:35.000Z,Library,3,quad3_r2_c3,Frustrated,4.0,en
+2024-08-01T11:44:00.000Z,Innovation Center,1,quad2_r4_c4,Exhausted,3.7,en
+2024-08-01T15:49:54.000Z,Science Center,1,quad3_r2_c5,Stunned,7.3,en
+2024-08-01T16:28:46.000Z,Science Center,2,quad3_r3_c3,Angry,3.2,en
+2024-08-02T01:13:06.000Z,Science Center,4,quad2_r3_c2,Miserable,1.7,es
+2024-08-02T12:49:18.000Z,Science Center,1,quad2_r2_c1,Pesimista,3.6,es
+2024-08-02T13:20:04.000Z,Science Center,1,quad4_r4_c2,Thoughtful,4.6,en
+2024-08-02T16:19:42.000Z,Innovation Center,1,quad4_r1_c1,At Ease,2.7,en
+2024-08-02T22:50:52.000Z,Science Center,1,quad4_r3_c1,Relaxed,3.8,en
+2024-08-03T07:46:29.000Z,Library,1,quad2_r5_c4,Sin energía,2.3,es
+2024-08-03T12:31:02.000Z,Innovation Center,1,quad2_r4_c4,Exhausted,5.8,en
+2024-08-03T16:28:07.000Z,Library,1,quad3_r4_c5,Annoyed,1.1,en
+2024-08-03T17:33:21.000Z,Library,2,quad1_r2_c2,Cheerful,7.0,en
+2024-08-04T11:49:44.000Z,Innovation Center,1,quad3_r1_c3,Estresado,3.3,es
+2024-08-04T14:31:10.000Z,Science Center,2,quad4_r1_c4,Cariñoso,6.2,es
+2024-08-05T16:32:36.000Z,Library,1,quad1_r2_c4,Inspired,3.5,en
+2024-08-05T17:19:17.000Z,Science Center,5,quad2_r4_c3,Sullen,3.1,en
+2024-08-05T20:25:14.000Z,Library,1,quad2_r3_c1,Alienated,3.7,en
+2024-08-06T10:42:10.000Z,Innovation Center,2,quad3_r1_c3,Stressed,8.3,en
+2024-08-06T15:55:02.000Z,Library,2,quad4_r1_c2,Relajado,3.3,es
+2024-08-06T17:55:08.000Z,Library,1,quad1_r2_c4,Inspired,3.2,en
+2024-08-06T21:20:18.000Z,Innovation Center,1,quad4_r3_c2,Chill,3.5,en
+2024-08-07T14:01:21.000Z,Science Center,1,quad2_r2_c4,Sad,4.3,en
+2024-08-07T14:53:26.000Z,Innovation Center,2,quad1_r5_c3,Esperanzado,2.7,es
+2024-08-07T16:11:24.000Z,Library,2,quad3_r3_c4,Nervous,6.5,en
+2024-08-07T16:35:08.000Z,Library,2,quad1_r4_c4,Orgulloso,4.5,es
+2024-08-07T20:12:30.000Z,Innovation Center,1,quad1_r3_c4,Optimista,3.2,es
+2024-08-08T06:06:21.000Z,Library,3,quad3_r4_c4,Irritado,2.4,es
+2024-08-08T09:33:34.000Z,Library,1,quad4_r2_c5,Touched,3.0,en
+2024-08-08T12:35:44.000Z,Library,1,quad1_r2_c2,Alegre,7.3,es
+2024-08-08T18:44:58.000Z,Science Center,2,quad1_r3_c2,Vivaz,4.7,es
+2024-08-25T10:04:28.000Z,Library,2,quad3_r4_c5,Annoyed,4.7,en
+2024-08-25T15:26:39.000Z,Science Center,2,quad1_r4_c3,Happy,4.9,en
+2024-08-26T11:49:21.000Z,Innovation Center,6,quad3_r2_c2,Furious,5.1,en
+2024-08-26T16:30:58.000Z,Science Center,2,quad3_r2_c4,Tense,5.7,en
+2024-08-26T19:15:10.000Z,Science Center,1,quad1_r4_c4,Proud,6.4,en
+2024-08-27T08:54:39.000Z,Innovation Center,2,quad1_r5_c2,Joyful,1.8,en
+2024-08-27T14:10:08.000Z,Library,2,quad1_r3_c5,Enthusiastic,1.9,en
+2024-08-27T16:08:33.000Z,Science Center,1,quad1_r4_c3,Happy,2.4,en
+2024-08-28T11:16:06.000Z,Library,1,quad1_r2_c3,Motivated,3.2,en
+2024-08-30T11:06:45.000Z,Innovation Center,1,quad1_r3_c4,Optimistic,2.0,en
+2024-08-30T13:11:51.000Z,Science Center,1,quad2_r1_c1,Disgustado,3.3,es
+2024-08-31T15:13:09.000Z,Innovation Center,3,quad4_r5_c5,Serene,1.0,en
+2024-09-01T20:41:15.000Z,Innovation Center,1,quad3_r4_c4,Irritated,8.1,en
+2024-09-02T11:03:16.000Z,Innovation Center,2,quad4_r2_c3,Satisfied,7.4,en
+2024-09-02T12:57:00.000Z,Innovation Center,2,quad1_r1_c4,Exhilarated,6.1,en
+2024-09-02T18:21:52.000Z,Science Center,2,quad3_r3_c4,Nervous,2.7,en
+2024-09-03T14:14:16.000Z,Library,1,quad1_r1_c3,Festive,2.5,en
+2024-09-03T15:11:55.000Z,Library,3,quad1_r4_c4,Proud,4.8,en
+2024-09-04T13:22:37.000Z,Science Center,2,quad3_r3_c2,Frightened,1.9,en
+2024-09-04T13:27:40.000Z,Innovation Center,1,quad3_r1_c3,Estresado,0.9,es
+2024-09-04T14:50:11.000Z,Library,3,quad4_r2_c4,Grateful,3.1,en
+2024-09-04T16:39:14.000Z,Library,2,quad1_r1_c1,Sorprendido,1.3,es
+2024-09-04T19:06:47.000Z,Innovation Center,1,quad2_r5_c1,Despairing,5.6,en
+2024-09-05T16:36:20.000Z,Library,2,quad1_r5_c4,Juguetón,5.1,es
+2024-09-06T17:19:25.000Z,Library,2,quad1_r4_c3,Happy,5.1,en
+2024-09-07T20:44:55.000Z,Science Center,1,quad3_r3_c3,Angry,3.8,en
+2024-09-08T14:49:08.000Z,Innovation Center,1,quad4_r3_c3,Restful,5.1,en
+2024-09-09T21:08:52.000Z,Science Center,3,quad4_r1_c4,Loving,7.4,en
+2024-09-10T11:22:47.000Z,Library,1,quad3_r2_c3,Frustrado,1.7,es
+2024-09-11T12:52:36.000Z,Science Center,1,quad1_r2_c4,Inspired,5.3,en
+2024-09-12T12:11:34.000Z,Library,2,quad4_r4_c4,Comfortable,3.0,en
+2024-09-12T12:44:39.000Z,Innovation Center,3,quad4_r5_c3,Tranquil,4.3,en
+2024-09-12T13:20:03.000Z,Library,2,quad1_r4_c2,Focused,2.8,en
+2024-09-12T14:48:57.000Z,Library,1,quad2_r2_c4,Sad,6.2,en
+2024-09-12T16:46:31.000Z,Library,1,quad3_r2_c1,Livid,5.6,en
+2024-09-12T18:27:50.000Z,Library,1,quad3_r2_c5,Aturdido,1.4,es
+2024-09-13T13:06:42.000Z,Innovation Center,1,quad3_r2_c4,Tense,6.9,en
+2024-09-13T14:21:42.000Z,Library,2,quad2_r3_c3,Lonely,3.1,en
+2024-09-13T14:47:33.000Z,Library,1,quad2_r4_c1,Despondent,8.5,en
+2024-09-13T15:08:57.000Z,Science Center,2,quad1_r1_c3,Festive,6.7,en
+2024-09-13T15:34:44.000Z,Innovation Center,3,quad1_r5_c3,Hopeful,4.5,en
+2024-09-13T17:12:40.000Z,Library,1,quad3_r4_c3,Worried,3.7,en
+2024-09-13T18:17:16.000Z,Library,1,quad4_r4_c2,Reflexivo,2.1,es
+2024-09-13T20:54:55.000Z,Library,1,quad4_r4_c2,Reflexivo,6.2,es
+2024-09-14T09:20:51.000Z,Innovation Center,1,quad3_r1_c3,Stressed,5.1,en
+2024-09-14T13:19:51.000Z,Innovation Center,1,quad3_r1_c5,Shocked,6.3,en
+2024-09-14T17:54:06.000Z,Innovation Center,3,quad1_r1_c5,Ecstatic,7.6,en
+2024-09-14T19:49:05.000Z,Innovation Center,1,quad1_r3_c2,Vivaz,6.3,es
+2024-09-15T16:10:26.000Z,Innovation Center,4,quad3_r1_c2,Panicked,2.6,en
+2024-09-15T17:09:59.000Z,Innovation Center,2,quad3_r4_c5,Annoyed,6.8,en
+2024-09-15T17:37:28.000Z,Science Center,1,quad1_r4_c1,Pleased,6.7,en
+2024-09-15T22:40:42.000Z,Science Center,1,quad1_r5_c5,Blissful,6.1,en
+2024-09-16T13:22:46.000Z,Science Center,2,quad1_r4_c3,Happy,9.0,en
+2024-09-16T15:44:27.000Z,Science Center,1,quad2_r1_c2,Glum,3.6,en
+2024-09-17T14:16:30.000Z,Library,1,quad3_r4_c4,Irritated,3.2,en
+2024-09-18T09:08:48.000Z,Innovation Center,2,quad2_r3_c5,Tired,6.5,en
+2024-09-18T17:06:10.000Z,Library,1,quad2_r3_c5,Tired,4.0,en
+2024-09-18T19:58:58.000Z,Library,2,quad2_r3_c4,Disheartened,8.4,en
+2024-09-19T15:13:57.000Z,Library,3,quad4_r3_c2,Chill,7.1,en
+2024-09-20T11:58:05.000Z,Innovation Center,1,quad1_r4_c4,Proud,2.1,en
+2024-09-20T14:12:47.000Z,Innovation Center,1,quad4_r2_c2,Secure,9.7,en
+2024-09-23T18:25:13.000Z,Library,1,quad1_r2_c2,Alegre,3.7,es
+2024-09-24T06:33:25.000Z,Library,1,quad3_r4_c5,Annoyed,1.5,en
+2024-09-24T18:38:55.000Z,Library,2,quad3_r5_c4,Uneasy,7.0,en
+2024-09-25T14:32:06.000Z,Library,2,quad1_r2_c4,Inspired,6.9,en
+2024-09-25T16:31:42.000Z,Innovation Center,1,quad1_r4_c2,Focused,2.6,en
+2024-09-26T15:04:00.000Z,Library,1,quad2_r3_c3,Solo,2.0,es
+2024-09-26T17:12:52.000Z,Library,3,quad4_r4_c4,Cómodo,5.8,es
+2024-09-26T17:57:01.000Z,Innovation Center,1,quad4_r3_c2,Chill,5.5,en
+2024-09-27T09:16:58.000Z,Science Center,1,quad1_r5_c3,Hopeful,1.6,en
+2024-09-27T12:41:03.000Z,Library,1,quad4_r3_c1,Relaxed,2.5,en
+2024-09-27T16:59:45.000Z,Science Center,1,quad2_r2_c5,Bored,2.8,en
+2024-09-27T17:34:10.000Z,Innovation Center,2,quad4_r3_c2,Chill,8.8,en
+2024-09-28T16:43:22.000Z,Innovation Center,2,quad2_r5_c3,Desolate,3.4,en
+2024-09-28T17:21:37.000Z,Innovation Center,3,quad1_r2_c2,Cheerful,6.0,en
+2024-09-29T13:06:13.000Z,Library,3,quad1_r1_c2,Animado,3.2,es
+2024-09-29T13:37:10.000Z,Science Center,1,quad3_r4_c5,Molesto,4.9,es
+2024-09-29T16:53:58.000Z,Innovation Center,1,quad1_r4_c3,Feliz,3.5,es
+2024-09-30T16:01:40.000Z,Library,1,quad4_r4_c3,Peaceful,3.7,en
+2024-09-30T16:51:08.000Z,Library,2,quad4_r5_c1,Sleepy,1.5,en
+2024-10-01T18:49:48.000Z,Library,1,quad4_r3_c4,Blessed,4.8,en
+2024-10-02T11:48:03.000Z,Innovation Center,2,quad3_r5_c5,Fastidiado,2.0,es
+2024-10-02T13:15:35.000Z,Innovation Center,1,quad3_r5_c2,Troubled,2.3,en
+2024-10-02T17:28:48.000Z,Library,2,quad3_r4_c2,Aprensivo,1.1,es
+2024-10-03T15:19:06.000Z,Innovation Center,1,quad4_r2_c5,Touched,3.9,en
+2024-10-03T17:05:30.000Z,Library,2,quad1_r2_c2,Cheerful,6.1,en
+2024-10-03T17:10:42.000Z,Innovation Center,1,quad1_r4_c2,Focused,4.1,en
+2024-10-03T17:15:51.000Z,Library,2,quad3_r3_c3,Enojado,6.6,es
+2024-10-03T18:58:08.000Z,Innovation Center,1,quad2_r3_c4,Desalentado,2.6,es
+2024-10-04T14:12:28.000Z,Science Center,1,quad3_r1_c1,Enraged,6.7,en
+2024-10-05T11:35:45.000Z,Science Center,1,quad1_r4_c3,Happy,4.1,en
+2024-10-05T14:28:28.000Z,Innovation Center,2,quad3_r4_c3,Worried,7.0,en
+2024-10-05T20:23:35.000Z,Science Center,3,quad2_r1_c2,Apagado,1.4,es
+2024-10-07T10:10:16.000Z,Library,2,quad1_r1_c2,Upbeat,2.8,en
+2024-10-07T10:29:02.000Z,Science Center,1,quad4_r4_c2,Thoughtful,1.1,en
+2024-10-07T13:11:01.000Z,Library,1,quad3_r1_c5,Shocked,2.7,en
+2024-10-07T14:39:01.000Z,Library,1,quad3_r2_c4,Tenso,6.2,es
+2024-10-09T15:05:39.000Z,Library,1,quad2_r3_c3,Lonely,3.2,en
+2024-10-09T18:35:12.000Z,Library,1,quad4_r3_c1,Relaxed,3.7,en
+2024-10-10T18:25:16.000Z,Innovation Center,1,quad1_r4_c2,Concentrado,5.1,es
+2024-10-10T20:46:24.000Z,Library,3,quad1_r2_c3,Motivado,8.5,es
+2024-10-11T10:47:00.000Z,Innovation Center,2,quad4_r2_c2,Secure,6.7,en
+2024-10-11T15:30:10.000Z,Science Center,2,quad1_r2_c2,Cheerful,1.2,en
+2024-10-11T16:15:07.000Z,Library,2,quad3_r5_c4,Uneasy,8.7,en
+2024-10-12T10:14:23.000Z,Innovation Center,1,quad3_r2_c1,Livid,2.9,en
+2024-10-12T10:41:37.000Z,Innovation Center,1,quad2_r1_c3,Disappointed,2.4,en
+2024-10-12T11:16:39.000Z,Library,1,quad2_r2_c3,Discouraged,6.4,en
+2024-10-12T11:50:34.000Z,Innovation Center,1,quad3_r4_c2,Aprensivo,3.3,es
+2024-10-12T13:02:56.000Z,Innovation Center,1,quad4_r3_c4,Blessed,2.6,en
+2024-10-12T13:20:31.000Z,Science Center,1,quad3_r5_c3,Concerned,1.5,en
+2024-10-12T14:08:05.000Z,Science Center,2,quad3_r1_c4,Nervioso,2.3,es
+2024-10-12T14:44:28.000Z,Innovation Center,1,quad4_r2_c2,Secure,1.2,en
+2024-10-12T16:58:46.000Z,Science Center,2,quad1_r2_c3,Motivated,6.1,en
+2024-10-13T10:43:01.000Z,Innovation Center,1,quad1_r4_c5,Thrilled,3.4,en
+2024-10-13T12:33:33.000Z,Innovation Center,1,quad3_r5_c1,Repulsed,3.8,en
+2024-10-13T12:58:21.000Z,Innovation Center,2,quad2_r1_c1,Disgusted,4.3,en
+2024-10-13T16:04:51.000Z,Library,2,quad1_r3_c4,Optimistic,2.9,en
+2024-10-14T10:03:46.000Z,Innovation Center,4,quad4_r3_c5,Balanced,5.3,en
+2024-10-14T11:11:00.000Z,Library,1,quad2_r5_c4,Spent,2.3,en
+2024-10-14T13:00:55.000Z,Library,2,quad4_r1_c5,Fulfilled,1.6,en
+2024-10-14T13:09:33.000Z,Innovation Center,1,quad4_r5_c3,Tranquilo,2.9,es
+2024-10-14T17:29:15.000Z,Innovation Center,2,quad3_r3_c5,Restless,1.9,en
+2024-10-14T18:32:45.000Z,Science Center,1,quad4_r3_c1,Relajado,8.5,es
+2024-10-15T17:53:49.000Z,Innovation Center,2,quad3_r1_c1,Enraged,1.3,en
+2024-10-16T07:30:42.000Z,Science Center,1,quad1_r5_c5,Blissful,2.9,en
+2024-10-16T12:37:07.000Z,Library,2,quad1_r1_c3,Festive,2.2,en
+2024-10-16T15:32:38.000Z,Science Center,2,quad4_r5_c2,Complacent,2.5,en
+2024-10-16T16:35:17.000Z,Library,2,quad2_r4_c3,Sullen,4.1,en
+2024-10-17T11:06:22.000Z,Innovation Center,1,quad2_r2_c3,Desanimado,6.1,es
+2024-10-17T11:29:29.000Z,Library,1,quad1_r3_c5,Enthusiastic,6.2,en
+2024-10-17T11:37:10.000Z,Library,3,quad4_r2_c3,Satisfied,3.1,en
+2024-10-17T13:59:38.000Z,Library,1,quad3_r1_c3,Estresado,3.9,es
+2024-10-17T14:46:50.000Z,Science Center,3,quad3_r5_c3,Concerned,2.5,en
+2024-10-17T15:49:09.000Z,Innovation Center,1,quad2_r3_c1,Alienated,3.1,en
+2024-10-18T19:33:52.000Z,Science Center,1,quad2_r2_c4,Sad,8.1,en
+2024-10-18T23:07:36.000Z,Science Center,1,quad2_r5_c3,Desolate,3.8,en
+2024-10-19T15:53:11.000Z,Science Center,1,quad2_r1_c5,Apathetic,3.5,en
+2024-10-20T13:55:49.000Z,Innovation Center,2,quad1_r2_c2,Cheerful,2.8,en
+2024-10-20T14:26:13.000Z,Innovation Center,2,quad2_r5_c3,Desolate,2.8,en
+2024-10-20T18:18:46.000Z,Science Center,2,quad1_r4_c5,Thrilled,1.1,en
+2024-10-21T12:58:20.000Z,Library,3,quad1_r2_c4,Inspired,8.9,en
+2024-10-21T18:01:30.000Z,Innovation Center,2,quad3_r2_c3,Frustrated,3.3,en
+2024-10-22T09:26:07.000Z,Library,1,quad4_r2_c3,Satisfied,2.2,en
+2024-10-22T11:33:25.000Z,Library,1,quad4_r2_c3,Satisfied,6.1,en
+2024-10-23T10:41:19.000Z,Science Center,2,quad3_r2_c5,Stunned,2.6,en
+2024-10-23T15:36:05.000Z,Science Center,1,quad3_r1_c4,Jittery,1.8,en
+2024-10-23T17:38:12.000Z,Innovation Center,2,quad4_r4_c5,Carefree,4.3,en
+2024-10-25T10:13:13.000Z,Science Center,1,quad4_r5_c1,Somnoliento,1.9,es
+2024-10-25T11:54:00.000Z,Innovation Center,2,quad1_r4_c1,Complacido,5.2,es
+2024-10-25T12:30:28.000Z,Science Center,2,quad3_r2_c1,Livid,5.4,en
+2024-10-25T15:07:56.000Z,Science Center,1,quad4_r4_c4,Comfortable,4.0,en
+2024-10-25T17:09:33.000Z,Library,2,quad3_r1_c3,Stressed,4.6,en
+2024-10-25T18:45:02.000Z,Innovation Center,2,quad3_r3_c3,Angry,4.0,en
+2024-10-26T13:27:18.000Z,Science Center,1,quad4_r1_c3,Contento,5.7,es
+2024-10-26T13:39:40.000Z,Innovation Center,2,quad4_r3_c4,Blessed,3.2,en
+2024-10-27T13:43:24.000Z,Library,1,quad3_r2_c5,Stunned,7.1,en
+2024-10-28T15:32:02.000Z,Science Center,2,quad1_r1_c3,Festivo,3.8,es
+2024-10-28T17:16:41.000Z,Innovation Center,2,quad4_r2_c3,Satisfecho,1.9,es
+2024-10-29T09:48:10.000Z,Library,2,quad2_r4_c3,Sullen,3.7,en
+2024-10-29T11:44:10.000Z,Innovation Center,1,quad1_r4_c5,Emocionadísimo,6.0,es
+2024-10-29T12:00:56.000Z,Innovation Center,1,quad4_r4_c3,Peaceful,7.8,en
+2024-10-30T13:06:03.000Z,Science Center,2,quad3_r5_c1,Repulsed,5.6,en
+2024-10-30T16:39:05.000Z,Science Center,3,quad1_r5_c5,Dichoso,4.1,es
+2024-10-30T16:40:00.000Z,Innovation Center,1,quad3_r4_c1,Anxious,6.2,en
+2024-10-31T09:55:57.000Z,Innovation Center,3,quad3_r4_c4,Irritated,4.4,en
+2024-11-02T14:34:22.000Z,Innovation Center,2,quad4_r1_c1,At Ease,6.3,en
+2024-11-02T16:49:50.000Z,Library,3,quad4_r5_c5,Serene,4.1,en
+2024-11-03T12:19:00.000Z,Science Center,1,quad2_r4_c3,Sullen,3.0,en
+2024-11-03T17:02:36.000Z,Library,2,quad3_r2_c4,Tenso,1.7,es
+2024-11-03T19:46:40.000Z,Library,1,quad1_r5_c3,Hopeful,2.9,en
+2024-11-04T10:14:07.000Z,Library,4,quad2_r5_c5,Drained,6.8,en
+2024-11-05T07:50:28.000Z,Innovation Center,1,quad4_r4_c3,Peaceful,2.1,en
+2024-11-05T15:06:44.000Z,Science Center,3,quad1_r2_c3,Motivated,7.1,en
+2024-11-05T16:54:28.000Z,Science Center,1,quad1_r3_c4,Optimista,4.0,es
+2024-11-06T11:14:10.000Z,Science Center,3,quad2_r3_c3,Lonely,3.4,en
+2024-11-06T16:54:01.000Z,Library,2,quad4_r5_c1,Somnoliento,4.5,es
+2024-11-06T19:11:12.000Z,Library,3,quad3_r3_c4,Nervous,2.8,en
+2024-11-07T14:07:01.000Z,Innovation Center,1,quad1_r2_c3,Motivated,3.0,en
+2024-11-08T15:49:27.000Z,Science Center,1,quad1_r4_c2,Focused,2.1,en
+2024-11-08T17:31:40.000Z,Innovation Center,2,quad2_r2_c4,Sad,3.9,en
+2024-11-08T19:37:24.000Z,Library,1,quad3_r4_c2,Apprehensive,1.4,en
+2024-11-08T21:59:21.000Z,Innovation Center,1,quad1_r5_c4,Playful,2.5,en
+2024-11-09T13:19:58.000Z,Science Center,1,quad3_r3_c2,Frightened,4.9,en
+2024-11-09T15:09:58.000Z,Science Center,2,quad2_r3_c1,Alienated,2.7,en
+2024-11-09T19:49:09.000Z,Library,1,quad3_r2_c5,Stunned,2.0,en
+2024-11-10T15:33:08.000Z,Innovation Center,1,quad4_r5_c1,Sleepy,4.2,en
+2024-11-11T09:43:22.000Z,Library,1,quad3_r1_c4,Nervioso,1.8,es
+2024-11-11T18:50:30.000Z,Science Center,2,quad4_r3_c5,Balanced,6.5,en
+2024-11-12T12:40:05.000Z,Science Center,2,quad2_r2_c3,Desanimado,3.3,es
+2024-11-12T14:46:12.000Z,Innovation Center,1,quad3_r4_c5,Annoyed,4.2,en
+2024-11-12T18:09:55.000Z,Innovation Center,1,quad4_r3_c3,Restful,6.2,en
+2024-11-12T20:12:40.000Z,Science Center,1,quad1_r1_c2,Upbeat,5.0,en
+2024-11-13T13:08:48.000Z,Innovation Center,2,quad3_r4_c4,Irritated,4.1,en
+2024-11-13T14:02:45.000Z,Library,1,quad3_r3_c5,Restless,1.9,en
+2024-11-13T14:19:58.000Z,Library,1,quad3_r2_c5,Stunned,3.9,en
+2024-11-14T14:30:06.000Z,Science Center,3,quad4_r1_c4,Loving,7.5,en
+2024-11-14T19:16:44.000Z,Innovation Center,2,quad1_r3_c4,Optimistic,3.2,en
+2024-11-15T03:48:07.000Z,Library,2,quad4_r4_c5,Carefree,2.2,en
+2024-11-15T14:28:54.000Z,Innovation Center,1,quad1_r3_c1,Energizado,4.7,es
+2024-11-15T14:58:17.000Z,Science Center,2,quad1_r4_c2,Focused,8.6,en
+2024-11-15T18:20:59.000Z,Library,1,quad3_r1_c4,Jittery,1.5,en
+2024-11-15T18:40:47.000Z,Library,2,quad3_r2_c3,Frustrated,2.5,en
+2024-11-16T10:23:56.000Z,Science Center,1,quad3_r4_c3,Worried,4.8,en
+2024-11-16T11:24:19.000Z,Science Center,2,quad3_r2_c3,Frustrated,3.5,en
+2024-11-16T16:49:17.000Z,Library,3,quad4_r4_c3,Pacífico,3.8,es
+2024-11-16T20:13:57.000Z,Library,1,quad4_r1_c3,Content,8.0,en
+2024-11-17T12:18:08.000Z,Science Center,1,quad3_r4_c4,Irritado,4.8,es
+2024-11-17T15:18:29.000Z,Innovation Center,1,quad2_r2_c3,Discouraged,7.3,en
+2024-11-17T20:17:24.000Z,Science Center,2,quad3_r1_c4,Nervioso,4.4,es
+2024-11-18T15:12:33.000Z,Innovation Center,1,quad1_r2_c5,Elated,3.5,en
+2024-11-18T15:36:10.000Z,Library,2,quad1_r3_c4,Optimistic,7.0,en
+2024-11-19T13:39:58.000Z,Library,1,quad1_r1_c1,Surprised,1.9,en
+2024-11-20T16:18:07.000Z,Library,2,quad3_r2_c2,Furious,2.2,en
+2024-11-21T12:42:53.000Z,Innovation Center,2,quad3_r3_c1,Encolerizado,4.1,es
+2024-11-22T13:12:12.000Z,Library,1,quad1_r4_c5,Thrilled,7.2,en
+2024-11-22T15:07:10.000Z,Library,1,quad4_r3_c4,Blessed,0.8,en
+2024-11-23T12:12:02.000Z,Library,2,quad1_r3_c2,Lively,1.4,en
+2024-11-23T13:39:48.000Z,Science Center,1,quad2_r3_c3,Lonely,3.0,en
+2024-11-24T15:44:35.000Z,Science Center,1,quad4_r5_c2,Complacent,7.3,en
+2024-11-24T22:33:10.000Z,Library,3,quad1_r3_c3,Emocionado,1.2,es
+2024-11-25T16:02:53.000Z,Library,3,quad1_r2_c4,Inspired,3.9,en
+2024-11-25T16:42:44.000Z,Innovation Center,1,quad4_r3_c3,Restful,6.5,en
+2024-11-25T19:36:12.000Z,Library,1,quad3_r2_c4,Tense,4.8,en
+2024-11-25T19:49:35.000Z,Innovation Center,1,quad1_r1_c4,Exhilarated,4.3,en
+2024-11-26T19:35:28.000Z,Innovation Center,1,quad4_r3_c5,Balanced,2.5,en
+2024-11-27T10:21:19.000Z,Innovation Center,3,quad3_r2_c3,Frustrated,3.0,en
+2024-11-27T10:42:45.000Z,Science Center,1,quad4_r3_c4,Blessed,4.2,en
+2024-11-27T12:52:47.000Z,Science Center,2,quad1_r4_c5,Emocionadísimo,6.5,es
+2024-11-27T14:47:29.000Z,Library,1,quad2_r1_c4,Down,6.7,en
+2024-11-28T13:32:18.000Z,Innovation Center,1,quad2_r4_c3,Huraño,4.7,es
+2024-11-28T13:51:37.000Z,Library,2,quad1_r2_c2,Cheerful,2.4,en
+2024-11-28T15:10:47.000Z,Science Center,2,quad3_r1_c4,Jittery,3.1,en
+2024-11-30T14:59:49.000Z,Innovation Center,2,quad3_r1_c2,Panicked,7.5,en
+2024-11-30T15:47:13.000Z,Innovation Center,5,quad4_r2_c2,Seguro,3.9,es
+2024-12-01T11:17:45.000Z,Science Center,2,quad4_r3_c4,Bendecido,4.7,es
+2024-12-01T13:24:03.000Z,Science Center,2,quad3_r2_c3,Frustrado,6.7,es
+2024-12-01T13:36:41.000Z,Science Center,2,quad3_r5_c5,Fastidiado,6.3,es
+2024-12-01T13:58:10.000Z,Innovation Center,1,quad3_r2_c4,Tense,6.6,en
+2024-12-01T15:14:19.000Z,Innovation Center,4,quad3_r2_c4,Tense,6.0,en
+2024-12-02T11:12:36.000Z,Innovation Center,4,quad2_r3_c4,Disheartened,2.4,en
+2024-12-02T13:21:15.000Z,Science Center,1,quad3_r3_c5,Restless,7.7,en
+2024-12-02T14:39:57.000Z,Library,3,quad4_r1_c1,Tranquilo,3.6,es
+2024-12-04T14:09:07.000Z,Library,2,quad4_r1_c4,Loving,5.8,en
+2024-12-05T10:03:23.000Z,Innovation Center,1,quad4_r5_c1,Sleepy,7.9,en
+2024-12-05T15:31:18.000Z,Innovation Center,2,quad1_r5_c4,Playful,3.0,en
+2024-12-06T10:31:43.000Z,Science Center,2,quad3_r1_c3,Estresado,5.5,es
+2024-12-06T11:20:53.000Z,Science Center,1,quad2_r1_c5,Apathetic,4.6,en
+2024-12-06T13:11:44.000Z,Library,1,quad3_r3_c4,Nervous,1.9,en
+2024-12-07T20:05:58.000Z,Innovation Center,2,quad3_r2_c1,Livid,1.7,en
+2024-12-08T06:56:51.000Z,Library,2,quad4_r2_c4,Agradecido,2.3,es
+2024-12-08T15:34:13.000Z,Library,1,quad3_r5_c2,Troubled,2.6,en
+2024-12-09T11:56:38.000Z,Library,1,quad3_r2_c5,Stunned,7.5,en
+2024-12-09T14:53:38.000Z,Innovation Center,1,quad2_r3_c5,Tired,7.9,en
+2024-12-10T10:11:41.000Z,Library,1,quad3_r4_c2,Apprehensive,8.8,en
+2024-12-10T12:57:52.000Z,Innovation Center,1,quad1_r5_c4,Playful,1.7,en
+2024-12-10T14:55:01.000Z,Innovation Center,3,quad1_r1_c5,Ecstatic,4.0,en
+2024-12-11T11:31:09.000Z,Science Center,3,quad4_r1_c4,Loving,7.1,en
+2024-12-11T21:54:15.000Z,Innovation Center,1,quad3_r3_c2,Frightened,4.8,en
+2024-12-12T11:14:40.000Z,Innovation Center,2,quad1_r4_c2,Focused,6.7,en
+2024-12-12T11:49:27.000Z,Science Center,1,quad2_r5_c3,Desolate,1.9,en
+2024-12-12T13:47:31.000Z,Science Center,2,quad4_r5_c4,Acogedor,7.0,es
+2024-12-12T16:03:42.000Z,Science Center,1,quad3_r5_c3,Preocupado,2.9,es
+2024-12-13T14:42:38.000Z,Innovation Center,2,quad4_r2_c4,Grateful,2.5,en
+2024-12-13T15:33:44.000Z,Innovation Center,1,quad4_r4_c3,Peaceful,7.1,en
+2024-12-13T16:10:13.000Z,Library,1,quad4_r2_c2,Seguro,3.6,es
+2024-12-13T16:46:55.000Z,Science Center,1,quad4_r2_c3,Satisfied,6.7,en
+2024-12-14T15:01:16.000Z,Innovation Center,1,quad2_r3_c1,Alienated,2.1,en
+2024-12-14T17:22:49.000Z,Science Center,1,quad1_r3_c3,Excited,1.8,en
+2024-12-15T11:39:09.000Z,Library,2,quad2_r4_c3,Sullen,4.3,en
+2024-12-15T13:34:54.000Z,Library,2,quad4_r4_c3,Peaceful,4.7,en
+2024-12-15T15:34:39.000Z,Innovation Center,2,quad4_r1_c5,Fulfilled,1.9,en
+2024-12-16T10:48:19.000Z,Library,1,quad1_r2_c4,Inspired,2.7,en
+2024-12-16T12:31:12.000Z,Innovation Center,2,quad3_r3_c2,Frightened,8.6,en
+2024-12-17T14:08:13.000Z,Innovation Center,1,quad3_r5_c2,Troubled,1.1,en
+2024-12-17T15:24:01.000Z,Library,2,quad4_r1_c2,Easygoing,1.6,en
+2024-12-17T15:30:08.000Z,Library,1,quad1_r1_c5,Ecstatic,2.2,en
+2024-12-17T19:27:49.000Z,Innovation Center,1,quad3_r2_c3,Frustrated,4.4,en
+2024-12-18T13:35:12.000Z,Science Center,1,quad3_r2_c2,Furious,4.4,en
+2024-12-18T15:34:36.000Z,Science Center,4,quad3_r1_c4,Nervioso,2.5,es
+2024-12-18T23:59:59.000Z,Library,1,quad1_r3_c1,Energized,1.4,en
+2024-12-19T14:45:24.000Z,Science Center,2,quad1_r4_c5,Emocionadísimo,5.2,es
+2024-12-19T16:44:26.000Z,Science Center,1,quad4_r5_c2,Complaciente,3.5,es
+2025-01-18T13:30:49.000Z,Innovation Center,1,quad4_r3_c4,Bendecido,3.4,es
+2025-01-18T13:40:57.000Z,Innovation Center,3,quad1_r4_c3,Happy,4.2,en
+2025-01-18T15:57:03.000Z,Innovation Center,1,quad4_r1_c4,Loving,7.0,en
+2025-01-18T18:44:03.000Z,Innovation Center,2,quad1_r1_c2,Upbeat,7.2,en
+2025-01-19T12:13:13.000Z,Innovation Center,2,quad1_r3_c4,Optimistic,3.7,en
+2025-01-19T13:51:03.000Z,Science Center,1,quad3_r5_c5,Peeved,5.5,en
+2025-01-19T14:09:38.000Z,Innovation Center,2,quad2_r5_c2,Desahuciado,4.2,es
+2025-01-19T15:07:03.000Z,Library,1,quad3_r2_c2,Furious,0.9,en
+2025-01-19T17:48:23.000Z,Innovation Center,1,quad4_r3_c3,Restful,4.4,en
+2025-01-20T15:30:55.000Z,Science Center,2,quad2_r2_c4,Triste,5.8,es
+2025-01-21T16:03:19.000Z,Library,3,quad1_r4_c2,Focused,6.1,en
+2025-01-23T08:39:50.000Z,Library,2,quad1_r1_c1,Sorprendido,4.0,es
+2025-01-23T12:47:35.000Z,Library,1,quad2_r4_c1,Despondent,5.0,en
+2025-01-24T14:36:28.000Z,Innovation Center,1,quad1_r1_c2,Upbeat,5.7,en
+2025-01-24T15:03:41.000Z,Innovation Center,1,quad3_r1_c2,Con pánico,7.3,es
+2025-01-24T15:24:10.000Z,Science Center,1,quad1_r2_c4,Inspired,8.0,en
+2025-01-24T19:23:53.000Z,Library,2,quad2_r2_c1,Pesimista,6.5,es
+2025-01-25T11:30:04.000Z,Science Center,1,quad1_r3_c2,Lively,7.2,en
+2025-01-25T17:16:24.000Z,Library,1,quad1_r1_c4,Exhilarated,1.3,en
+2025-01-26T09:57:48.000Z,Library,2,quad3_r4_c1,Anxious,2.2,en
+2025-01-26T12:46:10.000Z,Innovation Center,1,quad4_r1_c2,Easygoing,4.7,en
+2025-01-26T16:55:56.000Z,Innovation Center,1,quad1_r1_c5,Ecstatic,9.3,en
+2025-01-27T16:14:58.000Z,Innovation Center,1,quad1_r2_c3,Motivated,0.8,en
+2025-01-29T13:16:21.000Z,Innovation Center,3,quad2_r4_c2,Deprimido,5.9,es
+2025-01-29T13:23:43.000Z,Science Center,2,quad3_r1_c3,Estresado,2.7,es
+2025-01-30T13:51:59.000Z,Innovation Center,2,quad3_r3_c3,Angry,2.5,en
+2025-01-30T13:58:39.000Z,Library,1,quad4_r5_c2,Complacent,7.8,en
+2025-01-30T17:18:56.000Z,Science Center,1,quad3_r2_c3,Frustrated,5.2,en
+2025-01-31T11:06:49.000Z,Science Center,1,quad1_r5_c5,Blissful,2.0,en
+2025-01-31T13:22:15.000Z,Science Center,1,quad4_r2_c1,Calm,2.0,en
+2025-01-31T14:06:35.000Z,Science Center,1,quad1_r4_c2,Focused,2.2,en
+2025-01-31T16:20:07.000Z,Library,2,quad1_r2_c2,Alegre,6.8,es
+2025-02-01T14:06:37.000Z,Innovation Center,2,quad1_r4_c4,Proud,7.9,en
+2025-02-02T12:22:49.000Z,Library,1,quad1_r4_c5,Emocionadísimo,5.6,es
+2025-02-02T13:11:41.000Z,Innovation Center,2,quad3_r2_c4,Tense,8.8,en
+2025-02-02T13:16:27.000Z,Science Center,1,quad3_r2_c2,Furioso,1.9,es
+2025-02-03T12:59:28.000Z,Innovation Center,1,quad1_r4_c4,Proud,2.9,en
+2025-02-03T14:01:45.000Z,Innovation Center,2,quad4_r3_c2,Chill,4.4,en
+2025-02-03T14:47:50.000Z,Library,1,quad4_r4_c3,Peaceful,4.1,en
+2025-02-04T20:12:18.000Z,Science Center,1,quad1_r1_c4,Exhilarated,3.8,en
+2025-02-05T10:47:34.000Z,Innovation Center,1,quad3_r1_c5,Shocked,2.9,en
+2025-02-05T12:16:14.000Z,Library,1,quad2_r3_c1,Alienated,3.4,en
+2025-02-05T13:50:33.000Z,Library,2,quad4_r3_c1,Relaxed,8.7,en
+2025-02-06T08:59:38.000Z,Innovation Center,2,quad1_r2_c5,Elated,2.9,en
+2025-02-06T10:44:35.000Z,Science Center,2,quad2_r1_c2,Glum,6.6,en
+2025-02-06T12:37:42.000Z,Innovation Center,2,quad1_r4_c4,Orgulloso,5.9,es
+2025-02-06T13:09:14.000Z,Library,1,quad3_r4_c2,Apprehensive,4.8,en
+2025-02-06T18:40:11.000Z,Science Center,2,quad4_r3_c2,Chill,5.2,en
+2025-02-07T09:41:12.000Z,Innovation Center,4,quad4_r3_c2,Chill,5.9,en
+2025-02-08T13:32:16.000Z,Library,1,quad4_r2_c2,Seguro,1.8,es
+2025-02-08T19:57:31.000Z,Innovation Center,2,quad3_r1_c3,Estresado,2.6,es
+2025-02-09T11:42:27.000Z,Library,3,quad2_r3_c1,Alienated,8.2,en
+2025-02-09T13:32:57.000Z,Innovation Center,4,quad4_r3_c2,Chill,4.5,en
+2025-02-09T17:24:22.000Z,Innovation Center,1,quad2_r2_c5,Bored,5.3,en
+2025-02-09T17:38:21.000Z,Science Center,1,quad4_r3_c1,Relaxed,4.1,en
+2025-02-09T20:34:07.000Z,Science Center,2,quad3_r1_c4,Jittery,7.3,en
+2025-02-09T20:34:08.000Z,Science Center,3,quad2_r3_c4,Disheartened,5.2,en
+2025-02-09T22:54:34.000Z,Innovation Center,1,quad2_r2_c3,Discouraged,3.5,en
+2025-02-10T12:12:21.000Z,Science Center,1,quad1_r4_c4,Proud,6.0,en
+2025-02-10T12:22:19.000Z,Library,4,quad2_r1_c2,Apagado,4.4,es
+2025-02-10T13:14:56.000Z,Science Center,1,quad3_r1_c2,Panicked,1.0,en
+2025-02-10T13:15:05.000Z,Library,2,quad1_r3_c4,Optimista,1.7,es
+2025-02-10T13:57:40.000Z,Library,3,quad4_r2_c3,Satisfied,3.6,en
+2025-02-10T20:41:56.000Z,Science Center,2,quad1_r1_c2,Upbeat,6.2,en
+2025-02-11T13:26:22.000Z,Science Center,2,quad4_r3_c3,Restful,1.7,en
+2025-02-11T14:42:25.000Z,Science Center,3,quad2_r2_c4,Sad,4.9,en
+2025-02-11T14:47:04.000Z,Library,1,quad3_r5_c2,Troubled,2.0,en
+2025-02-12T13:47:07.000Z,Innovation Center,2,quad1_r2_c2,Alegre,3.3,es
+2025-02-12T15:48:07.000Z,Innovation Center,2,quad2_r2_c2,Melancólico,3.2,es
+2025-02-12T15:55:24.000Z,Library,2,quad4_r5_c3,Tranquil,2.0,en
+2025-02-12T17:05:01.000Z,Library,2,quad1_r4_c4,Proud,1.4,en
+2025-02-12T18:53:38.000Z,Science Center,3,quad1_r2_c5,Elated,4.9,en
+2025-02-13T11:13:22.000Z,Library,2,quad3_r4_c4,Irritated,5.7,en
+2025-02-13T12:57:24.000Z,Library,1,quad1_r3_c2,Lively,3.3,en
+2025-02-14T10:28:47.000Z,Innovation Center,4,quad2_r2_c2,Melancólico,5.1,es
+2025-02-14T14:21:21.000Z,Innovation Center,1,quad2_r1_c2,Glum,1.6,en
+2025-02-14T15:25:54.000Z,Innovation Center,2,quad4_r3_c3,Restful,4.2,en
+2025-02-14T20:40:00.000Z,Library,2,quad1_r2_c3,Motivated,5.2,en
+2025-02-15T13:23:42.000Z,Innovation Center,4,quad4_r4_c1,Mellow,8.2,en
+2025-02-15T19:34:56.000Z,Innovation Center,3,quad4_r5_c2,Complacent,3.9,en
+2025-02-15T19:40:49.000Z,Innovation Center,1,quad3_r3_c5,Restless,7.6,en
+2025-02-16T07:43:52.000Z,Science Center,2,quad2_r2_c2,Morose,4.9,en
+2025-02-17T05:53:03.000Z,Innovation Center,1,quad2_r3_c2,Miserable,2.2,es
+2025-02-17T09:09:48.000Z,Library,1,quad4_r5_c5,Sereno,4.3,es
+2025-02-17T15:17:11.000Z,Innovation Center,2,quad2_r2_c1,Pessimistic,4.7,en
+2025-02-18T13:20:19.000Z,Innovation Center,1,quad3_r1_c4,Nervioso,1.3,es
+2025-02-18T20:54:25.000Z,Library,1,quad1_r3_c4,Optimistic,3.8,en
+2025-02-19T15:09:00.000Z,Science Center,2,quad4_r4_c1,Sereno,7.3,es
+2025-02-20T13:53:57.000Z,Science Center,1,quad2_r5_c2,Hopeless,8.1,en
+2025-02-20T16:31:57.000Z,Innovation Center,1,quad3_r3_c3,Angry,2.5,en
+2025-02-21T07:20:51.000Z,Innovation Center,2,quad3_r2_c5,Stunned,1.5,en
+2025-02-21T14:08:40.000Z,Innovation Center,3,quad1_r4_c4,Proud,1.8,en
+2025-02-21T19:17:24.000Z,Innovation Center,1,quad4_r3_c3,Descansado,2.7,es
+2025-02-22T10:50:23.000Z,Science Center,2,quad4_r2_c1,Calm,1.1,en
+2025-02-22T12:46:01.000Z,Innovation Center,1,quad3_r2_c4,Tense,6.2,en
+2025-02-22T18:36:49.000Z,Library,1,quad1_r1_c2,Animado,4.4,es
+2025-02-23T10:04:35.000Z,Library,2,quad4_r2_c4,Grateful,4.9,en
+2025-02-24T12:10:34.000Z,Science Center,3,quad4_r4_c4,Comfortable,1.8,en
+2025-02-24T13:29:38.000Z,Library,2,quad1_r3_c1,Energized,3.0,en
+2025-02-24T13:37:03.000Z,Science Center,1,quad1_r3_c3,Excited,3.7,en
+2025-02-25T15:59:55.000Z,Innovation Center,3,quad1_r4_c5,Thrilled,3.7,en
+2025-02-26T18:15:24.000Z,Science Center,2,quad2_r4_c5,Fatigued,4.9,en
+2025-02-27T14:27:47.000Z,Science Center,1,quad1_r3_c3,Excited,4.2,en
+2025-02-27T19:02:13.000Z,Science Center,1,quad1_r3_c1,Energized,3.8,en
+2025-02-28T15:02:52.000Z,Innovation Center,3,quad4_r1_c3,Contento,5.8,es
+2025-02-28T15:58:08.000Z,Library,3,quad1_r5_c2,Joyful,5.9,en
+2025-02-28T18:22:17.000Z,Innovation Center,3,quad3_r3_c3,Angry,4.3,en
+2025-03-01T18:57:14.000Z,Science Center,1,quad2_r5_c3,Desolate,3.9,en
+2025-03-02T13:11:29.000Z,Innovation Center,1,quad2_r2_c2,Melancólico,2.7,es
+2025-03-03T11:00:55.000Z,Library,1,quad1_r1_c2,Upbeat,5.6,en
+2025-03-03T11:27:59.000Z,Science Center,2,quad3_r5_c3,Preocupado,4.0,es
+2025-03-03T12:39:45.000Z,Science Center,1,quad2_r3_c1,Alienated,2.5,en
+2025-03-03T13:05:41.000Z,Science Center,2,quad1_r5_c1,Agradable,4.6,es
+2025-03-03T16:23:30.000Z,Innovation Center,1,quad1_r2_c1,Hyper,5.9,en
+2025-03-05T12:57:47.000Z,Library,2,quad2_r5_c5,Drained,3.8,en
+2025-03-05T15:06:16.000Z,Science Center,3,quad2_r1_c3,Decepcionado,1.6,es
+2025-03-07T12:46:06.000Z,Innovation Center,1,quad2_r4_c2,Depressed,2.3,en
+2025-03-08T16:48:57.000Z,Science Center,2,quad4_r1_c2,Relajado,6.0,es
+2025-03-08T18:05:48.000Z,Science Center,2,quad4_r2_c5,Touched,4.7,en
+2025-03-09T10:25:30.000Z,Science Center,1,quad4_r5_c4,Cozy,6.0,en
+2025-03-09T12:11:33.000Z,Library,1,quad3_r4_c4,Irritado,5.0,es
+2025-03-09T13:24:47.000Z,Innovation Center,1,quad2_r2_c4,Sad,4.3,en
+2025-03-09T14:30:12.000Z,Science Center,1,quad3_r5_c1,Repulsed,1.6,en
+2025-03-09T14:43:32.000Z,Library,2,quad3_r2_c4,Tense,2.2,en
+2025-03-09T14:44:56.000Z,Library,1,quad3_r2_c5,Stunned,5.3,en
+2025-03-09T15:36:00.000Z,Library,3,quad1_r4_c2,Focused,4.0,en
+2025-03-09T19:04:59.000Z,Library,2,quad3_r5_c5,Fastidiado,4.6,es
+2025-03-10T03:15:39.000Z,Innovation Center,2,quad3_r2_c3,Frustrated,2.3,en
+2025-03-10T12:08:53.000Z,Innovation Center,1,quad4_r5_c4,Acogedor,7.4,es
+2025-03-10T12:14:06.000Z,Library,2,quad4_r2_c2,Seguro,1.7,es
+2025-03-10T12:34:42.000Z,Science Center,1,quad4_r3_c4,Blessed,0.8,en
+2025-03-10T13:58:39.000Z,Science Center,1,quad2_r2_c2,Morose,4.1,en
+2025-03-10T14:13:15.000Z,Science Center,1,quad1_r3_c2,Vivaz,7.2,es
+2025-03-10T14:18:17.000Z,Library,1,quad4_r1_c3,Content,5.2,en
+2025-03-11T10:09:16.000Z,Science Center,2,quad1_r1_c3,Festive,1.9,en
+2025-03-11T14:04:53.000Z,Science Center,2,quad3_r1_c4,Jittery,3.7,en
+2025-03-11T14:50:53.000Z,Innovation Center,1,quad1_r4_c1,Pleased,2.1,en
+2025-03-11T15:02:43.000Z,Innovation Center,1,quad3_r4_c2,Apprehensive,3.9,en
+2025-03-11T15:15:53.000Z,Innovation Center,1,quad1_r3_c2,Lively,6.8,en
+2025-03-11T19:11:13.000Z,Innovation Center,3,quad4_r2_c4,Grateful,5.0,en
+2025-03-11T20:57:31.000Z,Library,2,quad4_r1_c5,Fulfilled,4.2,en
+2025-03-12T10:44:33.000Z,Innovation Center,1,quad4_r2_c3,Satisfied,6.8,en
+2025-03-12T11:48:43.000Z,Library,2,quad4_r2_c3,Satisfied,2.4,en
+2025-03-12T13:31:52.000Z,Library,1,quad1_r5_c4,Playful,3.3,en
+2025-03-12T14:47:42.000Z,Innovation Center,2,quad1_r2_c4,Inspirado,6.6,es
+2025-03-12T15:59:51.000Z,Innovation Center,1,quad4_r2_c2,Secure,5.2,en
+2025-03-12T16:27:03.000Z,Innovation Center,3,quad3_r2_c1,Livid,1.8,en
+2025-03-12T17:09:46.000Z,Innovation Center,2,quad1_r1_c4,Exaltado,2.8,es
+2025-03-12T17:34:35.000Z,Library,3,quad1_r1_c5,Ecstatic,5.3,en
+2025-03-13T08:36:56.000Z,Innovation Center,2,quad2_r5_c2,Hopeless,5.7,en
+2025-03-13T11:45:35.000Z,Science Center,2,quad3_r1_c1,Enfurecido,3.9,es
+2025-03-13T12:22:30.000Z,Science Center,1,quad3_r4_c3,Worried,6.5,en
+2025-03-13T15:52:13.000Z,Library,1,quad4_r5_c3,Tranquil,2.5,en
+2025-03-13T16:02:09.000Z,Innovation Center,1,quad1_r4_c5,Emocionadísimo,3.4,es
+2025-03-13T19:59:17.000Z,Science Center,2,quad2_r3_c2,Miserable,7.3,en
+2025-03-13T20:18:41.000Z,Innovation Center,1,quad1_r4_c4,Orgulloso,4.2,es
+2025-03-14T02:24:22.000Z,Library,1,quad2_r1_c5,Apathetic,2.6,en
+2025-03-14T03:18:29.000Z,Science Center,1,quad3_r2_c1,Lívido,5.7,es
+2025-03-14T11:40:43.000Z,Innovation Center,1,quad4_r2_c5,Touched,3.5,en
+2025-03-14T16:26:16.000Z,Science Center,1,quad3_r4_c1,Anxious,3.4,en
+2025-03-14T17:44:58.000Z,Science Center,1,quad2_r5_c3,Desolate,1.9,en
+2025-03-15T09:54:13.000Z,Innovation Center,2,quad1_r3_c4,Optimistic,4.6,en
+2025-03-15T12:24:40.000Z,Library,1,quad4_r1_c1,At Ease,2.3,en
+2025-03-15T16:06:28.000Z,Innovation Center,3,quad1_r2_c4,Inspired,5.0,en
+2025-03-16T11:01:18.000Z,Science Center,2,quad3_r3_c3,Angry,4.1,en
+2025-03-16T11:44:33.000Z,Library,2,quad3_r4_c3,Worried,2.9,en
+2025-03-16T11:46:50.000Z,Innovation Center,2,quad4_r4_c3,Peaceful,1.3,en
+2025-03-16T13:06:51.000Z,Science Center,2,quad2_r5_c4,Spent,6.1,en
+2025-03-16T14:15:34.000Z,Library,2,quad1_r4_c5,Thrilled,2.0,en
+2025-03-17T13:02:21.000Z,Science Center,1,quad4_r4_c1,Mellow,6.4,en
+2025-03-18T11:36:15.000Z,Science Center,1,quad4_r4_c3,Pacífico,7.6,es
+2025-03-18T15:57:39.000Z,Innovation Center,1,quad3_r1_c1,Enraged,1.9,en
+2025-03-19T16:52:41.000Z,Library,1,quad3_r1_c5,Shocked,1.5,en
+2025-03-20T10:28:54.000Z,Innovation Center,1,quad4_r2_c3,Satisfied,3.3,en
+2025-03-20T13:53:50.000Z,Library,1,quad3_r1_c4,Jittery,3.6,en
+2025-03-20T16:20:24.000Z,Library,1,quad1_r3_c3,Emocionado,2.1,es
+2025-03-22T09:48:08.000Z,Innovation Center,2,quad1_r1_c3,Festive,1.5,en
+2025-03-22T13:41:39.000Z,Library,1,quad3_r4_c3,Preocupado,4.4,es
+2025-03-22T14:35:31.000Z,Innovation Center,1,quad4_r2_c3,Satisfied,1.8,en
+2025-03-22T18:14:35.000Z,Library,2,quad4_r1_c4,Loving,8.6,en
+2025-03-22T18:52:21.000Z,Library,2,quad1_r2_c2,Alegre,1.2,es
+2025-03-22T21:48:05.000Z,Library,2,quad1_r4_c4,Orgulloso,2.9,es
+2025-03-23T07:41:36.000Z,Innovation Center,2,quad4_r1_c4,Loving,3.9,en
+2025-03-23T10:34:04.000Z,Library,2,quad3_r3_c3,Enojado,2.6,es
+2025-03-23T13:06:45.000Z,Innovation Center,1,quad4_r3_c4,Bendecido,6.4,es
+2025-03-24T10:04:41.000Z,Library,1,quad4_r1_c4,Loving,3.1,en
+2025-03-24T12:30:18.000Z,Science Center,1,quad2_r5_c3,Desolate,2.4,en
+2025-03-24T17:05:03.000Z,Library,1,quad1_r2_c3,Motivated,4.0,en
+2025-03-25T09:26:23.000Z,Library,1,quad3_r5_c2,Troubled,3.9,en
+2025-03-25T15:54:48.000Z,Innovation Center,2,quad1_r1_c3,Festive,6.2,en
+2025-03-26T11:32:44.000Z,Library,1,quad2_r1_c4,Down,2.6,en
+2025-03-26T13:10:25.000Z,Library,2,quad2_r4_c5,Fatigued,3.0,en
+2025-03-26T13:13:51.000Z,Science Center,1,quad4_r3_c1,Relaxed,5.7,en
+2025-03-27T09:48:01.000Z,Innovation Center,1,quad3_r1_c3,Stressed,1.7,en
+2025-03-27T12:26:41.000Z,Innovation Center,3,quad4_r3_c4,Blessed,2.3,en
+2025-03-27T12:33:07.000Z,Science Center,4,quad1_r3_c4,Optimistic,2.3,en
+2025-03-27T13:20:20.000Z,Science Center,1,quad2_r1_c4,Decaído,7.5,es
+2025-03-28T10:45:36.000Z,Science Center,1,quad1_r1_c5,Extasiado,3.2,es
+2025-03-28T14:11:20.000Z,Science Center,2,quad2_r4_c2,Depressed,2.8,en
+2025-03-28T18:19:33.000Z,Innovation Center,1,quad3_r4_c2,Apprehensive,5.2,en
+2025-03-29T09:33:50.000Z,Science Center,2,quad4_r2_c3,Satisfecho,2.8,es
+2025-03-29T13:15:32.000Z,Innovation Center,1,quad3_r4_c2,Aprensivo,1.6,es
+2025-03-29T16:21:33.000Z,Innovation Center,3,quad4_r4_c4,Cómodo,9.7,es
+2025-03-29T18:00:35.000Z,Innovation Center,1,quad4_r5_c3,Tranquil,5.8,en
+2025-03-30T10:55:42.000Z,Library,1,quad4_r5_c4,Cozy,8.4,en
+2025-03-30T12:51:33.000Z,Science Center,2,quad1_r3_c3,Excited,6.5,en
+2025-03-30T16:31:58.000Z,Innovation Center,1,quad4_r2_c1,Calm,1.5,en
+2025-03-30T20:55:47.000Z,Science Center,1,quad3_r2_c1,Livid,4.3,en
+2025-03-31T10:02:43.000Z,Innovation Center,1,quad4_r3_c1,Relaxed,9.7,en
+2025-03-31T15:51:54.000Z,Library,3,quad4_r2_c5,Touched,4.6,en
+2025-03-31T17:32:12.000Z,Library,1,quad4_r1_c5,Fulfilled,2.5,en
+2025-04-01T12:11:13.000Z,Innovation Center,1,quad2_r2_c1,Pessimistic,1.7,en
+2025-04-01T21:24:17.000Z,Library,3,quad3_r3_c2,Frightened,2.1,en
+2025-04-02T13:41:25.000Z,Innovation Center,1,quad3_r3_c4,Nervous,1.9,en
+2025-04-02T15:56:25.000Z,Library,2,quad2_r4_c4,Exhausted,3.4,en
+2025-04-03T17:52:12.000Z,Innovation Center,1,quad4_r4_c4,Comfortable,5.3,en
+2025-04-04T13:03:14.000Z,Innovation Center,1,quad2_r3_c4,Disheartened,4.6,en
+2025-04-04T16:48:02.000Z,Science Center,2,quad1_r2_c2,Cheerful,4.0,en
+2025-04-05T18:25:41.000Z,Innovation Center,2,quad4_r4_c3,Peaceful,7.8,en
+2025-04-06T12:30:32.000Z,Innovation Center,2,quad1_r1_c2,Upbeat,5.7,en
+2025-04-06T15:50:07.000Z,Library,2,quad4_r4_c2,Thoughtful,5.3,en
+2025-04-06T19:19:41.000Z,Library,1,quad4_r3_c3,Restful,8.1,en
+2025-04-07T14:48:10.000Z,Innovation Center,1,quad3_r1_c5,Shocked,1.6,en
+2025-04-07T15:03:51.000Z,Innovation Center,1,quad2_r1_c3,Disappointed,1.5,en
+2025-04-08T13:32:57.000Z,Science Center,2,quad1_r3_c2,Lively,9.2,en
+2025-04-08T14:01:58.000Z,Science Center,1,quad4_r5_c4,Cozy,5.1,en
+2025-04-08T15:43:24.000Z,Science Center,2,quad1_r2_c2,Alegre,8.8,es
+2025-04-10T02:17:46.000Z,Library,1,quad4_r5_c3,Tranquilo,5.1,es
+2025-04-10T12:21:42.000Z,Science Center,1,quad1_r1_c4,Exaltado,6.1,es
+2025-04-10T12:23:52.000Z,Innovation Center,2,quad4_r1_c3,Content,3.1,en
+2025-04-10T15:07:42.000Z,Innovation Center,1,quad1_r2_c5,Elated,4.1,en
+2025-04-10T16:51:11.000Z,Science Center,4,quad1_r3_c5,Enthusiastic,6.5,en
+2025-04-11T18:13:01.000Z,Library,1,quad3_r4_c2,Apprehensive,2.6,en
+2025-04-12T13:29:30.000Z,Innovation Center,1,quad2_r1_c1,Disgusted,3.3,en
+2025-04-12T15:25:38.000Z,Library,1,quad3_r5_c5,Peeved,1.6,en
+2025-04-13T15:51:05.000Z,Science Center,2,quad2_r3_c5,Tired,3.5,en
+2025-04-14T09:44:04.000Z,Library,1,quad3_r2_c5,Stunned,2.0,en
+2025-04-14T15:58:44.000Z,Library,2,quad4_r1_c1,At Ease,3.2,en
+2025-04-14T16:19:09.000Z,Library,2,quad2_r1_c5,Apathetic,9.1,en
+2025-04-16T12:17:21.000Z,Library,2,quad3_r4_c1,Anxious,6.6,en
+2025-04-16T16:58:01.000Z,Library,1,quad1_r3_c2,Vivaz,0.9,es
+2025-04-17T00:58:38.000Z,Innovation Center,2,quad4_r3_c5,Balanced,3.1,en
+2025-04-17T10:59:21.000Z,Library,1,quad4_r1_c1,At Ease,4.6,en
+2025-04-17T15:43:39.000Z,Innovation Center,1,quad3_r2_c3,Frustrado,7.4,es
+2025-04-18T06:23:39.000Z,Science Center,2,quad2_r5_c2,Hopeless,5.3,en
+2025-04-18T11:00:42.000Z,Library,1,quad4_r2_c3,Satisfied,9.3,en
+2025-04-18T14:06:39.000Z,Science Center,2,quad2_r4_c5,Fatigued,2.3,en
+2025-04-18T14:14:33.000Z,Science Center,1,quad2_r2_c2,Melancólico,2.0,es
+2025-04-19T06:48:51.000Z,Library,5,quad1_r1_c5,Ecstatic,5.3,en
+2025-04-19T16:06:23.000Z,Innovation Center,1,quad4_r3_c5,Balanced,8.6,en
+2025-04-19T16:24:38.000Z,Innovation Center,1,quad2_r4_c3,Sullen,2.7,en
+2025-04-19T17:15:02.000Z,Innovation Center,1,quad3_r3_c3,Angry,2.0,en
+2025-04-20T10:57:39.000Z,Science Center,2,quad2_r4_c2,Depressed,2.6,en
+2025-04-20T13:50:20.000Z,Innovation Center,1,quad2_r4_c3,Sullen,4.7,en
+2025-04-20T14:30:14.000Z,Science Center,1,quad1_r4_c3,Happy,5.4,en
+2025-04-20T14:51:33.000Z,Science Center,2,quad4_r2_c3,Satisfied,2.6,en
+2025-04-20T15:40:51.000Z,Library,2,quad1_r3_c1,Energized,1.7,en
+2025-04-20T17:15:55.000Z,Innovation Center,1,quad1_r1_c1,Surprised,2.7,en
+2025-04-20T20:24:41.000Z,Library,3,quad3_r2_c2,Furious,1.7,en
+2025-04-21T10:15:24.000Z,Library,1,quad2_r3_c3,Lonely,8.0,en
+2025-04-21T17:33:46.000Z,Science Center,2,quad3_r2_c5,Aturdido,6.3,es
+2025-04-21T19:35:14.000Z,Science Center,1,quad4_r3_c2,Chill,5.2,en
+2025-04-22T14:32:10.000Z,Innovation Center,4,quad4_r4_c2,Thoughtful,3.9,en
+2025-04-23T14:17:46.000Z,Library,1,quad2_r2_c4,Sad,4.8,en
+2025-04-24T16:38:35.000Z,Library,1,quad3_r1_c2,Panicked,1.3,en
+2025-04-25T09:50:48.000Z,Library,2,quad3_r1_c5,Shocked,9.4,en
+2025-04-25T12:22:37.000Z,Innovation Center,1,quad4_r2_c2,Secure,3.8,en
+2025-04-25T15:55:59.000Z,Innovation Center,2,quad3_r5_c4,Intranquilo,5.3,es
+2025-04-25T17:03:39.000Z,Library,1,quad1_r4_c2,Focused,3.3,en
+2025-04-27T15:39:29.000Z,Innovation Center,1,quad4_r4_c4,Comfortable,5.1,en
+2025-04-28T10:13:21.000Z,Library,2,quad3_r3_c2,Frightened,7.6,en
+2025-04-28T11:58:50.000Z,Library,1,quad4_r1_c1,At Ease,3.1,en
+2025-04-28T15:33:10.000Z,Library,2,quad2_r1_c3,Disappointed,6.4,en
+2025-04-29T09:22:00.000Z,Innovation Center,1,quad4_r4_c4,Comfortable,2.9,en
+2025-04-29T12:20:08.000Z,Innovation Center,2,quad1_r3_c3,Excited,4.2,en
+2025-04-29T13:18:19.000Z,Innovation Center,2,quad3_r4_c5,Annoyed,3.6,en
+2025-04-29T13:49:29.000Z,Library,1,quad3_r3_c4,Nervous,1.6,en
+2025-05-01T12:07:26.000Z,Innovation Center,1,quad4_r2_c2,Secure,2.8,en
+2025-05-01T19:59:30.000Z,Innovation Center,2,quad3_r1_c5,Impactado,3.0,es
+2025-05-02T12:56:30.000Z,Library,2,quad2_r1_c3,Disappointed,2.2,en
+2025-05-02T13:13:49.000Z,Science Center,1,quad3_r2_c5,Stunned,5.5,en
+2025-05-02T18:23:24.000Z,Innovation Center,1,quad3_r5_c1,Repulsed,4.3,en
+2025-05-03T13:35:33.000Z,Innovation Center,1,quad4_r5_c4,Cozy,4.2,en
+2025-05-03T17:48:13.000Z,Library,2,quad2_r3_c2,Miserable,2.3,en
+2025-05-04T11:26:40.000Z,Science Center,2,quad1_r1_c1,Surprised,1.9,en
+2025-05-04T14:40:21.000Z,Science Center,2,quad4_r2_c3,Satisfied,3.3,en
+2025-05-04T20:24:08.000Z,Science Center,1,quad4_r1_c1,Tranquilo,8.0,es
+2025-05-05T10:13:02.000Z,Science Center,1,quad1_r1_c4,Exhilarated,8.7,en
+2025-05-05T10:14:40.000Z,Innovation Center,1,quad3_r5_c3,Concerned,3.1,en
+2025-05-05T12:18:14.000Z,Library,2,quad3_r2_c3,Frustrated,4.7,en
+2025-05-05T16:03:21.000Z,Innovation Center,2,quad3_r3_c2,Frightened,4.4,en
+2025-05-05T17:53:23.000Z,Science Center,1,quad4_r3_c3,Descansado,2.1,es
+2025-05-06T11:56:25.000Z,Library,1,quad1_r4_c5,Thrilled,1.4,en
+2025-05-06T14:51:36.000Z,Library,1,quad4_r3_c4,Bendecido,2.8,es
+2025-05-07T03:24:02.000Z,Innovation Center,3,quad4_r3_c1,Relaxed,8.0,en
+2025-05-08T12:02:04.000Z,Innovation Center,1,quad4_r4_c2,Thoughtful,1.7,en
+2025-05-08T17:08:31.000Z,Library,1,quad3_r5_c5,Peeved,4.6,en
+2025-05-09T13:10:49.000Z,Innovation Center,1,quad3_r3_c5,Restless,1.6,en
+2025-05-09T16:12:55.000Z,Science Center,1,quad4_r3_c5,Balanced,1.8,en
+2025-05-10T16:50:13.000Z,Innovation Center,2,quad1_r4_c4,Orgulloso,4.7,es
+2025-05-11T12:30:56.000Z,Library,1,quad3_r4_c1,Anxious,4.3,en
+2025-05-11T15:22:29.000Z,Science Center,1,quad3_r5_c2,Troubled,6.2,en
+2025-05-11T15:47:12.000Z,Library,1,quad4_r3_c3,Restful,6.7,en
+2025-05-11T17:43:58.000Z,Science Center,1,quad2_r1_c4,Down,1.7,en
+2025-05-12T04:57:45.000Z,Innovation Center,1,quad4_r5_c3,Tranquil,2.8,en
+2025-05-12T12:40:50.000Z,Library,3,quad2_r5_c2,Hopeless,6.1,en
+2025-05-12T18:05:46.000Z,Innovation Center,1,quad3_r4_c4,Irritated,1.8,en
+2025-05-13T13:23:01.000Z,Science Center,2,quad4_r1_c5,Fulfilled,3.0,en
+2025-05-13T23:35:02.000Z,Science Center,1,quad3_r1_c1,Enraged,4.1,en
+2025-05-14T14:23:23.000Z,Innovation Center,1,quad3_r1_c5,Shocked,2.9,en
+2025-05-14T19:54:46.000Z,Innovation Center,4,quad4_r4_c5,Carefree,8.8,en
+2025-05-15T12:29:02.000Z,Science Center,1,quad3_r5_c5,Peeved,2.2,en
+2025-05-16T12:44:46.000Z,Library,1,quad1_r5_c1,Agradable,8.8,es
+2025-05-16T20:02:04.000Z,Science Center,1,quad3_r2_c2,Furioso,6.8,es
+2025-05-17T10:55:05.000Z,Science Center,2,quad4_r4_c2,Thoughtful,9.5,en
+2025-05-17T12:43:34.000Z,Science Center,1,quad3_r2_c1,Livid,2.6,en
+2025-05-17T13:18:16.000Z,Library,1,quad3_r3_c5,Restless,8.0,en
+2025-05-18T19:02:43.000Z,Library,1,quad4_r2_c2,Seguro,3.7,es
+2025-05-19T11:54:24.000Z,Science Center,1,quad3_r5_c3,Concerned,2.8,en
+2025-05-19T20:30:28.000Z,Innovation Center,1,quad4_r1_c2,Easygoing,1.3,en
+2025-05-20T10:54:34.000Z,Library,2,quad4_r3_c1,Relaxed,1.6,en
+2025-05-20T11:01:55.000Z,Science Center,1,quad3_r5_c3,Concerned,7.2,en
+2025-05-20T13:45:34.000Z,Innovation Center,3,quad2_r1_c5,Apathetic,0.9,en
+2025-05-20T19:03:32.000Z,Library,2,quad3_r1_c3,Stressed,3.6,en
+2025-05-21T16:54:35.000Z,Innovation Center,1,quad3_r5_c5,Peeved,3.0,en
+2025-05-22T17:20:47.000Z,Science Center,2,quad3_r1_c4,Jittery,1.9,en
+2025-06-09T10:29:23.000Z,Innovation Center,2,quad4_r5_c1,Sleepy,4.1,en
+2025-06-09T15:27:00.000Z,Innovation Center,3,quad2_r2_c4,Triste,4.8,es
+2025-06-09T18:00:46.000Z,Science Center,2,quad3_r1_c5,Shocked,7.6,en
+2025-06-10T16:48:18.000Z,Library,1,quad4_r2_c5,Touched,5.4,en
+2025-06-11T11:22:22.000Z,Science Center,2,quad4_r4_c2,Thoughtful,4.4,en
+2025-06-11T14:56:58.000Z,Science Center,3,quad2_r5_c1,Despairing,0.9,en
+2025-06-11T15:40:15.000Z,Science Center,1,quad1_r2_c5,Eufórico,5.2,es
+2025-06-12T14:27:14.000Z,Science Center,1,quad3_r5_c1,Repulsed,5.6,en
+2025-06-13T14:37:59.000Z,Innovation Center,1,quad1_r4_c2,Focused,3.9,en
+2025-06-13T16:40:25.000Z,Library,1,quad4_r2_c4,Grateful,2.1,en
+2025-06-14T13:39:00.000Z,Science Center,1,quad2_r5_c3,Desolate,4.1,en
+2025-06-15T17:22:17.000Z,Science Center,2,quad2_r3_c4,Disheartened,2.6,en
+2025-06-16T13:39:20.000Z,Innovation Center,1,quad2_r4_c4,Agotado,6.7,es
+2025-06-16T14:56:07.000Z,Science Center,3,quad3_r5_c3,Concerned,3.7,en
+2025-06-16T16:14:00.000Z,Science Center,3,quad4_r4_c2,Reflexivo,3.4,es
+2025-06-17T15:01:38.000Z,Library,3,quad4_r3_c4,Blessed,1.3,en
+2025-06-17T16:20:10.000Z,Library,3,quad2_r5_c1,Desesperado,7.2,es
+2025-06-19T11:20:39.000Z,Science Center,2,quad4_r2_c4,Grateful,2.5,en
+2025-06-19T14:43:29.000Z,Innovation Center,1,quad2_r2_c3,Discouraged,3.4,en
+2025-06-19T15:35:34.000Z,Science Center,2,quad1_r3_c4,Optimista,4.4,es
+2025-06-19T17:22:13.000Z,Innovation Center,1,quad4_r1_c3,Content,6.0,en
+2025-06-20T14:00:13.000Z,Library,3,quad4_r1_c3,Content,6.8,en
+2025-06-20T14:06:31.000Z,Library,1,quad4_r3_c3,Descansado,2.7,es
+2025-06-20T14:13:34.000Z,Science Center,1,quad2_r4_c3,Sullen,4.8,en
+2025-06-20T16:52:36.000Z,Science Center,2,quad4_r4_c2,Thoughtful,2.7,en
+2025-06-20T17:49:45.000Z,Library,2,quad4_r1_c4,Loving,4.0,en
+2025-06-22T13:18:02.000Z,Library,2,quad2_r4_c2,Depressed,1.9,en
+2025-06-23T13:18:18.000Z,Science Center,4,quad4_r3_c3,Restful,5.8,en
+2025-06-23T15:14:11.000Z,Library,1,quad1_r2_c4,Inspired,4.3,en
+2025-06-23T15:35:05.000Z,Innovation Center,1,quad3_r3_c4,Nervous,6.1,en
+2025-06-23T17:18:18.000Z,Library,4,quad4_r2_c2,Seguro,2.4,es
+2025-06-23T17:24:09.000Z,Science Center,1,quad1_r5_c4,Playful,4.6,en
+2025-06-23T19:02:29.000Z,Innovation Center,2,quad2_r2_c4,Sad,9.5,en
+2025-06-25T09:58:12.000Z,Library,2,quad3_r1_c2,Panicked,2.6,en
+2025-06-25T11:02:13.000Z,Library,1,quad4_r5_c1,Sleepy,7.1,en
+2025-06-25T12:40:20.000Z,Innovation Center,2,quad4_r4_c2,Thoughtful,3.8,en
+2025-06-25T22:12:58.000Z,Innovation Center,1,quad1_r3_c2,Vivaz,7.3,es
+2025-06-26T13:35:56.000Z,Library,1,quad1_r3_c1,Energized,3.9,en
+2025-06-26T15:19:45.000Z,Innovation Center,1,quad3_r4_c3,Worried,5.0,en
+2025-06-29T10:59:00.000Z,Science Center,2,quad4_r1_c5,Fulfilled,3.7,en
+2025-06-29T12:38:08.000Z,Innovation Center,1,quad1_r2_c5,Eufórico,3.3,es
+2025-06-30T14:20:24.000Z,Science Center,2,quad4_r5_c3,Tranquil,4.4,en
+2025-06-30T16:53:49.000Z,Library,2,quad2_r3_c2,Miserable,2.4,en
+2025-07-01T11:46:00.000Z,Library,1,quad3_r4_c3,Worried,5.5,en
+2025-07-01T19:32:26.000Z,Innovation Center,3,quad4_r2_c4,Grateful,5.2,en
+2025-07-01T22:15:53.000Z,Science Center,2,quad4_r5_c3,Tranquil,4.4,en
+2025-07-02T11:24:58.000Z,Library,2,quad3_r1_c1,Enraged,8.3,en
+2025-07-03T16:45:47.000Z,Innovation Center,1,quad1_r5_c3,Hopeful,5.0,en
+2025-07-04T05:53:15.000Z,Library,2,quad1_r3_c3,Excited,2.7,en
+2025-07-05T13:09:30.000Z,Science Center,2,quad4_r2_c3,Satisfied,8.2,en
+2025-07-05T14:01:31.000Z,Library,1,quad4_r4_c4,Cómodo,4.6,es
+2025-07-05T14:41:25.000Z,Innovation Center,1,quad4_r3_c3,Descansado,5.8,es
+2025-07-06T10:47:05.000Z,Science Center,2,quad4_r3_c4,Blessed,5.0,en
+2025-07-06T14:36:21.000Z,Library,2,quad1_r3_c4,Optimistic,3.3,en
+2025-07-06T14:46:40.000Z,Science Center,1,quad2_r5_c5,Drained,3.6,en
+2025-07-07T15:30:27.000Z,Science Center,1,quad2_r2_c4,Sad,6.3,en
+2025-07-07T15:54:14.000Z,Innovation Center,1,quad2_r4_c5,Fatigued,3.4,en
+2025-07-07T17:32:56.000Z,Library,1,quad1_r3_c3,Emocionado,7.3,es
+2025-07-08T13:50:18.000Z,Library,3,quad1_r3_c4,Optimistic,7.9,en
+2025-07-10T14:31:11.000Z,Library,2,quad2_r4_c1,Despondent,3.8,en
+2025-07-10T16:40:26.000Z,Innovation Center,1,quad1_r4_c1,Complacido,3.7,es
+2025-07-11T12:09:04.000Z,Science Center,1,quad3_r2_c3,Frustrated,3.8,en
+2025-07-11T13:50:17.000Z,Library,1,quad3_r1_c2,Panicked,6.5,en
+2025-07-11T14:06:18.000Z,Innovation Center,2,quad2_r3_c4,Disheartened,5.0,en
+2025-07-11T15:14:18.000Z,Innovation Center,3,quad1_r2_c2,Cheerful,3.1,en
+2025-07-12T07:02:07.000Z,Library,1,quad4_r3_c4,Blessed,1.9,en
+2025-07-12T10:39:34.000Z,Science Center,3,quad4_r2_c1,Calm,1.1,en
+2025-07-12T14:47:55.000Z,Innovation Center,2,quad2_r3_c3,Lonely,7.2,en
+2025-07-12T15:59:46.000Z,Innovation Center,1,quad1_r5_c2,Joyful,7.2,en
+2025-07-13T14:42:54.000Z,Science Center,1,quad2_r4_c3,Huraño,1.9,es
+2025-07-14T15:04:41.000Z,Science Center,4,quad1_r5_c2,Joyful,7.5,en
+2025-07-15T16:25:23.000Z,Science Center,1,quad2_r4_c5,Fatigued,4.3,en
+2025-07-15T16:59:15.000Z,Innovation Center,1,quad3_r1_c4,Jittery,7.4,en
+2025-07-17T10:54:19.000Z,Library,2,quad1_r5_c2,Joyful,7.0,en
+2025-07-17T14:43:09.000Z,Science Center,2,quad1_r2_c4,Inspired,6.4,en
+2025-07-17T16:15:56.000Z,Science Center,3,quad1_r5_c4,Juguetón,2.8,es
+2025-07-17T16:27:32.000Z,Library,3,quad1_r1_c3,Festive,2.9,en
+2025-07-17T16:48:49.000Z,Innovation Center,1,quad4_r3_c4,Blessed,6.0,en
+2025-07-17T17:29:06.000Z,Library,3,quad1_r1_c4,Exhilarated,2.8,en
+2025-07-18T10:02:05.000Z,Science Center,2,quad4_r2_c5,Touched,6.3,en
+2025-07-18T13:23:04.000Z,Innovation Center,1,quad3_r2_c2,Furious,9.2,en
+2025-07-18T13:55:39.000Z,Innovation Center,1,quad2_r4_c2,Depressed,1.8,en
+2025-07-18T20:12:10.000Z,Library,2,quad2_r3_c2,Miserable,5.7,en
+2025-07-19T13:20:52.000Z,Innovation Center,1,quad3_r4_c2,Apprehensive,5.7,en
+2025-07-20T13:20:29.000Z,Science Center,3,quad2_r2_c3,Discouraged,5.8,en
+2025-07-21T12:39:03.000Z,Library,2,quad4_r3_c4,Blessed,3.2,en
+2025-07-22T10:27:28.000Z,Innovation Center,2,quad1_r2_c5,Eufórico,3.0,es
+2025-07-22T17:44:43.000Z,Innovation Center,2,quad1_r4_c1,Pleased,8.8,en
+2025-07-23T11:41:46.000Z,Innovation Center,1,quad2_r3_c3,Lonely,5.4,en
+2025-07-23T13:47:49.000Z,Library,4,quad4_r1_c5,Fulfilled,3.7,en
+2025-07-23T17:29:50.000Z,Science Center,2,quad2_r4_c5,Fatigued,6.9,en
+2025-07-24T16:11:40.000Z,Science Center,1,quad1_r3_c4,Optimistic,6.6,en
+2025-07-24T23:27:39.000Z,Innovation Center,3,quad2_r1_c3,Disappointed,1.7,en
+2025-07-25T04:18:29.000Z,Library,2,quad3_r3_c5,Restless,4.5,en
+2025-07-25T14:04:55.000Z,Science Center,1,quad1_r3_c2,Vivaz,4.4,es
+2025-07-25T14:35:25.000Z,Library,4,quad2_r2_c4,Sad,4.8,en
+2025-07-25T17:09:38.000Z,Library,1,quad2_r4_c1,Despondent,1.7,en
+2025-07-26T15:45:34.000Z,Library,2,quad3_r4_c3,Worried,2.0,en
+2025-07-27T14:54:27.000Z,Innovation Center,3,quad3_r3_c5,Restless,4.8,en
+2025-07-27T15:01:48.000Z,Science Center,2,quad1_r3_c3,Excited,3.5,en
+2025-07-28T12:32:39.000Z,Innovation Center,1,quad4_r4_c1,Mellow,7.0,en
+2025-07-28T15:10:57.000Z,Innovation Center,1,quad3_r3_c5,Restless,2.0,en
+2025-07-28T16:19:34.000Z,Science Center,1,quad4_r1_c4,Loving,2.4,en
+2025-07-29T08:01:41.000Z,Innovation Center,1,quad2_r1_c2,Glum,4.6,en
+2025-07-29T09:04:21.000Z,Library,1,quad4_r1_c3,Content,4.5,en
+2025-07-29T10:09:01.000Z,Innovation Center,3,quad3_r5_c4,Intranquilo,2.5,es
+2025-07-29T10:17:56.000Z,Science Center,2,quad1_r2_c5,Eufórico,4.4,es
+2025-07-29T12:17:05.000Z,Library,1,quad1_r3_c4,Optimistic,2.2,en
+2025-07-29T13:13:59.000Z,Science Center,2,quad1_r1_c5,Ecstatic,6.2,en
+2025-07-29T14:57:38.000Z,Science Center,1,quad4_r3_c2,Chill,6.6,en
+2025-07-29T17:36:15.000Z,Library,2,quad3_r2_c2,Furioso,6.2,es
+2025-07-29T18:02:59.000Z,Innovation Center,2,quad4_r5_c2,Complacent,4.5,en
+2025-07-30T11:56:28.000Z,Innovation Center,1,quad2_r4_c2,Depressed,1.0,en
+2025-07-31T10:32:04.000Z,Science Center,1,quad3_r5_c5,Fastidiado,8.0,es
+2025-07-31T13:58:30.000Z,Innovation Center,1,quad3_r5_c3,Preocupado,1.9,es
+2025-07-31T15:02:00.000Z,Library,1,quad4_r1_c4,Cariñoso,5.2,es
+2025-07-31T19:13:34.000Z,Library,2,quad4_r5_c5,Sereno,2.5,es
+2025-07-31T23:59:59.000Z,Library,1,quad2_r3_c5,Cansado,3.8,es
+2025-08-01T13:48:27.000Z,Science Center,1,quad3_r3_c4,Nervioso,1.7,es
+2025-08-01T14:03:42.000Z,Innovation Center,3,quad2_r5_c5,Drained,5.4,en
+2025-08-01T19:06:56.000Z,Library,1,quad2_r3_c4,Disheartened,2.9,en
+2025-08-02T14:25:44.000Z,Science Center,2,quad3_r3_c1,Fuming,1.3,en
+2025-08-02T19:19:28.000Z,Science Center,1,quad2_r4_c5,Fatigued,4.1,en
+2025-08-03T11:30:43.000Z,Library,1,quad4_r5_c3,Tranquilo,4.1,es
+2025-08-03T14:53:52.000Z,Innovation Center,2,quad1_r2_c5,Elated,3.5,en
+2025-08-03T15:09:30.000Z,Science Center,1,quad2_r5_c3,Desolate,6.0,en
+2025-08-04T10:34:30.000Z,Library,3,quad3_r2_c3,Frustrado,5.6,es
+2025-08-04T12:41:03.000Z,Library,1,quad1_r1_c2,Upbeat,5.1,en
+2025-08-04T12:56:40.000Z,Library,1,quad1_r4_c3,Happy,4.7,en
+2025-08-04T17:48:32.000Z,Science Center,1,quad2_r5_c4,Spent,9.5,en
+2025-08-04T21:43:51.000Z,Library,4,quad2_r2_c4,Sad,3.5,en
+2025-08-05T11:52:44.000Z,Science Center,2,quad4_r4_c4,Comfortable,2.3,en
+2025-08-05T14:19:31.000Z,Library,1,quad1_r2_c4,Inspired,1.2,en
+2025-08-05T15:13:01.000Z,Science Center,1,quad4_r1_c3,Contento,3.7,es
+2025-08-05T15:16:51.000Z,Innovation Center,5,quad3_r4_c1,Anxious,5.4,en
+2025-08-06T11:15:38.000Z,Science Center,2,quad4_r1_c4,Loving,5.7,en
+2025-08-06T13:23:39.000Z,Library,2,quad1_r1_c5,Ecstatic,6.7,en
+2025-08-06T14:22:07.000Z,Innovation Center,2,quad3_r1_c1,Enraged,2.4,en
+2025-08-06T15:26:13.000Z,Library,3,quad1_r1_c2,Animado,5.3,es
+2025-08-07T12:06:18.000Z,Innovation Center,1,quad3_r2_c5,Stunned,2.2,en
+2025-08-07T17:02:13.000Z,Library,1,quad4_r5_c4,Cozy,2.8,en
+2025-08-07T20:50:20.000Z,Library,1,quad4_r5_c3,Tranquilo,4.5,es
+2025-08-23T14:41:53.000Z,Science Center,3,quad1_r3_c3,Excited,4.3,en
+2025-08-24T11:58:53.000Z,Innovation Center,3,quad4_r3_c2,Chill,3.8,en
+2025-08-24T12:45:39.000Z,Library,1,quad4_r4_c4,Comfortable,7.7,en
+2025-08-24T15:19:42.000Z,Innovation Center,1,quad4_r2_c2,Secure,6.6,en
+2025-08-24T15:59:32.000Z,Library,1,quad1_r2_c4,Inspired,8.9,en
+2025-08-24T16:36:16.000Z,Science Center,1,quad4_r5_c4,Acogedor,2.1,es
+2025-08-24T19:36:57.000Z,Library,2,quad4_r5_c3,Tranquil,8.9,en
+2025-08-25T14:56:10.000Z,Science Center,1,quad1_r5_c1,Pleasant,4.8,en
+2025-08-25T18:53:37.000Z,Library,1,quad3_r5_c3,Concerned,3.6,en
+2025-08-25T21:15:08.000Z,Library,1,quad3_r4_c5,Molesto,2.1,es
+2025-08-26T11:54:11.000Z,Innovation Center,1,quad3_r1_c1,Enraged,5.6,en
+2025-08-26T13:01:32.000Z,Science Center,1,quad2_r2_c4,Sad,1.4,en
+2025-08-26T17:22:48.000Z,Innovation Center,1,quad3_r4_c3,Preocupado,4.2,es
+2025-08-27T09:17:28.000Z,Library,3,quad2_r4_c2,Depressed,2.2,en
+2025-08-27T13:21:36.000Z,Library,1,quad3_r2_c1,Lívido,4.3,es
+2025-08-27T17:15:10.000Z,Science Center,3,quad2_r3_c4,Disheartened,3.0,en
+2025-08-27T19:48:12.000Z,Library,1,quad4_r4_c1,Sereno,8.5,es
+2025-08-29T12:25:02.000Z,Library,2,quad2_r5_c5,Drained,4.5,en
+2025-08-29T13:07:32.000Z,Science Center,3,quad1_r3_c1,Energized,6.7,en
+2025-08-29T18:17:04.000Z,Science Center,4,quad3_r2_c2,Furious,6.2,en
+2025-08-31T15:33:08.000Z,Library,1,quad1_r1_c3,Festive,3.7,en
+2025-09-02T13:01:06.000Z,Science Center,4,quad4_r2_c3,Satisfied,1.7,en
+2025-09-02T18:37:16.000Z,Science Center,2,quad3_r4_c4,Irritado,4.4,es
+2025-09-02T20:02:20.000Z,Science Center,1,quad1_r5_c5,Blissful,9.4,en
+2025-09-03T01:29:58.000Z,Library,1,quad1_r1_c5,Extasiado,5.5,es
+2025-09-03T06:31:34.000Z,Library,2,quad1_r5_c1,Pleasant,2.7,en
+2025-09-03T12:46:30.000Z,Science Center,2,quad4_r2_c2,Secure,5.8,en
+2025-09-04T14:08:15.000Z,Science Center,4,quad2_r1_c5,Apathetic,4.9,en
+2025-09-06T14:06:24.000Z,Innovation Center,2,quad2_r2_c5,Bored,5.5,en
+2025-09-06T16:20:45.000Z,Library,1,quad3_r2_c1,Livid,5.4,en
+2025-09-06T19:15:32.000Z,Library,1,quad2_r4_c1,Despondent,7.4,en
+2025-09-07T14:23:30.000Z,Innovation Center,3,quad4_r3_c2,Chill,4.5,en
+2025-09-07T18:11:11.000Z,Science Center,1,quad1_r4_c2,Concentrado,4.6,es
+2025-09-08T11:45:33.000Z,Library,3,quad3_r4_c2,Aprensivo,1.2,es
+2025-09-08T13:31:14.000Z,Library,1,quad4_r5_c3,Tranquilo,4.7,es
+2025-09-08T16:04:45.000Z,Library,4,quad2_r4_c3,Huraño,3.7,es
+2025-09-09T09:55:51.000Z,Science Center,1,quad3_r3_c2,Frightened,5.2,en
+2025-09-09T20:00:35.000Z,Library,1,quad4_r1_c5,Fulfilled,2.7,en
+2025-09-10T12:16:41.000Z,Science Center,3,quad4_r4_c5,Carefree,4.3,en
+2025-09-10T13:07:37.000Z,Science Center,1,quad1_r1_c2,Upbeat,6.5,en
+2025-09-11T12:37:46.000Z,Library,1,quad1_r1_c5,Ecstatic,2.9,en
+2025-09-11T17:59:45.000Z,Innovation Center,1,quad2_r4_c3,Huraño,8.3,es
+2025-09-13T22:02:50.000Z,Innovation Center,2,quad3_r1_c2,Con pánico,2.3,es
+2025-09-14T17:28:11.000Z,Library,1,quad4_r4_c1,Sereno,4.5,es
+2025-09-15T16:42:55.000Z,Innovation Center,2,quad3_r4_c3,Worried,6.4,en
+2025-09-15T18:24:59.000Z,Science Center,2,quad2_r5_c4,Spent,1.6,en
+2025-09-16T12:47:30.000Z,Library,4,quad4_r3_c2,Chill,1.8,en
+2025-09-16T13:09:16.000Z,Library,1,quad3_r3_c1,Encolerizado,5.0,es
+2025-09-16T13:52:11.000Z,Science Center,1,quad1_r1_c3,Festive,6.1,en
+2025-09-16T13:57:18.000Z,Library,4,quad3_r1_c1,Enraged,2.0,en
+2025-09-16T14:04:47.000Z,Science Center,2,quad3_r3_c4,Nervous,3.8,en
+2025-09-17T07:50:43.000Z,Innovation Center,2,quad4_r2_c3,Satisfecho,2.6,es
+2025-09-19T03:45:06.000Z,Science Center,3,quad4_r2_c3,Satisfied,8.8,en
+2025-09-19T16:34:01.000Z,Science Center,2,quad4_r2_c3,Satisfied,2.6,en
+2025-09-19T17:41:56.000Z,Innovation Center,2,quad1_r4_c4,Proud,4.0,en
+2025-09-20T10:16:34.000Z,Library,5,quad1_r3_c5,Enthusiastic,2.0,en
+2025-09-20T15:31:55.000Z,Innovation Center,2,quad2_r2_c1,Pessimistic,2.1,en
+2025-09-20T15:49:32.000Z,Innovation Center,2,quad2_r4_c5,Fatigued,2.0,en
+2025-09-20T17:27:37.000Z,Innovation Center,2,quad4_r3_c4,Blessed,5.1,en
+2025-09-21T14:32:22.000Z,Library,3,quad1_r4_c1,Pleased,2.3,en
+2025-09-23T11:44:32.000Z,Library,3,quad4_r2_c3,Satisfied,6.1,en
+2025-09-23T14:03:43.000Z,Library,1,quad1_r5_c5,Dichoso,3.9,es
+2025-09-23T15:26:10.000Z,Science Center,2,quad2_r2_c5,Bored,3.9,en
+2025-09-24T16:56:22.000Z,Innovation Center,1,quad1_r4_c2,Concentrado,7.1,es
+2025-09-25T13:39:14.000Z,Science Center,1,quad3_r2_c2,Furious,0.9,en
+2025-09-26T11:43:36.000Z,Library,1,quad3_r4_c4,Irritated,7.4,en
+2025-09-26T13:09:07.000Z,Innovation Center,2,quad1_r1_c1,Surprised,3.3,en
+2025-09-26T16:43:55.000Z,Library,1,quad3_r2_c3,Frustrated,4.5,en
+2025-09-27T10:09:27.000Z,Innovation Center,2,quad2_r3_c3,Lonely,3.8,en
+2025-09-27T12:20:52.000Z,Innovation Center,3,quad1_r4_c3,Happy,8.3,en
+2025-09-27T14:12:04.000Z,Science Center,1,quad1_r4_c3,Happy,3.6,en
+2025-09-28T10:53:40.000Z,Library,1,quad1_r3_c3,Excited,6.0,en
+2025-09-28T12:20:10.000Z,Innovation Center,1,quad4_r1_c4,Loving,8.8,en
+2025-09-28T17:27:59.000Z,Library,2,quad4_r1_c3,Content,6.2,en
+2025-09-29T04:28:13.000Z,Library,1,quad2_r1_c3,Disappointed,2.9,en
+2025-09-29T11:04:05.000Z,Innovation Center,2,quad4_r4_c3,Peaceful,2.9,en
+2025-09-29T17:03:15.000Z,Science Center,1,quad2_r5_c5,Drenado,1.4,es
+2025-09-30T13:01:40.000Z,Science Center,3,quad4_r1_c2,Easygoing,8.6,en
+2025-09-30T15:21:19.000Z,Science Center,1,quad2_r4_c3,Sullen,1.7,en
+2025-09-30T15:36:19.000Z,Library,1,quad2_r1_c3,Disappointed,4.2,en
+2025-10-01T09:06:04.000Z,Innovation Center,1,quad1_r5_c5,Blissful,4.8,en
+2025-10-01T10:49:13.000Z,Library,1,quad3_r3_c2,Asustado,5.2,es
+2025-10-01T13:13:27.000Z,Innovation Center,1,quad4_r2_c4,Grateful,3.3,en
+2025-10-01T14:11:55.000Z,Science Center,4,quad2_r4_c1,Despondent,2.8,en
+2025-10-02T13:32:54.000Z,Science Center,1,quad4_r3_c2,Chill,8.2,en
+2025-10-02T13:36:53.000Z,Science Center,4,quad3_r3_c3,Angry,3.6,en
+2025-10-02T18:47:35.000Z,Science Center,2,quad3_r1_c4,Jittery,3.1,en
+2025-10-03T17:01:52.000Z,Innovation Center,1,quad4_r3_c3,Restful,4.6,en
+2025-10-05T11:30:11.000Z,Library,1,quad3_r3_c3,Angry,4.9,en
+2025-10-05T23:59:59.000Z,Library,2,quad2_r3_c5,Tired,3.2,en
+2025-10-06T12:14:46.000Z,Library,1,quad2_r3_c1,Alienated,4.1,en
+2025-10-06T12:38:21.000Z,Library,1,quad4_r3_c2,Chill,4.6,en
+2025-10-06T13:53:45.000Z,Innovation Center,2,quad2_r5_c1,Despairing,4.2,en
+2025-10-06T15:25:47.000Z,Science Center,1,quad2_r2_c1,Pessimistic,2.5,en
+2025-10-07T13:33:10.000Z,Science Center,2,quad1_r3_c5,Enthusiastic,5.6,en
+2025-10-07T14:04:39.000Z,Science Center,1,quad4_r1_c3,Contento,8.3,es
+2025-10-07T15:29:30.000Z,Library,2,quad4_r5_c2,Complacent,1.6,en
+2025-10-07T19:22:08.000Z,Innovation Center,2,quad2_r4_c5,Fatigado,6.8,es
+2025-10-08T16:12:37.000Z,Science Center,1,quad4_r5_c5,Serene,7.1,en
+2025-10-08T18:15:30.000Z,Science Center,1,quad4_r2_c1,Calmado,6.6,es
+2025-10-09T09:10:08.000Z,Science Center,1,quad2_r2_c3,Desanimado,5.3,es
+2025-10-09T16:54:23.000Z,Library,2,quad4_r3_c3,Restful,5.3,en
+2025-10-10T14:02:39.000Z,Innovation Center,1,quad4_r5_c2,Complaciente,2.2,es
+2025-10-10T17:38:50.000Z,Library,1,quad2_r3_c2,Miserable,6.4,en
+2025-10-10T23:46:25.000Z,Innovation Center,2,quad3_r2_c2,Furious,6.9,en
+2025-10-11T06:51:04.000Z,Innovation Center,2,quad2_r2_c3,Discouraged,3.2,en
+2025-10-11T12:16:28.000Z,Library,2,quad4_r4_c3,Peaceful,1.8,en
+2025-10-11T12:58:51.000Z,Innovation Center,3,quad3_r3_c3,Angry,5.3,en
+2025-10-11T13:23:23.000Z,Library,2,quad3_r1_c5,Shocked,4.2,en
+2025-10-11T13:39:58.000Z,Science Center,2,quad1_r5_c4,Playful,2.7,en
+2025-10-11T14:16:56.000Z,Science Center,1,quad4_r5_c1,Sleepy,1.5,en
+2025-10-11T15:10:26.000Z,Science Center,1,quad2_r2_c3,Discouraged,6.3,en
+2025-10-11T15:48:42.000Z,Innovation Center,2,quad4_r5_c4,Cozy,3.4,en
+2025-10-12T11:12:59.000Z,Innovation Center,1,quad1_r2_c4,Inspired,2.3,en
+2025-10-12T12:18:30.000Z,Innovation Center,1,quad2_r4_c3,Sullen,3.7,en
+2025-10-12T13:18:18.000Z,Library,3,quad2_r1_c4,Down,7.7,en
+2025-10-12T15:10:53.000Z,Library,1,quad2_r3_c2,Miserable,8.0,en
+2025-10-12T15:49:48.000Z,Innovation Center,1,quad3_r5_c2,Troubled,4.9,en
+2025-10-12T16:07:13.000Z,Science Center,1,quad2_r1_c1,Disgusted,1.6,en
+2025-10-12T17:19:03.000Z,Innovation Center,4,quad4_r1_c2,Relajado,2.5,es
+2025-10-12T19:47:15.000Z,Innovation Center,1,quad2_r5_c5,Drenado,4.1,es
+2025-10-12T21:15:25.000Z,Library,1,quad3_r5_c2,Angustiado,3.1,es
+2025-10-13T11:04:11.000Z,Innovation Center,1,quad2_r4_c1,Desesperanzado,6.7,es
+2025-10-13T13:48:29.000Z,Library,1,quad4_r4_c4,Comfortable,7.8,en
+2025-10-13T14:17:15.000Z,Innovation Center,1,quad2_r5_c3,Desolate,9.2,en
+2025-10-13T14:38:56.000Z,Library,1,quad4_r1_c5,Fulfilled,4.3,en
+2025-10-14T12:47:11.000Z,Library,1,quad2_r4_c1,Desesperanzado,1.4,es
+2025-10-14T13:15:56.000Z,Innovation Center,1,quad3_r2_c1,Livid,10.2,en
+2025-10-14T13:27:17.000Z,Science Center,2,quad3_r3_c4,Nervous,5.7,en
+2025-10-14T13:56:09.000Z,Science Center,3,quad4_r4_c5,Carefree,2.1,en
+2025-10-15T12:14:53.000Z,Library,1,quad4_r3_c1,Relaxed,6.5,en
+2025-10-15T12:20:32.000Z,Innovation Center,3,quad4_r4_c2,Thoughtful,9.9,en
+2025-10-15T12:44:22.000Z,Library,2,quad4_r3_c3,Descansado,4.4,es
+2025-10-15T14:25:12.000Z,Innovation Center,1,quad3_r1_c2,Panicked,1.3,en
+2025-10-15T18:50:10.000Z,Library,2,quad3_r4_c4,Irritated,2.8,en
+2025-10-16T05:44:23.000Z,Science Center,2,quad4_r5_c2,Complacent,8.9,en
+2025-10-16T10:29:09.000Z,Library,1,quad1_r4_c4,Orgulloso,6.5,es
+2025-10-16T13:58:37.000Z,Science Center,1,quad2_r5_c5,Drained,5.2,en
+2025-10-16T14:59:02.000Z,Science Center,2,quad3_r5_c2,Troubled,2.5,en
+2025-10-16T16:08:29.000Z,Library,4,quad1_r2_c5,Elated,5.4,en
+2025-10-16T16:21:45.000Z,Science Center,2,quad3_r4_c5,Annoyed,6.4,en
+2025-10-16T17:56:55.000Z,Science Center,1,quad3_r1_c3,Stressed,6.2,en
+2025-10-17T09:44:25.000Z,Library,2,quad2_r2_c2,Melancólico,3.9,es
+2025-10-17T12:19:13.000Z,Science Center,1,quad1_r2_c5,Elated,6.4,en
+2025-10-17T12:55:08.000Z,Library,1,quad3_r4_c4,Irritated,7.7,en
+2025-10-17T13:02:05.000Z,Library,1,quad3_r3_c1,Fuming,2.3,en
+2025-10-17T13:12:18.000Z,Innovation Center,1,quad2_r3_c5,Tired,3.8,en
+2025-10-17T13:12:49.000Z,Science Center,3,quad2_r4_c3,Sullen,4.5,en
+2025-10-17T13:33:46.000Z,Innovation Center,1,quad4_r2_c5,Touched,8.1,en
+2025-10-17T13:47:37.000Z,Library,2,quad4_r1_c2,Easygoing,2.1,en
+2025-10-17T17:43:11.000Z,Library,2,quad2_r2_c2,Morose,1.8,en
+2025-10-18T13:56:26.000Z,Innovation Center,1,quad2_r2_c3,Discouraged,5.0,en
+2025-10-18T15:40:00.000Z,Library,1,quad1_r1_c5,Ecstatic,4.0,en
+2025-10-18T19:21:47.000Z,Innovation Center,1,quad2_r4_c1,Desesperanzado,5.6,es
+2025-10-20T13:11:05.000Z,Innovation Center,1,quad1_r4_c4,Proud,0.8,en
+2025-10-20T13:47:24.000Z,Science Center,1,quad4_r4_c4,Comfortable,3.5,en
+2025-10-20T15:18:01.000Z,Library,1,quad1_r3_c3,Excited,6.6,en
+2025-10-21T16:02:23.000Z,Innovation Center,1,quad4_r2_c3,Satisfied,6.2,en
+2025-10-23T17:00:00.000Z,Innovation Center,1,quad2_r3_c5,Cansado,5.3,es
+2025-10-24T12:09:15.000Z,Science Center,2,quad1_r4_c2,Focused,2.9,en
+2025-10-24T12:44:51.000Z,Innovation Center,1,quad2_r5_c5,Drained,2.2,en
+2025-10-25T10:36:25.000Z,Science Center,1,quad4_r5_c1,Sleepy,5.7,en
+2025-10-25T12:57:51.000Z,Science Center,1,quad4_r4_c2,Thoughtful,5.6,en
+2025-10-25T13:19:30.000Z,Innovation Center,2,quad3_r4_c2,Apprehensive,2.3,en
+2025-10-26T06:53:54.000Z,Library,1,quad3_r4_c3,Worried,5.7,en
+2025-10-26T16:46:30.000Z,Library,1,quad1_r2_c5,Elated,1.7,en
+2025-10-27T11:54:19.000Z,Library,2,quad2_r1_c3,Disappointed,3.2,en
+2025-10-27T12:12:53.000Z,Innovation Center,3,quad3_r4_c3,Worried,2.1,en
+2025-10-27T14:01:57.000Z,Science Center,4,quad1_r4_c2,Focused,1.8,en
+2025-10-27T15:21:31.000Z,Library,2,quad4_r4_c4,Cómodo,2.4,es
+2025-10-28T09:45:51.000Z,Library,1,quad4_r2_c5,Touched,3.2,en
+2025-10-28T11:18:04.000Z,Science Center,1,quad4_r1_c5,Fulfilled,5.6,en
+2025-10-29T09:40:27.000Z,Library,1,quad4_r3_c5,Balanced,3.8,en
+2025-10-29T11:28:17.000Z,Innovation Center,1,quad1_r3_c4,Optimista,2.9,es
+2025-10-30T03:48:06.000Z,Library,1,quad3_r2_c4,Tense,6.0,en
+2025-10-30T14:54:42.000Z,Science Center,1,quad3_r4_c4,Irritated,4.7,en
+2025-10-30T18:22:56.000Z,Science Center,1,quad1_r1_c4,Exhilarated,4.7,en
+2025-10-31T14:16:28.000Z,Library,2,quad3_r5_c5,Peeved,6.9,en
+2025-10-31T16:52:10.000Z,Science Center,2,quad1_r2_c3,Motivated,3.3,en
+2025-10-31T16:54:33.000Z,Science Center,1,quad3_r3_c3,Angry,6.2,en
+2025-11-01T12:32:29.000Z,Science Center,2,quad1_r3_c4,Optimistic,1.9,en
+2025-11-01T13:18:02.000Z,Science Center,2,quad2_r5_c2,Hopeless,6.9,en
+2025-11-01T13:55:36.000Z,Innovation Center,2,quad4_r1_c3,Content,4.2,en
+2025-11-01T17:07:13.000Z,Library,3,quad4_r3_c4,Blessed,2.3,en
+2025-11-01T18:03:46.000Z,Science Center,2,quad2_r5_c2,Hopeless,4.1,en
+2025-11-01T18:04:32.000Z,Library,3,quad2_r2_c3,Desanimado,6.8,es
+2025-11-04T09:38:48.000Z,Library,2,quad1_r1_c4,Exhilarated,4.7,en
+2025-11-04T13:43:57.000Z,Science Center,1,quad3_r2_c4,Tense,5.0,en
+2025-11-04T16:18:08.000Z,Innovation Center,2,quad1_r5_c1,Pleasant,3.1,en
+2025-11-05T13:53:45.000Z,Library,3,quad2_r1_c1,Disgusted,2.8,en
+2025-11-05T15:16:15.000Z,Library,2,quad3_r1_c2,Panicked,4.1,en
+2025-11-07T15:16:04.000Z,Science Center,1,quad1_r4_c3,Happy,8.4,en
+2025-11-07T18:17:34.000Z,Science Center,2,quad1_r3_c1,Energized,7.2,en
+2025-11-08T10:58:45.000Z,Library,1,quad4_r3_c4,Blessed,3.0,en
+2025-11-08T13:45:08.000Z,Science Center,1,quad2_r4_c3,Sullen,3.6,en
+2025-11-08T15:49:52.000Z,Innovation Center,1,quad4_r4_c1,Mellow,5.3,en
+2025-11-08T16:35:23.000Z,Innovation Center,1,quad2_r3_c4,Disheartened,2.8,en
+2025-11-09T15:51:13.000Z,Innovation Center,1,quad2_r3_c5,Tired,6.1,en
+2025-11-10T12:52:41.000Z,Innovation Center,2,quad4_r4_c2,Thoughtful,2.2,en
+2025-11-10T13:48:57.000Z,Innovation Center,4,quad3_r5_c2,Troubled,5.1,en
+2025-11-10T15:25:34.000Z,Library,3,quad2_r4_c3,Huraño,8.0,es
+2025-11-10T17:26:07.000Z,Library,1,quad2_r3_c2,Miserable,5.0,en
+2025-11-11T11:50:22.000Z,Science Center,1,quad1_r4_c2,Focused,3.4,en
+2025-11-11T12:22:24.000Z,Innovation Center,1,quad1_r3_c4,Optimistic,6.6,en
+2025-11-11T15:22:15.000Z,Science Center,1,quad1_r3_c3,Excited,5.3,en
+2025-11-11T16:13:49.000Z,Innovation Center,1,quad4_r1_c1,At Ease,4.8,en
+2025-11-12T04:49:10.000Z,Innovation Center,4,quad1_r5_c4,Playful,2.9,en
+2025-11-12T12:25:23.000Z,Library,1,quad4_r3_c3,Restful,4.5,en
+2025-11-13T02:26:53.000Z,Innovation Center,3,quad1_r2_c4,Inspired,0.8,en
+2025-11-14T03:31:10.000Z,Innovation Center,1,quad1_r3_c3,Excited,4.3,en
+2025-11-14T14:30:51.000Z,Library,1,quad1_r3_c2,Vivaz,4.0,es
+2025-11-14T17:25:46.000Z,Innovation Center,1,quad3_r5_c5,Peeved,3.3,en
+2025-11-15T10:17:48.000Z,Science Center,1,quad4_r4_c2,Thoughtful,1.9,en
+2025-11-15T11:46:18.000Z,Science Center,1,quad2_r2_c1,Pesimista,2.1,es
+2025-11-15T17:00:35.000Z,Science Center,2,quad2_r2_c1,Pesimista,9.4,es
+2025-11-16T17:27:32.000Z,Science Center,2,quad4_r3_c5,Balanced,6.7,en
+2025-11-17T09:42:15.000Z,Library,2,quad1_r2_c2,Cheerful,3.7,en
+2025-11-17T13:53:05.000Z,Innovation Center,2,quad2_r1_c1,Disgustado,7.0,es
+2025-11-17T16:08:40.000Z,Library,3,quad3_r3_c3,Enojado,7.0,es
+2025-11-17T17:15:22.000Z,Innovation Center,1,quad1_r1_c2,Upbeat,7.6,en
+2025-11-17T18:18:09.000Z,Innovation Center,2,quad3_r2_c1,Livid,4.6,en
+2025-11-18T11:04:10.000Z,Library,2,quad4_r1_c3,Content,5.2,en
+2025-11-19T12:01:03.000Z,Library,1,quad2_r3_c2,Miserable,4.9,en
+2025-11-19T19:01:43.000Z,Library,2,quad2_r4_c5,Fatigued,8.4,en
+2025-11-21T09:07:18.000Z,Innovation Center,1,quad4_r2_c5,Conmovido,2.1,es
+2025-11-21T14:05:02.000Z,Library,1,quad2_r5_c2,Hopeless,3.4,en
+2025-11-21T16:19:21.000Z,Science Center,2,quad4_r2_c4,Grateful,3.0,en
+2025-11-22T10:20:31.000Z,Library,2,quad3_r4_c2,Aprensivo,7.2,es
+2025-11-22T11:28:28.000Z,Library,1,quad4_r1_c5,Fulfilled,4.5,en
+2025-11-22T12:24:53.000Z,Library,1,quad1_r1_c3,Festive,3.9,en
+2025-11-22T14:00:30.000Z,Science Center,4,quad3_r1_c4,Jittery,8.6,en
+2025-11-22T17:15:14.000Z,Science Center,1,quad3_r5_c3,Preocupado,6.3,es
+2025-11-22T17:54:56.000Z,Innovation Center,1,quad3_r3_c4,Nervous,5.5,en
+2025-11-23T12:39:17.000Z,Library,2,quad4_r2_c5,Touched,1.0,en
+2025-11-24T13:15:35.000Z,Innovation Center,2,quad1_r1_c2,Upbeat,6.7,en
+2025-11-24T16:57:33.000Z,Library,3,quad2_r4_c4,Exhausted,1.4,en
+2025-11-25T12:53:03.000Z,Library,3,quad2_r3_c4,Disheartened,1.3,en
+2025-11-25T13:53:25.000Z,Library,1,quad4_r4_c1,Mellow,3.1,en
+2025-11-26T09:04:27.000Z,Library,2,quad4_r3_c2,Chill,2.6,en
+2025-11-26T12:17:16.000Z,Library,1,quad2_r3_c4,Disheartened,2.7,en
+2025-11-26T16:26:26.000Z,Science Center,3,quad1_r2_c3,Motivated,3.7,en
+2025-11-27T01:11:41.000Z,Innovation Center,1,quad4_r4_c4,Comfortable,2.4,en
+2025-11-27T11:27:20.000Z,Library,1,quad2_r2_c4,Sad,8.0,en
+2025-11-27T13:35:27.000Z,Innovation Center,1,quad3_r3_c3,Angry,5.0,en
+2025-11-28T09:03:19.000Z,Innovation Center,1,quad1_r2_c5,Elated,7.7,en
+2025-11-28T11:42:53.000Z,Science Center,2,quad2_r5_c1,Despairing,7.3,en
+2025-11-28T16:53:47.000Z,Innovation Center,4,quad2_r4_c1,Despondent,9.3,en
+2025-11-28T18:17:53.000Z,Library,1,quad4_r4_c3,Peaceful,2.6,en
+2025-11-29T09:43:24.000Z,Science Center,4,quad4_r4_c3,Pacífico,1.2,es
+2025-11-29T11:58:20.000Z,Library,2,quad3_r2_c5,Stunned,4.5,en
+2025-11-30T12:01:53.000Z,Science Center,1,quad2_r3_c5,Tired,3.6,en
+2025-11-30T12:25:04.000Z,Innovation Center,3,quad4_r4_c3,Peaceful,2.9,en
+2025-11-30T16:27:39.000Z,Library,2,quad1_r5_c5,Blissful,6.7,en
+2025-11-30T17:12:29.000Z,Science Center,1,quad4_r4_c4,Comfortable,3.1,en
+2025-11-30T17:18:53.000Z,Innovation Center,2,quad1_r1_c5,Ecstatic,5.5,en
+2025-12-01T11:38:29.000Z,Library,1,quad2_r2_c4,Triste,3.7,es
+2025-12-01T22:02:26.000Z,Innovation Center,1,quad4_r4_c2,Thoughtful,3.1,en
+2025-12-02T12:43:05.000Z,Science Center,1,quad4_r1_c4,Loving,6.8,en
+2025-12-02T15:43:14.000Z,Innovation Center,2,quad2_r4_c1,Despondent,1.9,en
+2025-12-03T16:43:22.000Z,Innovation Center,1,quad3_r5_c2,Troubled,6.9,en
+2025-12-04T15:50:48.000Z,Library,2,quad4_r2_c1,Calm,5.7,en
+2025-12-05T12:26:22.000Z,Science Center,2,quad2_r4_c5,Fatigued,5.5,en
+2025-12-05T19:13:34.000Z,Science Center,1,quad4_r2_c4,Agradecido,8.6,es
+2025-12-06T11:37:56.000Z,Innovation Center,2,quad4_r5_c4,Acogedor,4.4,es
+2025-12-06T13:59:50.000Z,Library,1,quad4_r1_c5,Realizado,6.9,es
+2025-12-07T09:14:18.000Z,Innovation Center,1,quad2_r3_c1,Alienated,2.5,en
+2025-12-07T12:45:39.000Z,Science Center,1,quad1_r5_c1,Pleasant,4.0,en
+2025-12-08T10:26:35.000Z,Science Center,1,quad4_r2_c4,Grateful,6.8,en
+2025-12-08T13:50:42.000Z,Library,1,quad1_r4_c2,Focused,5.6,en
+2025-12-08T14:13:11.000Z,Innovation Center,3,quad1_r5_c5,Dichoso,1.2,es
+2025-12-08T14:25:15.000Z,Innovation Center,2,quad4_r1_c4,Cariñoso,5.1,es
+2025-12-08T17:52:48.000Z,Science Center,1,quad3_r2_c4,Tenso,5.9,es
+2025-12-09T11:59:54.000Z,Science Center,1,quad1_r2_c1,Hyper,1.9,en
+2025-12-09T13:45:01.000Z,Science Center,1,quad4_r3_c5,Balanced,5.0,en
+2025-12-09T15:16:24.000Z,Innovation Center,5,quad3_r3_c4,Nervous,2.5,en
+2025-12-09T16:37:13.000Z,Library,2,quad3_r4_c3,Worried,1.2,en
+2025-12-09T17:07:40.000Z,Innovation Center,2,quad1_r4_c1,Complacido,3.6,es
+2025-12-09T17:50:00.000Z,Science Center,2,quad1_r5_c4,Juguetón,4.2,es
+2025-12-09T18:41:56.000Z,Innovation Center,1,quad3_r4_c5,Annoyed,2.7,en
+2025-12-10T05:28:04.000Z,Science Center,1,quad1_r2_c2,Alegre,2.8,es
+2025-12-10T10:23:00.000Z,Science Center,1,quad4_r5_c4,Acogedor,8.1,es
+2025-12-10T14:15:54.000Z,Library,3,quad3_r4_c4,Irritated,2.1,en
+2025-12-10T14:36:01.000Z,Library,4,quad2_r3_c3,Solo,5.4,es
+2025-12-10T15:11:01.000Z,Innovation Center,1,quad3_r2_c1,Livid,3.1,en
+2025-12-10T17:33:25.000Z,Science Center,2,quad3_r5_c3,Concerned,4.4,en
+2025-12-10T17:54:32.000Z,Innovation Center,1,quad4_r1_c5,Fulfilled,3.3,en
+2025-12-10T20:16:09.000Z,Innovation Center,3,quad2_r2_c2,Morose,2.8,en
+2025-12-10T23:13:18.000Z,Innovation Center,2,quad4_r2_c3,Satisfied,7.1,en
+2025-12-11T13:29:00.000Z,Library,2,quad4_r1_c3,Contento,5.3,es
+2025-12-12T06:40:25.000Z,Science Center,1,quad4_r3_c3,Descansado,2.5,es
+2025-12-12T11:29:03.000Z,Innovation Center,1,quad2_r2_c5,Bored,3.8,en
+2025-12-12T13:16:49.000Z,Innovation Center,1,quad4_r4_c3,Peaceful,3.4,en
+2025-12-13T01:37:50.000Z,Science Center,2,quad3_r4_c3,Worried,7.0,en
+2025-12-13T11:09:53.000Z,Library,1,quad3_r5_c4,Uneasy,4.3,en
+2025-12-13T12:54:54.000Z,Innovation Center,2,quad4_r3_c1,Relaxed,1.9,en
+2025-12-13T14:51:09.000Z,Science Center,2,quad3_r4_c5,Annoyed,5.8,en
+2025-12-13T15:05:48.000Z,Science Center,3,quad3_r1_c5,Shocked,8.2,en
+2025-12-13T16:30:06.000Z,Innovation Center,1,quad4_r5_c4,Acogedor,7.5,es
+2025-12-14T13:31:11.000Z,Innovation Center,1,quad3_r1_c4,Jittery,6.0,en
+2025-12-14T14:31:41.000Z,Library,1,quad4_r5_c1,Sleepy,2.8,en
+2025-12-14T14:35:35.000Z,Library,1,quad3_r2_c4,Tenso,4.9,es
+2025-12-14T15:13:19.000Z,Science Center,2,quad4_r5_c5,Serene,2.3,en
+2025-12-14T17:32:33.000Z,Innovation Center,1,quad4_r5_c1,Sleepy,3.5,en
+2025-12-15T12:40:35.000Z,Innovation Center,2,quad4_r4_c2,Reflexivo,3.0,es
+2025-12-15T14:55:50.000Z,Library,1,quad1_r4_c4,Proud,3.2,en
+2025-12-15T16:04:54.000Z,Innovation Center,3,quad4_r1_c2,Relajado,2.6,es
+2025-12-15T16:42:04.000Z,Library,1,quad3_r4_c4,Irritated,8.0,en
+2025-12-16T12:53:18.000Z,Science Center,1,quad3_r5_c2,Troubled,3.8,en
+2025-12-16T13:21:45.000Z,Library,1,quad1_r5_c3,Hopeful,8.1,en
+2025-12-16T15:22:07.000Z,Library,5,quad4_r2_c4,Grateful,4.7,en
+2025-12-16T15:40:20.000Z,Library,1,quad4_r1_c1,At Ease,3.2,en
+2025-12-16T18:07:48.000Z,Library,2,quad4_r2_c5,Conmovido,4.6,es
+2025-12-17T11:42:56.000Z,Innovation Center,2,quad4_r5_c4,Cozy,2.8,en
+2025-12-17T12:24:10.000Z,Innovation Center,2,quad3_r5_c3,Concerned,1.9,en
+2025-12-17T13:21:36.000Z,Innovation Center,2,quad3_r2_c4,Tense,2.9,en
+2025-12-17T18:17:59.000Z,Innovation Center,1,quad2_r5_c3,Desolate,6.0,en
+2025-12-18T10:18:55.000Z,Innovation Center,2,quad3_r3_c3,Angry,4.2,en
+2025-12-18T10:51:58.000Z,Innovation Center,1,quad3_r1_c4,Jittery,4.6,en
+2025-12-18T15:14:23.000Z,Science Center,2,quad1_r5_c2,Alegre,3.4,es
+2025-12-18T18:19:03.000Z,Library,1,quad3_r2_c1,Lívido,3.7,es
+2026-01-17T11:28:16.000Z,Science Center,2,quad3_r4_c5,Annoyed,3.6,en
+2026-01-17T12:55:42.000Z,Science Center,3,quad4_r2_c4,Grateful,3.3,en
+2026-01-17T13:05:35.000Z,Library,3,quad3_r2_c5,Aturdido,3.2,es
+2026-01-18T12:59:58.000Z,Library,1,quad4_r2_c2,Secure,2.4,en
+2026-01-18T22:29:56.000Z,Science Center,1,quad4_r3_c3,Restful,1.3,en
+2026-01-19T15:07:08.000Z,Library,1,quad3_r1_c3,Stressed,2.2,en
+2026-01-20T13:37:06.000Z,Library,2,quad4_r5_c4,Acogedor,6.0,es
+2026-01-21T11:34:42.000Z,Library,3,quad1_r4_c2,Focused,4.0,en
+2026-01-21T13:03:01.000Z,Innovation Center,1,quad3_r2_c2,Furious,6.0,en
+2026-01-21T14:52:27.000Z,Science Center,1,quad4_r2_c4,Grateful,4.4,en
+2026-01-22T11:13:14.000Z,Library,1,quad4_r1_c5,Fulfilled,5.7,en
+2026-01-22T11:36:19.000Z,Library,2,quad1_r2_c5,Elated,5.7,en
+2026-01-22T12:18:36.000Z,Innovation Center,2,quad4_r5_c3,Tranquil,2.2,en
+2026-01-23T13:33:42.000Z,Innovation Center,1,quad4_r3_c2,Distendido,2.5,es
+2026-01-23T21:11:03.000Z,Science Center,1,quad3_r4_c3,Worried,8.6,en
+2026-01-24T14:28:05.000Z,Library,2,quad4_r5_c1,Somnoliento,2.3,es
+2026-01-24T16:29:46.000Z,Innovation Center,1,quad2_r5_c5,Drained,5.0,en
+2026-01-24T17:10:10.000Z,Science Center,2,quad4_r4_c4,Cómodo,7.0,es
+2026-01-24T23:40:51.000Z,Library,1,quad3_r5_c3,Preocupado,6.3,es
+2026-01-25T16:11:10.000Z,Innovation Center,1,quad3_r5_c4,Uneasy,2.4,en
+2026-01-26T14:56:10.000Z,Library,1,quad4_r4_c1,Mellow,3.4,en
+2026-01-26T16:53:55.000Z,Library,2,quad4_r2_c4,Grateful,4.4,en
+2026-01-27T18:32:49.000Z,Innovation Center,2,quad3_r3_c4,Nervioso,2.7,es
+2026-01-31T12:53:14.000Z,Science Center,1,quad4_r1_c5,Fulfilled,7.5,en
+2026-01-31T13:52:17.000Z,Science Center,1,quad1_r5_c3,Hopeful,9.7,en
+2026-01-31T15:31:49.000Z,Library,3,quad3_r2_c5,Stunned,1.1,en
+2026-02-01T09:35:51.000Z,Innovation Center,1,quad3_r1_c5,Impactado,8.1,es
+2026-02-01T11:02:04.000Z,Innovation Center,1,quad1_r3_c2,Vivaz,2.0,es
+2026-02-02T16:17:52.000Z,Innovation Center,1,quad1_r1_c2,Upbeat,3.2,en
+2026-02-02T16:46:31.000Z,Library,1,quad1_r4_c5,Thrilled,3.3,en
+2026-02-02T18:46:41.000Z,Library,1,quad3_r2_c2,Furious,5.2,en
+2026-02-04T10:52:19.000Z,Science Center,1,quad2_r1_c5,Apathetic,3.8,en
+2026-02-04T12:58:56.000Z,Library,1,quad1_r3_c2,Lively,1.3,en
+2026-02-04T15:07:11.000Z,Science Center,1,quad1_r4_c1,Pleased,7.0,en
+2026-02-05T13:21:13.000Z,Science Center,1,quad2_r2_c3,Desanimado,5.2,es
+2026-02-05T19:06:52.000Z,Library,2,quad4_r4_c1,Mellow,5.3,en
+2026-02-06T18:12:00.000Z,Science Center,2,quad3_r2_c1,Lívido,3.6,es
+2026-02-07T09:47:38.000Z,Library,1,quad4_r5_c2,Complacent,5.9,en
+2026-02-07T10:26:34.000Z,Science Center,1,quad4_r3_c4,Blessed,3.6,en
+2026-02-07T14:32:23.000Z,Library,1,quad3_r2_c4,Tense,3.9,en
+2026-02-07T15:37:13.000Z,Innovation Center,2,quad4_r5_c4,Acogedor,5.2,es
+2026-02-07T15:50:00.000Z,Library,1,quad4_r1_c4,Cariñoso,4.4,es
+2026-02-07T16:35:44.000Z,Science Center,1,quad2_r1_c5,Apathetic,7.9,en
+2026-02-07T17:13:38.000Z,Innovation Center,1,quad1_r4_c3,Happy,1.8,en
+2026-02-07T18:22:30.000Z,Library,2,quad1_r2_c4,Inspirado,3.7,es
+2026-02-08T12:14:30.000Z,Innovation Center,1,quad4_r3_c4,Bendecido,3.0,es
+2026-02-08T13:30:55.000Z,Innovation Center,2,quad1_r2_c1,Hyper,2.6,en
+2026-02-08T15:34:07.000Z,Library,1,quad4_r3_c4,Blessed,1.6,en
+2026-02-08T16:13:19.000Z,Innovation Center,1,quad1_r3_c3,Excited,4.2,en
+2026-02-08T16:17:31.000Z,Science Center,1,quad1_r5_c1,Pleasant,3.0,en
+2026-02-08T17:13:44.000Z,Library,1,quad3_r1_c3,Estresado,2.1,es
+2026-02-09T12:54:08.000Z,Library,1,quad3_r4_c4,Irritated,2.1,en
+2026-02-09T14:40:14.000Z,Innovation Center,4,quad2_r5_c3,Desolate,3.5,en
+2026-02-10T09:43:24.000Z,Innovation Center,1,quad3_r3_c3,Angry,1.1,en
+2026-02-10T11:10:10.000Z,Innovation Center,3,quad1_r4_c3,Happy,4.7,en
+2026-02-10T14:18:53.000Z,Science Center,2,quad4_r3_c5,Balanced,8.5,en
+2026-02-11T13:55:45.000Z,Innovation Center,1,quad4_r5_c3,Tranquil,5.6,en
+2026-02-11T17:17:44.000Z,Library,1,quad4_r5_c2,Complacent,6.7,en
+2026-02-11T17:54:31.000Z,Science Center,1,quad1_r2_c2,Cheerful,8.0,en
+2026-02-12T10:30:33.000Z,Innovation Center,2,quad3_r5_c3,Concerned,7.3,en
+2026-02-12T15:21:35.000Z,Innovation Center,3,quad2_r5_c4,Spent,5.6,en
+2026-02-12T16:18:09.000Z,Innovation Center,1,quad3_r5_c5,Peeved,2.1,en
+2026-02-12T20:53:47.000Z,Science Center,2,quad2_r4_c2,Depressed,1.3,en
+2026-02-13T14:40:24.000Z,Library,2,quad1_r4_c3,Happy,2.9,en
+2026-02-15T10:33:56.000Z,Innovation Center,1,quad3_r2_c4,Tense,6.9,en
+2026-02-15T14:06:57.000Z,Library,3,quad2_r4_c3,Sullen,2.2,en
+2026-02-16T14:11:40.000Z,Library,2,quad3_r4_c3,Worried,3.0,en
+2026-02-16T18:56:37.000Z,Library,1,quad4_r1_c4,Loving,3.1,en
+2026-02-17T15:19:15.000Z,Science Center,3,quad4_r2_c3,Satisfied,4.5,en
+2026-02-17T15:31:13.000Z,Innovation Center,1,quad3_r4_c3,Worried,5.8,en
+2026-02-18T17:13:09.000Z,Science Center,3,quad4_r2_c4,Grateful,7.0,en
+2026-02-19T10:10:50.000Z,Science Center,1,quad4_r1_c1,At Ease,8.7,en
+2026-02-19T13:09:04.000Z,Library,2,quad1_r3_c5,Enthusiastic,5.6,en
+2026-02-19T14:40:03.000Z,Library,2,quad4_r2_c1,Calm,5.7,en
+2026-02-19T16:19:02.000Z,Science Center,3,quad4_r1_c1,At Ease,3.8,en
+2026-02-20T12:19:33.000Z,Science Center,2,quad1_r3_c2,Lively,9.4,en
+2026-02-20T14:27:09.000Z,Innovation Center,1,quad3_r2_c2,Furious,2.6,en
+2026-02-20T15:49:29.000Z,Science Center,2,quad3_r1_c2,Panicked,6.1,en
+2026-02-21T09:20:13.000Z,Science Center,1,quad2_r3_c1,Alienated,3.2,en
+2026-02-21T11:33:57.000Z,Library,2,quad4_r4_c2,Reflexivo,3.9,es
+2026-02-21T13:15:32.000Z,Innovation Center,2,quad3_r1_c3,Stressed,3.3,en
+2026-02-22T12:01:42.000Z,Library,1,quad3_r2_c4,Tense,6.3,en
+2026-02-22T17:57:22.000Z,Library,2,quad4_r2_c2,Seguro,1.8,es
+2026-02-23T13:54:38.000Z,Innovation Center,1,quad2_r3_c2,Miserable,6.9,en
+2026-02-24T12:57:42.000Z,Library,2,quad3_r4_c2,Apprehensive,1.9,en
+2026-02-24T14:40:18.000Z,Innovation Center,1,quad4_r1_c1,At Ease,3.0,en
+2026-02-24T14:47:51.000Z,Library,1,quad3_r2_c3,Frustrated,3.1,en
+2026-02-24T17:29:07.000Z,Library,1,quad1_r2_c2,Cheerful,6.6,en
+2026-02-24T17:51:21.000Z,Library,1,quad1_r3_c3,Excited,2.7,en
+2026-02-25T04:46:12.000Z,Innovation Center,1,quad3_r3_c1,Fuming,5.6,en
+2026-02-25T13:13:21.000Z,Science Center,1,quad1_r2_c4,Inspired,6.4,en
+2026-02-25T16:31:39.000Z,Library,2,quad3_r3_c4,Nervous,3.5,en
+2026-02-26T11:53:34.000Z,Innovation Center,1,quad4_r2_c2,Secure,5.1,en
+2026-02-26T12:28:51.000Z,Library,3,quad1_r1_c2,Upbeat,2.0,en
+2026-02-26T16:20:10.000Z,Science Center,4,quad4_r2_c2,Secure,3.8,en
+2026-02-27T13:44:18.000Z,Science Center,2,quad1_r2_c5,Elated,3.5,en
+2026-02-27T18:44:22.000Z,Science Center,2,quad3_r3_c4,Nervous,2.8,en
+2026-03-01T11:36:27.000Z,Library,3,quad4_r5_c5,Serene,1.3,en
+2026-03-01T13:49:23.000Z,Science Center,1,quad1_r2_c2,Cheerful,6.0,en
+2026-03-01T13:50:59.000Z,Innovation Center,1,quad1_r5_c4,Playful,4.3,en
+2026-03-02T13:54:25.000Z,Science Center,1,quad2_r3_c4,Disheartened,2.8,en
+2026-03-02T19:32:02.000Z,Science Center,2,quad2_r2_c2,Melancólico,4.0,es
+2026-03-02T20:26:28.000Z,Library,1,quad2_r2_c1,Pessimistic,5.4,en
+2026-03-04T12:04:17.000Z,Library,1,quad3_r1_c2,Con pánico,3.8,es
+2026-03-04T15:10:06.000Z,Innovation Center,2,quad4_r2_c3,Satisfecho,6.4,es
+2026-03-04T18:10:34.000Z,Science Center,2,quad2_r1_c3,Disappointed,2.1,en
+2026-03-05T09:45:22.000Z,Library,2,quad1_r5_c4,Playful,4.3,en
+2026-03-06T12:25:15.000Z,Library,3,quad2_r4_c4,Exhausted,4.3,en
+2026-03-06T13:11:34.000Z,Library,1,quad3_r4_c4,Irritated,3.4,en
+2026-03-06T13:55:17.000Z,Innovation Center,3,quad4_r2_c4,Grateful,4.2,en
+2026-03-06T16:10:59.000Z,Library,1,quad4_r2_c3,Satisfied,5.0,en
+2026-03-06T16:19:47.000Z,Library,1,quad2_r2_c2,Melancólico,2.5,es
+2026-03-06T18:09:52.000Z,Innovation Center,2,quad1_r1_c4,Exaltado,2.6,es
+2026-03-07T05:38:03.000Z,Library,1,quad4_r3_c4,Bendecido,4.6,es
+2026-03-07T13:02:38.000Z,Library,1,quad3_r4_c1,Ansioso,6.0,es
+2026-03-07T15:37:02.000Z,Library,1,quad2_r4_c4,Agotado,2.3,es
+2026-03-08T11:07:33.000Z,Library,1,quad4_r2_c2,Seguro,1.8,es
+2026-03-08T11:48:08.000Z,Innovation Center,1,quad3_r4_c4,Irritated,4.8,en
+2026-03-08T12:20:26.000Z,Science Center,1,quad1_r4_c3,Happy,4.5,en
+2026-03-08T13:52:59.000Z,Innovation Center,1,quad1_r3_c1,Energized,5.9,en
+2026-03-08T16:01:10.000Z,Science Center,1,quad3_r2_c1,Livid,3.7,en
+2026-03-09T11:11:24.000Z,Science Center,2,quad3_r1_c2,Con pánico,1.4,es
+2026-03-09T13:17:38.000Z,Innovation Center,1,quad1_r4_c4,Orgulloso,5.1,es
+2026-03-09T13:35:21.000Z,Innovation Center,1,quad2_r5_c2,Hopeless,4.4,en
+2026-03-10T13:58:06.000Z,Library,1,quad3_r4_c1,Anxious,3.0,en
+2026-03-10T14:39:45.000Z,Science Center,3,quad3_r5_c1,Repulsed,2.6,en
+2026-03-10T15:04:35.000Z,Library,1,quad1_r3_c2,Lively,8.0,en
+2026-03-10T15:26:40.000Z,Innovation Center,2,quad3_r2_c2,Furious,4.4,en
+2026-03-10T16:34:26.000Z,Science Center,1,quad3_r3_c4,Nervioso,5.5,es
+2026-03-11T05:48:11.000Z,Library,2,quad2_r4_c4,Exhausted,5.2,en
+2026-03-11T09:08:38.000Z,Innovation Center,4,quad4_r5_c1,Sleepy,3.7,en
+2026-03-11T09:14:07.000Z,Innovation Center,1,quad2_r3_c3,Lonely,5.5,en
+2026-03-11T13:31:32.000Z,Science Center,2,quad3_r3_c1,Fuming,5.2,en
+2026-03-11T14:35:57.000Z,Innovation Center,2,quad3_r5_c1,Repulsed,2.4,en
+2026-03-11T16:42:02.000Z,Library,2,quad3_r1_c4,Jittery,6.0,en
+2026-03-11T18:56:44.000Z,Innovation Center,1,quad2_r3_c3,Lonely,2.9,en
+2026-03-11T19:39:50.000Z,Library,1,quad4_r1_c2,Easygoing,3.2,en
+2026-03-12T10:05:28.000Z,Library,1,quad3_r5_c1,Repulsed,3.7,en
+2026-03-12T10:21:55.000Z,Library,1,quad1_r3_c3,Emocionado,1.2,es
+2026-03-12T13:47:22.000Z,Library,2,quad2_r5_c1,Despairing,1.6,en
+2026-03-12T15:22:20.000Z,Science Center,1,quad2_r4_c5,Fatigued,5.7,en
+2026-03-12T15:45:36.000Z,Innovation Center,1,quad3_r1_c5,Impactado,5.6,es
+2026-03-13T09:39:27.000Z,Science Center,1,quad4_r4_c5,Despreocupado,8.7,es
+2026-03-13T10:59:56.000Z,Science Center,2,quad4_r2_c5,Touched,3.8,en
+2026-03-13T11:27:01.000Z,Innovation Center,1,quad3_r2_c5,Aturdido,4.2,es
+2026-03-13T15:45:14.000Z,Innovation Center,2,quad2_r2_c2,Melancólico,8.0,es
+2026-03-13T17:32:17.000Z,Innovation Center,2,quad4_r2_c4,Grateful,2.6,en
+2026-03-13T18:41:28.000Z,Innovation Center,1,quad4_r2_c1,Calm,2.6,en
+2026-03-14T11:41:48.000Z,Innovation Center,1,quad2_r2_c2,Morose,2.2,en
+2026-03-14T16:19:13.000Z,Library,3,quad4_r3_c2,Chill,7.9,en
+2026-03-15T17:02:23.000Z,Library,4,quad1_r5_c2,Joyful,3.1,en
+2026-03-16T03:03:01.000Z,Library,1,quad2_r1_c4,Down,3.1,en
+2026-03-16T14:31:09.000Z,Library,2,quad1_r5_c3,Hopeful,7.5,en
+2026-03-17T11:34:14.000Z,Innovation Center,4,quad4_r2_c1,Calmado,4.3,es
+2026-03-17T19:54:03.000Z,Science Center,3,quad4_r2_c3,Satisfied,7.9,en
+2026-03-18T16:24:13.000Z,Innovation Center,1,quad1_r2_c4,Inspirado,6.4,es
+2026-03-18T18:16:24.000Z,Library,1,quad4_r1_c5,Fulfilled,5.2,en
+2026-03-19T14:13:08.000Z,Library,1,quad3_r4_c3,Worried,5.3,en
+2026-03-19T15:07:39.000Z,Library,1,quad4_r4_c4,Comfortable,6.0,en
+2026-03-20T15:24:43.000Z,Science Center,4,quad4_r4_c1,Sereno,2.9,es
+2026-03-21T13:46:26.000Z,Science Center,3,quad2_r5_c4,Spent,6.0,en
+2026-03-21T14:33:04.000Z,Science Center,3,quad2_r4_c4,Agotado,3.8,es
+2026-03-21T15:15:03.000Z,Science Center,2,quad4_r3_c1,Relaxed,6.0,en
+2026-03-21T17:08:02.000Z,Library,1,quad4_r2_c3,Satisfied,6.8,en
+2026-03-22T12:07:47.000Z,Innovation Center,2,quad3_r5_c5,Peeved,6.0,en
+2026-03-22T14:37:08.000Z,Library,3,quad2_r5_c4,Spent,3.5,en
+2026-03-22T18:46:37.000Z,Science Center,2,quad1_r1_c1,Surprised,4.4,en
+2026-03-23T09:12:12.000Z,Innovation Center,1,quad1_r2_c5,Eufórico,9.3,es
+2026-03-23T15:03:01.000Z,Library,1,quad1_r1_c4,Exhilarated,1.4,en
+2026-03-23T19:38:12.000Z,Innovation Center,1,quad1_r5_c3,Hopeful,4.0,en
+2026-03-24T12:09:14.000Z,Library,2,quad2_r4_c1,Despondent,2.0,en
+2026-03-24T12:51:52.000Z,Innovation Center,1,quad4_r4_c5,Carefree,4.7,en
+2026-03-24T16:46:39.000Z,Innovation Center,2,quad3_r2_c2,Furious,5.5,en
+2026-03-24T17:44:40.000Z,Library,3,quad4_r4_c3,Peaceful,5.6,en
+2026-03-25T12:27:07.000Z,Innovation Center,2,quad4_r3_c3,Descansado,5.3,es
+2026-03-25T13:13:34.000Z,Innovation Center,1,quad4_r2_c2,Secure,6.2,en
+2026-03-25T17:59:10.000Z,Library,1,quad1_r2_c3,Motivated,7.7,en
+2026-03-26T12:04:54.000Z,Library,3,quad2_r4_c2,Depressed,4.2,en
+2026-03-26T12:38:36.000Z,Innovation Center,1,quad3_r3_c3,Angry,2.4,en
+2026-03-27T13:26:38.000Z,Science Center,2,quad1_r4_c5,Emocionadísimo,9.2,es
+2026-03-27T13:52:10.000Z,Library,2,quad3_r3_c4,Nervous,7.5,en
+2026-03-27T15:22:46.000Z,Science Center,1,quad3_r1_c3,Stressed,9.0,en
+2026-03-27T17:39:02.000Z,Library,3,quad1_r4_c4,Proud,8.2,en
+2026-03-28T12:06:27.000Z,Innovation Center,1,quad1_r1_c3,Festivo,4.9,es
+2026-03-28T14:47:11.000Z,Innovation Center,1,quad4_r4_c3,Peaceful,3.0,en
+2026-03-29T12:20:10.000Z,Innovation Center,1,quad2_r4_c2,Depressed,1.5,en
+2026-03-29T12:45:33.000Z,Innovation Center,3,quad4_r4_c3,Peaceful,5.0,en
+2026-03-29T13:09:44.000Z,Innovation Center,1,quad2_r1_c3,Disappointed,1.6,en
+2026-03-29T16:22:13.000Z,Innovation Center,3,quad4_r2_c4,Grateful,3.4,en
+2026-03-29T17:04:52.000Z,Library,3,quad2_r4_c3,Sullen,5.2,en
+2026-03-30T13:25:40.000Z,Science Center,1,quad4_r4_c4,Cómodo,5.8,es
+2026-03-31T14:05:36.000Z,Library,1,quad2_r4_c3,Sullen,9.2,en
+2026-03-31T19:04:55.000Z,Library,1,quad1_r3_c2,Lively,2.1,en
+2026-04-01T10:14:20.000Z,Innovation Center,1,quad1_r3_c3,Excited,7.1,en
+2026-04-01T11:49:57.000Z,Library,2,quad1_r5_c1,Pleasant,4.9,en
+2026-04-01T14:36:36.000Z,Library,2,quad4_r5_c4,Cozy,1.7,en
+2026-04-02T10:51:44.000Z,Innovation Center,1,quad4_r4_c5,Despreocupado,4.8,es
+2026-04-02T13:37:06.000Z,Science Center,2,quad1_r4_c2,Focused,3.2,en
+2026-04-02T18:29:28.000Z,Library,1,quad3_r4_c3,Preocupado,5.0,es
+2026-04-03T16:01:15.000Z,Innovation Center,1,quad4_r3_c2,Chill,2.4,en
+2026-04-05T11:03:18.000Z,Library,3,quad1_r5_c1,Pleasant,4.3,en
+2026-04-05T11:36:01.000Z,Innovation Center,1,quad4_r3_c5,Equilibrado,8.2,es
+2026-04-05T11:43:06.000Z,Library,1,quad3_r3_c2,Frightened,4.4,en
+2026-04-05T14:41:03.000Z,Library,1,quad4_r2_c2,Secure,5.5,en
+2026-04-05T16:58:55.000Z,Library,3,quad3_r4_c3,Worried,5.2,en
+2026-04-07T18:45:55.000Z,Science Center,1,quad1_r2_c2,Alegre,1.6,es
+2026-04-08T12:08:19.000Z,Library,1,quad1_r2_c2,Cheerful,3.4,en
+2026-04-08T19:14:27.000Z,Science Center,1,quad3_r1_c4,Jittery,2.8,en
+2026-04-09T12:13:56.000Z,Science Center,1,quad1_r1_c3,Festive,1.7,en
+2026-04-09T16:44:38.000Z,Innovation Center,6,quad4_r2_c1,Calmado,6.2,es
+2026-04-09T19:21:51.000Z,Innovation Center,1,quad2_r1_c2,Glum,4.2,en
+2026-04-10T12:41:31.000Z,Science Center,1,quad1_r3_c3,Emocionado,1.1,es
+2026-04-10T17:28:22.000Z,Innovation Center,1,quad1_r3_c4,Optimistic,2.0,en
+2026-04-11T07:38:48.000Z,Innovation Center,2,quad2_r2_c3,Discouraged,5.8,en
+2026-04-11T10:19:16.000Z,Science Center,1,quad3_r5_c3,Concerned,2.3,en
+2026-04-11T10:40:40.000Z,Library,2,quad1_r4_c2,Focused,2.6,en
+2026-04-11T18:39:03.000Z,Innovation Center,1,quad1_r2_c4,Inspired,7.1,en
+2026-04-11T19:43:05.000Z,Science Center,2,quad3_r5_c5,Peeved,4.3,en
+2026-04-12T13:08:06.000Z,Innovation Center,1,quad1_r5_c2,Alegre,3.0,es
+2026-04-13T10:40:21.000Z,Library,1,quad1_r4_c3,Happy,7.1,en
+2026-04-13T18:13:07.000Z,Library,3,quad4_r5_c5,Serene,3.8,en
+2026-04-14T09:33:46.000Z,Science Center,2,quad3_r3_c4,Nervous,1.4,en
+2026-04-14T12:59:04.000Z,Science Center,1,quad1_r3_c4,Optimistic,6.0,en
+2026-04-14T15:17:26.000Z,Library,1,quad2_r4_c1,Despondent,5.6,en
+2026-04-15T09:46:45.000Z,Library,1,quad4_r1_c3,Content,6.9,en
+2026-04-15T13:57:30.000Z,Innovation Center,1,quad4_r4_c1,Sereno,6.2,es
+2026-04-17T10:05:15.000Z,Library,1,quad1_r5_c1,Pleasant,1.3,en
+2026-04-17T14:53:17.000Z,Innovation Center,1,quad4_r4_c2,Thoughtful,1.0,en
+2026-04-18T08:51:20.000Z,Science Center,1,quad1_r4_c4,Proud,1.6,en
+2026-04-18T09:40:18.000Z,Library,1,quad4_r3_c3,Restful,4.5,en
+2026-04-18T12:32:04.000Z,Library,1,quad3_r3_c3,Angry,2.9,en
+2026-04-18T16:02:15.000Z,Science Center,1,quad1_r3_c5,Enthusiastic,4.9,en
+2026-04-18T19:45:06.000Z,Library,2,quad3_r3_c2,Frightened,1.6,en
+2026-04-19T00:17:49.000Z,Science Center,2,quad1_r3_c3,Excited,4.4,en
+2026-04-19T16:03:00.000Z,Library,2,quad3_r4_c4,Irritated,6.1,en
+2026-04-20T12:10:02.000Z,Innovation Center,1,quad2_r2_c3,Discouraged,6.0,en
+2026-04-20T14:02:32.000Z,Innovation Center,1,quad4_r3_c3,Restful,3.0,en
+2026-04-20T19:16:55.000Z,Innovation Center,1,quad1_r1_c2,Upbeat,2.4,en
+2026-04-21T13:51:04.000Z,Science Center,2,quad4_r2_c3,Satisfied,7.9,en
+2026-04-21T13:56:10.000Z,Science Center,2,quad4_r3_c1,Relaxed,2.4,en
+2026-04-23T15:18:04.000Z,Innovation Center,1,quad2_r3_c2,Miserable,8.7,en
+2026-04-24T13:42:32.000Z,Library,1,quad1_r1_c5,Ecstatic,2.2,en
+2026-04-24T14:25:10.000Z,Science Center,3,quad3_r4_c3,Worried,4.6,en
+2026-04-25T20:43:32.000Z,Science Center,1,quad3_r3_c5,Inquieto,5.8,es
+2026-04-26T15:44:05.000Z,Science Center,1,quad4_r1_c4,Loving,4.7,en
+2026-04-26T19:14:12.000Z,Library,3,quad4_r1_c5,Fulfilled,3.1,en
+2026-04-27T02:56:02.000Z,Innovation Center,2,quad1_r1_c2,Upbeat,3.4,en
+2026-04-27T10:13:35.000Z,Library,1,quad1_r1_c2,Upbeat,3.1,en
+2026-04-27T10:50:40.000Z,Library,1,quad3_r2_c2,Furious,4.1,en
+2026-04-27T14:52:52.000Z,Innovation Center,1,quad4_r4_c3,Peaceful,2.5,en
+2026-04-27T16:11:57.000Z,Innovation Center,1,quad3_r2_c4,Tense,4.7,en
+2026-04-28T11:38:05.000Z,Science Center,1,quad3_r1_c3,Stressed,2.3,en
+2026-04-28T15:07:36.000Z,Library,2,quad1_r5_c3,Hopeful,0.8,en
+2026-04-29T08:28:28.000Z,Library,1,quad4_r5_c3,Tranquil,5.0,en
+2026-04-29T13:06:47.000Z,Innovation Center,3,quad4_r4_c5,Carefree,7.5,en
+2026-04-29T15:44:53.000Z,Science Center,1,quad1_r4_c1,Pleased,2.8,en
+2026-04-30T10:27:48.000Z,Innovation Center,1,quad3_r4_c3,Worried,4.9,en
+2026-04-30T12:13:40.000Z,Science Center,1,quad3_r2_c5,Stunned,2.6,en
+2026-04-30T14:01:46.000Z,Library,5,quad4_r1_c2,Easygoing,1.9,en
+2026-04-30T14:10:48.000Z,Science Center,2,quad4_r5_c3,Tranquil,4.2,en
+2026-04-30T20:11:45.000Z,Innovation Center,1,quad3_r2_c4,Tenso,5.3,es
+2026-05-01T13:33:48.000Z,Science Center,1,quad4_r1_c2,Relajado,4.8,es
+2026-05-02T12:50:41.000Z,Science Center,1,quad3_r4_c1,Anxious,3.3,en
+2026-05-02T14:03:47.000Z,Innovation Center,1,quad3_r3_c2,Frightened,3.2,en
+2026-05-05T12:56:14.000Z,Science Center,1,quad3_r2_c1,Livid,4.3,en
+2026-05-06T13:11:21.000Z,Library,3,quad3_r1_c2,Panicked,2.7,en
+2026-05-06T15:02:02.000Z,Library,3,quad4_r2_c4,Grateful,3.2,en
+2026-05-07T17:56:20.000Z,Innovation Center,1,quad3_r1_c2,Panicked,4.6,en
+2026-05-08T14:24:37.000Z,Library,1,quad3_r2_c4,Tense,5.3,en
+2026-05-08T16:02:33.000Z,Innovation Center,1,quad4_r1_c5,Fulfilled,5.4,en
+2026-05-09T11:22:15.000Z,Innovation Center,2,quad3_r3_c1,Fuming,7.0,en
+2026-05-09T14:30:55.000Z,Innovation Center,3,quad3_r2_c1,Livid,5.1,en
+2026-05-09T16:12:46.000Z,Library,2,quad4_r4_c1,Mellow,1.9,en
+2026-05-10T13:12:06.000Z,Library,2,quad3_r2_c5,Stunned,2.5,en
+2026-05-10T15:38:00.000Z,Innovation Center,1,quad4_r4_c5,Despreocupado,1.2,es
+2026-05-10T20:45:45.000Z,Science Center,2,quad4_r5_c2,Complacent,5.1,en
+2026-05-11T18:02:47.000Z,Library,1,quad3_r2_c2,Furious,6.5,en
+2026-05-12T09:57:21.000Z,Innovation Center,1,quad2_r2_c3,Discouraged,4.5,en
+2026-05-12T18:25:17.000Z,Library,1,quad1_r5_c4,Playful,6.2,en
+2026-05-13T13:32:09.000Z,Library,2,quad4_r5_c4,Cozy,7.2,en
+2026-05-14T11:08:21.000Z,Library,3,quad3_r1_c5,Shocked,5.4,en
+2026-05-14T16:39:37.000Z,Library,1,quad1_r5_c2,Joyful,1.2,en
+2026-05-16T13:00:23.000Z,Library,2,quad3_r3_c4,Nervioso,5.1,es
+2026-05-16T13:17:04.000Z,Library,2,quad1_r3_c3,Excited,2.7,en
+2026-05-16T17:04:54.000Z,Innovation Center,1,quad1_r4_c1,Pleased,3.4,en
+2026-05-16T17:53:50.000Z,Library,2,quad3_r5_c3,Concerned,6.9,en
+2026-05-16T18:15:12.000Z,Innovation Center,2,quad4_r1_c2,Easygoing,5.8,en
+2026-05-17T09:40:02.000Z,Science Center,1,quad4_r2_c5,Touched,2.4,en
+2026-05-17T11:51:48.000Z,Science Center,1,quad3_r2_c1,Livid,5.6,en
+2026-05-17T12:48:01.000Z,Innovation Center,1,quad4_r5_c1,Somnoliento,3.1,es
+2026-05-18T13:41:10.000Z,Science Center,1,quad2_r3_c2,Miserable,6.3,es
+2026-05-18T14:03:28.000Z,Innovation Center,2,quad4_r5_c1,Somnoliento,2.9,es
+2026-05-19T09:05:48.000Z,Science Center,1,quad3_r4_c4,Irritado,4.9,es
+2026-05-19T17:49:38.000Z,Science Center,1,quad4_r2_c2,Secure,1.4,en
+2026-05-19T17:51:56.000Z,Innovation Center,1,quad3_r1_c3,Estresado,3.3,es
+2026-05-20T10:40:18.000Z,Library,1,quad4_r3_c3,Descansado,4.6,es
+2026-05-20T12:21:00.000Z,Innovation Center,2,quad1_r3_c3,Excited,5.6,en
+2026-05-20T18:16:32.000Z,Library,2,quad4_r2_c2,Secure,2.3,en
+2026-05-21T13:36:45.000Z,Innovation Center,3,quad3_r2_c3,Frustrado,2.6,es
+2026-05-21T17:58:06.000Z,Library,2,quad4_r2_c4,Grateful,3.7,en
+2026-06-08T07:21:44.000Z,Library,1,quad1_r3_c2,Lively,1.7,en
+2026-06-08T13:38:42.000Z,Innovation Center,2,quad2_r4_c2,Depressed,3.2,en
+2026-06-08T17:26:58.000Z,Science Center,2,quad2_r4_c5,Fatigued,3.5,en
+2026-06-09T11:50:02.000Z,Library,2,quad1_r5_c1,Pleasant,3.3,en
+2026-06-09T16:31:12.000Z,Innovation Center,1,quad4_r2_c3,Satisfecho,5.1,es
+2026-06-10T11:46:15.000Z,Library,6,quad2_r4_c2,Depressed,5.9,en
+2026-06-10T12:34:30.000Z,Science Center,2,quad4_r2_c2,Secure,2.2,en
+2026-06-10T12:36:12.000Z,Innovation Center,2,quad1_r4_c3,Feliz,5.6,es
+2026-06-11T16:55:21.000Z,Innovation Center,2,quad2_r3_c1,Alienated,2.6,en
+2026-06-12T11:31:26.000Z,Library,2,quad1_r3_c2,Lively,1.4,en
+2026-06-13T11:44:53.000Z,Library,2,quad2_r2_c4,Sad,3.3,en
+2026-06-14T08:56:51.000Z,Library,1,quad3_r3_c2,Frightened,8.0,en
+2026-06-14T09:04:33.000Z,Science Center,1,quad4_r3_c5,Balanced,5.7,en
+2026-06-14T12:24:27.000Z,Innovation Center,1,quad1_r4_c4,Orgulloso,1.7,es
+2026-06-14T13:24:33.000Z,Innovation Center,1,quad1_r3_c4,Optimista,7.8,es
+2026-06-14T17:10:24.000Z,Library,1,quad2_r4_c5,Fatigued,4.0,en
+2026-06-15T12:52:48.000Z,Library,1,quad2_r5_c2,Hopeless,2.6,en
+2026-06-15T17:02:20.000Z,Innovation Center,1,quad3_r1_c2,Panicked,5.9,en
+2026-06-16T11:14:57.000Z,Innovation Center,1,quad2_r3_c2,Miserable,3.9,es
+2026-06-16T15:29:01.000Z,Science Center,3,quad3_r1_c3,Estresado,3.3,es
+2026-06-17T11:23:16.000Z,Library,1,quad4_r2_c2,Secure,3.5,en
+2026-06-17T14:51:45.000Z,Science Center,1,quad4_r5_c1,Sleepy,1.2,en
+2026-06-17T21:21:57.000Z,Science Center,1,quad4_r3_c5,Balanced,3.3,en
+2026-06-18T11:08:11.000Z,Library,3,quad4_r2_c4,Grateful,3.3,en
+2026-06-18T14:53:10.000Z,Library,1,quad1_r3_c4,Optimistic,3.5,en
+2026-06-18T15:15:47.000Z,Innovation Center,4,quad4_r3_c4,Blessed,7.8,en
+2026-06-18T18:53:41.000Z,Science Center,1,quad3_r2_c3,Frustrated,3.5,en
+2026-06-19T15:38:41.000Z,Library,1,quad1_r4_c4,Orgulloso,2.5,es
+2026-06-19T17:08:29.000Z,Library,2,quad4_r1_c4,Loving,0.7,en
+2026-06-20T12:00:15.000Z,Innovation Center,1,quad3_r4_c5,Annoyed,3.5,en
+2026-06-20T14:05:21.000Z,Science Center,4,quad3_r4_c3,Worried,2.5,en
+2026-06-20T15:43:04.000Z,Innovation Center,3,quad2_r2_c3,Discouraged,2.1,en
+2026-06-21T13:30:26.000Z,Library,2,quad3_r5_c2,Angustiado,2.9,es
+2026-06-21T13:43:55.000Z,Innovation Center,1,quad1_r5_c2,Joyful,2.8,en
+2026-06-21T18:05:50.000Z,Science Center,1,quad4_r5_c3,Tranquil,2.5,en
+2026-06-21T19:04:33.000Z,Library,3,quad1_r5_c5,Blissful,8.1,en
+2026-06-22T13:54:09.000Z,Library,1,quad2_r3_c2,Miserable,1.7,en
+2026-06-23T19:15:53.000Z,Science Center,1,quad3_r4_c2,Apprehensive,5.2,en
+2026-06-24T12:25:35.000Z,Library,1,quad2_r5_c1,Despairing,8.9,en
+2026-06-24T14:48:59.000Z,Library,2,quad3_r1_c4,Nervioso,2.8,es
+2026-06-25T09:19:16.000Z,Science Center,2,quad1_r5_c5,Blissful,3.5,en
+2026-06-25T18:37:34.000Z,Library,1,quad4_r4_c2,Thoughtful,6.2,en
+2026-06-27T14:43:17.000Z,Innovation Center,3,quad3_r1_c3,Stressed,5.5,en
+2026-06-27T16:04:46.000Z,Science Center,2,quad4_r1_c3,Content,5.0,en
+2026-06-28T12:29:29.000Z,Science Center,2,quad3_r5_c2,Angustiado,2.4,es
+2026-06-29T12:18:51.000Z,Library,2,quad1_r4_c3,Happy,4.5,en
+2026-06-29T20:07:23.000Z,Science Center,1,quad2_r5_c4,Spent,2.6,en
+2026-06-30T09:41:01.000Z,Library,1,quad2_r5_c2,Hopeless,3.2,en
+2026-06-30T15:58:29.000Z,Innovation Center,1,quad2_r1_c2,Glum,6.3,en
+2026-06-30T20:25:27.000Z,Innovation Center,1,quad3_r2_c1,Livid,1.5,en
+2026-07-01T11:21:19.000Z,Library,1,quad1_r4_c4,Proud,5.5,en
+2026-07-01T13:41:50.000Z,Innovation Center,3,quad4_r4_c3,Peaceful,3.5,en
+2026-07-01T17:40:06.000Z,Science Center,1,quad1_r5_c3,Hopeful,9.5,en
+2026-07-02T09:27:44.000Z,Innovation Center,2,quad3_r5_c4,Uneasy,2.6,en
+2026-07-03T00:37:24.000Z,Innovation Center,1,quad1_r5_c1,Pleasant,4.7,en
+2026-07-03T10:44:55.000Z,Innovation Center,1,quad2_r4_c3,Sullen,1.1,en
+2026-07-03T10:49:19.000Z,Innovation Center,2,quad1_r5_c5,Dichoso,3.2,es
+2026-07-03T11:39:59.000Z,Library,2,quad1_r4_c4,Orgulloso,6.4,es
+2026-07-04T11:52:03.000Z,Innovation Center,2,quad3_r3_c3,Angry,1.3,en
+2026-07-04T12:24:38.000Z,Library,1,quad4_r3_c4,Bendecido,1.7,es
+2026-07-04T14:24:33.000Z,Science Center,1,quad3_r2_c4,Tense,7.9,en
+2026-07-04T19:07:58.000Z,Library,1,quad2_r3_c3,Lonely,7.9,en
+2026-07-05T16:16:25.000Z,Library,1,quad4_r3_c5,Balanced,9.0,en
+2026-07-06T18:50:27.000Z,Library,2,quad1_r5_c5,Dichoso,9.4,es
+2026-07-07T10:08:18.000Z,Library,1,quad1_r2_c2,Cheerful,2.6,en
+2026-07-07T15:09:52.000Z,Innovation Center,4,quad3_r5_c1,Repugnado,2.7,es
+2026-07-07T16:56:05.000Z,Innovation Center,1,quad4_r4_c2,Reflexivo,4.9,es
+2026-07-08T14:14:27.000Z,Innovation Center,1,quad3_r4_c4,Irritado,5.0,es
+2026-07-08T15:06:02.000Z,Innovation Center,3,quad1_r5_c2,Alegre,5.2,es
+2026-07-09T17:14:55.000Z,Science Center,1,quad3_r1_c3,Stressed,5.0,en
+2026-07-09T22:10:42.000Z,Innovation Center,1,quad1_r4_c5,Thrilled,2.5,en
+2026-07-11T14:14:35.000Z,Innovation Center,2,quad2_r2_c5,Bored,3.2,en
+2026-07-12T11:05:26.000Z,Library,1,quad2_r3_c5,Tired,2.1,en
+2026-07-12T12:28:13.000Z,Innovation Center,2,quad1_r1_c2,Animado,2.2,es
+2026-07-12T13:18:35.000Z,Innovation Center,5,quad4_r2_c4,Grateful,4.9,en
+2026-07-12T13:35:38.000Z,Science Center,2,quad4_r1_c1,Tranquilo,2.2,es
+2026-07-12T15:52:17.000Z,Innovation Center,1,quad1_r3_c3,Emocionado,1.9,es
+2026-07-12T23:59:59.000Z,Innovation Center,1,quad3_r1_c5,Shocked,1.1,en
+2026-07-13T17:38:02.000Z,Library,1,quad4_r2_c3,Satisfied,1.7,en
+2026-07-15T14:21:49.000Z,Innovation Center,1,quad1_r1_c4,Exhilarated,7.5,en
+2026-07-16T11:13:58.000Z,Innovation Center,1,quad1_r5_c2,Joyful,5.0,en
+2026-07-16T12:47:52.000Z,Science Center,3,quad2_r4_c4,Exhausted,5.2,en
+2026-07-16T13:28:17.000Z,Innovation Center,1,quad3_r2_c2,Furious,2.6,en
+2026-07-16T15:51:39.000Z,Innovation Center,3,quad3_r1_c5,Shocked,5.6,en
+2026-07-16T23:45:16.000Z,Science Center,1,quad2_r4_c3,Sullen,6.0,en
+2026-07-17T09:55:53.000Z,Innovation Center,1,quad3_r3_c3,Angry,3.4,en
+2026-07-17T14:07:34.000Z,Innovation Center,1,quad2_r5_c5,Drenado,3.4,es
+2026-07-17T14:47:59.000Z,Library,1,quad4_r2_c2,Secure,3.5,en
+2026-07-18T15:08:19.000Z,Innovation Center,1,quad4_r4_c4,Comfortable,2.0,en
+2026-07-18T17:02:37.000Z,Science Center,1,quad2_r5_c4,Spent,4.5,en
+2026-07-18T17:19:37.000Z,Library,2,quad4_r2_c5,Touched,1.6,en
+2026-07-19T11:47:54.000Z,Science Center,1,quad2_r4_c4,Exhausted,6.8,en
+2026-07-19T14:09:48.000Z,Library,2,quad4_r4_c3,Peaceful,5.9,en
+2026-07-20T18:21:55.000Z,Science Center,2,quad3_r2_c5,Stunned,5.2,en
+2026-07-21T15:29:29.000Z,Science Center,2,quad2_r3_c4,Disheartened,4.5,en
+2026-07-21T16:25:41.000Z,Library,1,quad3_r3_c3,Enojado,3.9,es
+2026-07-22T17:34:35.000Z,Innovation Center,1,quad2_r4_c3,Sullen,8.1,en
+2026-07-23T17:08:22.000Z,Library,1,quad2_r4_c4,Agotado,5.7,es
+2026-07-24T11:37:10.000Z,Science Center,1,quad4_r5_c4,Cozy,6.1,en
+2026-07-24T12:42:52.000Z,Science Center,2,quad1_r5_c4,Playful,2.3,en
+2026-07-24T16:50:49.000Z,Library,2,quad3_r1_c5,Shocked,4.4,en
+2026-07-26T17:41:53.000Z,Science Center,2,quad4_r2_c3,Satisfied,3.0,en
+2026-07-26T20:26:30.000Z,Library,2,quad4_r1_c2,Easygoing,1.6,en
+2026-07-27T10:37:21.000Z,Science Center,2,quad3_r4_c1,Anxious,6.7,en
+2026-07-27T11:07:44.000Z,Library,1,quad2_r5_c5,Drained,4.7,en
+2026-07-27T11:50:27.000Z,Library,2,quad3_r4_c2,Apprehensive,2.2,en
+2026-07-27T18:44:26.000Z,Science Center,3,quad2_r2_c4,Sad,5.2,en
+2026-07-28T10:14:53.000Z,Science Center,1,quad3_r2_c2,Furious,7.5,en
+2026-07-28T13:57:27.000Z,Innovation Center,1,quad2_r5_c4,Spent,8.3,en
+2026-07-28T15:41:16.000Z,Innovation Center,1,quad1_r5_c4,Playful,4.7,en
+2026-07-28T16:07:48.000Z,Innovation Center,2,quad1_r3_c3,Excited,5.2,en
+2026-07-28T18:43:06.000Z,Library,3,quad1_r2_c1,Hyper,4.7,en
+2026-07-29T11:22:37.000Z,Innovation Center,2,quad1_r1_c5,Ecstatic,2.9,en
+2026-07-29T13:12:59.000Z,Innovation Center,2,quad4_r2_c2,Secure,2.7,en
+2026-07-29T14:12:02.000Z,Innovation Center,1,quad2_r3_c2,Miserable,2.5,en
+2026-07-29T15:04:09.000Z,Innovation Center,2,quad4_r4_c5,Carefree,7.9,en
+2026-07-29T16:06:13.000Z,Library,1,quad2_r2_c5,Bored,5.1,en
+2026-07-30T08:59:51.000Z,Library,3,quad2_r2_c1,Pessimistic,5.3,en
+2026-07-30T09:31:53.000Z,Science Center,3,quad2_r4_c2,Depressed,4.0,en
+2026-07-30T12:14:10.000Z,Innovation Center,2,quad2_r1_c5,Apathetic,9.4,en
+2026-07-30T15:53:01.000Z,Library,2,quad4_r5_c4,Cozy,3.3,en
+2026-07-30T17:28:30.000Z,Science Center,1,quad2_r5_c1,Despairing,3.1,en
+2026-07-31T09:44:23.000Z,Innovation Center,2,quad2_r3_c1,Alienated,3.7,en
+2026-07-31T12:29:49.000Z,Library,2,quad2_r5_c1,Despairing,8.9,en
+2026-07-31T13:23:51.000Z,Innovation Center,1,quad2_r5_c3,Desolado,8.8,es
+2026-07-31T14:21:15.000Z,Library,1,quad3_r4_c1,Anxious,3.3,en
+2026-07-31T14:49:01.000Z,Innovation Center,1,quad3_r3_c4,Nervous,3.7,en
+2026-07-31T16:48:33.000Z,Library,1,quad4_r2_c2,Secure,6.5,en
+2026-07-31T18:35:12.000Z,Library,1,quad4_r3_c3,Restful,6.3,en
+2026-08-01T16:58:01.000Z,Innovation Center,2,quad3_r2_c1,Livid,5.2,en
+2026-08-01T17:19:42.000Z,Library,3,quad3_r5_c2,Troubled,1.0,en
+2026-08-01T18:50:51.000Z,Library,1,quad3_r1_c1,Enraged,4.0,en
+2026-08-01T19:12:33.000Z,Science Center,2,quad1_r3_c5,Enthusiastic,3.8,en
+2026-08-02T09:15:26.000Z,Science Center,1,quad3_r1_c1,Enraged,1.4,en
+2026-08-02T11:29:24.000Z,Innovation Center,3,quad2_r2_c4,Triste,1.9,es
+2026-08-02T12:25:02.000Z,Innovation Center,1,quad2_r4_c2,Depressed,6.7,en
+2026-08-02T14:12:47.000Z,Science Center,2,quad4_r2_c4,Grateful,5.8,en
+2026-08-02T16:40:27.000Z,Science Center,2,quad3_r3_c5,Restless,5.5,en
+2026-08-02T17:06:34.000Z,Innovation Center,1,quad4_r4_c4,Comfortable,2.2,en
+2026-08-03T14:55:16.000Z,Library,1,quad2_r5_c1,Desesperado,5.8,es
+2026-08-03T16:54:32.000Z,Innovation Center,2,quad1_r4_c1,Pleased,2.4,en
+2026-08-03T18:12:00.000Z,Science Center,2,quad4_r2_c3,Satisfied,7.6,en
+2026-08-03T21:00:21.000Z,Library,4,quad1_r2_c1,Hyper,2.8,en
+2026-08-04T12:33:11.000Z,Science Center,2,quad1_r3_c1,Energized,2.5,en
+2026-08-04T14:01:24.000Z,Innovation Center,2,quad2_r5_c2,Hopeless,5.2,en
+2026-08-04T14:59:31.000Z,Innovation Center,1,quad2_r2_c3,Discouraged,8.0,en
+2026-08-05T13:34:03.000Z,Innovation Center,1,quad4_r2_c3,Satisfecho,3.1,es
+2026-08-05T14:06:57.000Z,Science Center,2,quad1_r4_c4,Proud,1.8,en
+2026-08-05T14:10:27.000Z,Innovation Center,1,quad2_r2_c5,Aburrido,3.7,es
+2026-08-05T18:35:14.000Z,Library,1,quad3_r3_c1,Encolerizado,6.1,es
+2026-08-22T11:03:47.000Z,Library,1,quad1_r4_c2,Focused,2.5,en
+2026-08-22T16:17:12.000Z,Library,2,quad3_r3_c2,Frightened,4.4,en
+2026-08-22T18:12:46.000Z,Innovation Center,2,quad1_r4_c5,Thrilled,2.0,en
+2026-08-23T10:25:40.000Z,Innovation Center,1,quad2_r3_c3,Lonely,4.9,en
+2026-08-23T13:35:08.000Z,Innovation Center,1,quad4_r2_c2,Seguro,6.0,es
+2026-08-23T15:14:14.000Z,Innovation Center,1,quad1_r1_c1,Surprised,2.0,en
+2026-08-24T15:46:06.000Z,Innovation Center,1,quad1_r3_c5,Entusiasta,6.7,es
+2026-08-24T15:49:05.000Z,Science Center,2,quad3_r3_c3,Angry,7.9,en
+2026-08-25T07:00:17.000Z,Science Center,2,quad1_r3_c2,Lively,3.7,en
+2026-08-25T14:22:44.000Z,Innovation Center,3,quad4_r4_c2,Thoughtful,2.7,en
+2026-08-25T15:50:13.000Z,Library,1,quad2_r3_c5,Cansado,3.3,es
+2026-08-25T17:40:51.000Z,Science Center,2,quad4_r2_c3,Satisfecho,6.8,es
+2026-08-26T16:39:50.000Z,Science Center,2,quad1_r3_c2,Lively,5.2,en
+2026-08-27T13:15:11.000Z,Innovation Center,1,quad2_r2_c1,Pessimistic,1.9,en
+2026-08-27T13:31:02.000Z,Science Center,3,quad1_r4_c1,Pleased,4.0,en
+2026-08-27T14:09:53.000Z,Library,2,quad1_r4_c2,Focused,9.9,en
+2026-08-27T17:47:00.000Z,Library,3,quad1_r2_c2,Cheerful,4.9,en
+2026-08-28T11:09:44.000Z,Library,1,quad1_r4_c2,Focused,1.0,en
+2026-08-29T14:38:09.000Z,Library,2,quad4_r4_c4,Comfortable,5.7,en
+2026-08-29T15:03:25.000Z,Science Center,2,quad4_r1_c3,Contento,2.9,es
+2026-08-29T17:13:23.000Z,Innovation Center,1,quad2_r4_c1,Despondent,7.8,en
+2026-08-30T14:46:57.000Z,Science Center,1,quad3_r2_c4,Tenso,6.9,es
+2026-08-30T15:52:59.000Z,Science Center,1,quad1_r2_c2,Alegre,4.7,es
+2026-08-31T11:52:05.000Z,Science Center,2,quad3_r3_c2,Frightened,8.9,en
+2026-08-31T18:56:14.000Z,Library,1,quad3_r2_c1,Lívido,7.5,es
+2026-08-31T18:56:41.000Z,Library,3,quad1_r4_c3,Happy,3.5,en
+2026-08-31T19:13:42.000Z,Science Center,2,quad3_r2_c3,Frustrado,6.0,es
+2026-09-01T01:00:45.000Z,Science Center,1,quad3_r3_c3,Angry,4.7,en
+2026-09-01T11:52:17.000Z,Library,1,quad1_r1_c2,Upbeat,5.6,en
+2026-09-02T16:44:26.000Z,Innovation Center,1,quad1_r4_c3,Happy,6.7,en
+2026-09-03T19:34:23.000Z,Innovation Center,1,quad3_r4_c1,Anxious,1.0,en
+2026-09-04T11:57:46.000Z,Library,4,quad1_r2_c2,Alegre,8.1,es
+2026-09-04T14:17:52.000Z,Science Center,2,quad4_r5_c5,Sereno,2.0,es
+2026-09-04T14:46:48.000Z,Library,1,quad2_r3_c2,Miserable,4.5,en
+2026-09-04T23:59:59.000Z,Innovation Center,2,quad4_r2_c3,Satisfecho,4.2,es
+2026-09-05T13:49:49.000Z,Science Center,1,quad4_r2_c1,Calm,3.5,en
+2026-09-05T16:46:41.000Z,Innovation Center,1,quad4_r3_c4,Blessed,3.4,en
+2026-09-06T10:09:59.000Z,Library,1,quad1_r3_c5,Entusiasta,8.2,es
+2026-09-06T20:29:17.000Z,Science Center,1,quad1_r5_c2,Alegre,1.4,es
+2026-09-07T07:54:25.000Z,Innovation Center,1,quad1_r5_c3,Esperanzado,7.4,es
+2026-09-07T20:51:55.000Z,Innovation Center,2,quad1_r3_c2,Lively,2.5,en
+2026-09-08T10:37:16.000Z,Innovation Center,1,quad3_r5_c3,Concerned,3.9,en
+2026-09-09T14:20:50.000Z,Innovation Center,1,quad3_r5_c3,Preocupado,1.9,es
+2026-09-09T15:27:27.000Z,Innovation Center,1,quad4_r1_c3,Contento,6.6,es
+2026-09-10T11:58:17.000Z,Innovation Center,1,quad2_r3_c4,Disheartened,2.5,en
+2026-09-10T14:53:18.000Z,Innovation Center,1,quad4_r3_c2,Chill,5.3,en
+2026-09-10T17:56:50.000Z,Library,4,quad1_r2_c2,Alegre,1.3,es
+2026-09-11T11:44:09.000Z,Innovation Center,1,quad2_r4_c3,Huraño,7.6,es
+2026-09-11T13:57:36.000Z,Science Center,1,quad3_r1_c3,Stressed,5.6,en
+2026-09-12T11:00:05.000Z,Science Center,1,quad1_r5_c5,Blissful,2.4,en
+2026-09-12T14:35:56.000Z,Library,2,quad2_r2_c2,Morose,6.7,en
+2026-09-13T14:27:11.000Z,Science Center,1,quad4_r5_c3,Tranquil,1.4,en
+2026-09-14T13:13:07.000Z,Library,3,quad1_r4_c1,Pleased,3.5,en
+2026-09-14T17:11:36.000Z,Library,2,quad4_r4_c2,Thoughtful,1.9,en
+2026-09-15T13:53:07.000Z,Library,1,quad4_r2_c4,Agradecido,5.1,es
+2026-09-15T15:57:24.000Z,Science Center,1,quad2_r4_c4,Exhausted,4.6,en
+2026-09-15T19:13:55.000Z,Science Center,2,quad2_r4_c2,Depressed,1.7,en
+2026-09-15T23:35:27.000Z,Science Center,2,quad4_r4_c2,Reflexivo,7.2,es
+2026-09-16T03:11:37.000Z,Innovation Center,1,quad1_r4_c5,Thrilled,6.6,en
+2026-09-16T14:00:12.000Z,Library,2,quad2_r2_c2,Melancólico,6.8,es
+2026-09-16T14:56:33.000Z,Library,2,quad3_r4_c4,Irritated,5.5,en
+2026-09-17T13:13:59.000Z,Library,1,quad3_r4_c2,Aprensivo,3.8,es
+2026-09-17T14:34:07.000Z,Library,2,quad1_r4_c2,Focused,4.4,en
+2026-09-18T20:31:49.000Z,Library,1,quad3_r4_c5,Molesto,4.2,es
+2026-09-19T09:54:40.000Z,Science Center,1,quad3_r3_c4,Nervioso,3.1,es
+2026-09-19T11:36:30.000Z,Science Center,3,quad1_r5_c3,Hopeful,2.7,en
+2026-09-19T15:48:36.000Z,Library,2,quad1_r5_c5,Dichoso,1.7,es
+2026-09-20T14:14:37.000Z,Library,1,quad4_r1_c1,Tranquilo,7.4,es
+2026-09-21T12:33:09.000Z,Science Center,2,quad2_r3_c2,Miserable,4.2,en
+2026-09-21T14:12:21.000Z,Innovation Center,2,quad4_r4_c2,Reflexivo,5.7,es
+2026-09-21T16:15:47.000Z,Science Center,1,quad2_r1_c4,Down,5.4,en
+2026-09-21T17:21:13.000Z,Science Center,2,quad3_r2_c4,Tense,6.9,en
+2026-09-22T16:56:16.000Z,Library,1,quad1_r5_c4,Playful,6.1,en
+2026-09-22T18:17:29.000Z,Science Center,2,quad3_r2_c1,Livid,3.3,en
+2026-09-22T20:08:44.000Z,Science Center,2,quad4_r2_c5,Conmovido,4.2,es
+2026-09-23T12:32:37.000Z,Innovation Center,1,quad1_r5_c4,Playful,2.7,en
+2026-09-24T12:37:00.000Z,Science Center,3,quad3_r1_c5,Shocked,8.1,en
+2026-09-24T12:54:51.000Z,Science Center,1,quad4_r5_c2,Complacent,3.2,en
+2026-09-24T16:55:19.000Z,Library,2,quad4_r3_c2,Chill,5.5,en
+2026-09-24T17:05:40.000Z,Science Center,2,quad3_r5_c2,Troubled,3.7,en
+2026-09-24T17:42:43.000Z,Library,1,quad4_r3_c1,Relaxed,7.3,en
+2026-09-25T15:06:43.000Z,Innovation Center,1,quad1_r4_c4,Proud,4.1,en
+2026-09-26T12:53:24.000Z,Innovation Center,2,quad4_r5_c2,Complaciente,7.4,es
+2026-09-26T13:07:09.000Z,Library,1,quad4_r3_c2,Chill,1.6,en
+2026-09-26T16:01:52.000Z,Science Center,1,quad2_r2_c2,Morose,8.3,en
+2026-09-26T17:03:08.000Z,Library,4,quad3_r1_c2,Panicked,4.5,en
+2026-09-26T17:09:16.000Z,Library,3,quad3_r2_c1,Lívido,3.1,es
+2026-09-26T21:00:11.000Z,Innovation Center,2,quad2_r4_c4,Exhausted,2.2,en
+2026-09-27T12:02:27.000Z,Library,2,quad3_r2_c5,Stunned,2.2,en
+2026-09-27T15:31:30.000Z,Innovation Center,1,quad4_r2_c3,Satisfecho,1.4,es
+2026-09-27T18:24:38.000Z,Library,2,quad4_r1_c1,At Ease,5.8,en
+2026-09-28T18:25:18.000Z,Science Center,3,quad1_r4_c1,Pleased,1.9,en
+2026-09-29T13:00:59.000Z,Science Center,3,quad4_r3_c4,Blessed,2.1,en
+2026-09-30T10:48:24.000Z,Innovation Center,1,quad3_r3_c2,Asustado,8.0,es
+2026-09-30T11:26:44.000Z,Library,2,quad1_r2_c5,Elated,7.5,en
+2026-09-30T12:28:57.000Z,Science Center,1,quad3_r3_c4,Nervous,3.6,en
+2026-09-30T13:28:51.000Z,Science Center,2,quad4_r2_c4,Agradecido,6.5,es
+2026-09-30T16:51:56.000Z,Library,2,quad4_r2_c3,Satisfied,5.8,en
+2026-10-02T08:09:53.000Z,Innovation Center,2,quad4_r5_c2,Complacent,9.8,en
+2026-10-02T12:44:37.000Z,Library,1,quad2_r2_c5,Aburrido,1.9,es
+2026-10-02T14:26:29.000Z,Innovation Center,1,quad3_r2_c4,Tense,7.4,en
+2026-10-02T16:09:20.000Z,Science Center,1,quad1_r2_c5,Elated,1.7,en
+2026-10-03T11:14:24.000Z,Science Center,2,quad2_r4_c3,Sullen,1.8,en
+2026-10-03T13:06:09.000Z,Science Center,1,quad4_r2_c2,Secure,5.1,en
+2026-10-03T14:12:37.000Z,Science Center,1,quad3_r3_c2,Frightened,3.8,en
+2026-10-04T10:01:18.000Z,Library,1,quad1_r1_c1,Sorprendido,3.0,es
+2026-10-04T14:43:08.000Z,Science Center,3,quad4_r2_c4,Agradecido,3.4,es
+2026-10-05T11:27:12.000Z,Science Center,1,quad2_r5_c4,Spent,9.3,en
+2026-10-05T14:39:35.000Z,Library,1,quad4_r2_c1,Calm,2.4,en
+2026-10-05T18:28:27.000Z,Innovation Center,1,quad1_r5_c3,Hopeful,7.0,en
+2026-10-06T13:54:13.000Z,Science Center,1,quad4_r4_c3,Peaceful,1.4,en
+2026-10-06T14:38:51.000Z,Innovation Center,1,quad2_r2_c2,Morose,5.6,en
+2026-10-06T17:29:22.000Z,Science Center,4,quad2_r4_c4,Agotado,4.8,es
+2026-10-06T17:52:19.000Z,Innovation Center,1,quad1_r4_c4,Proud,3.8,en
+2026-10-07T12:29:37.000Z,Innovation Center,4,quad1_r3_c1,Energized,4.2,en
+2026-10-07T12:37:27.000Z,Library,1,quad2_r1_c4,Down,1.3,en
+2026-10-07T13:52:06.000Z,Science Center,2,quad2_r4_c2,Depressed,3.3,en
+2026-10-07T15:33:41.000Z,Library,4,quad2_r4_c3,Huraño,2.5,es
+2026-10-08T15:34:50.000Z,Science Center,4,quad4_r1_c2,Relajado,8.9,es
+2026-10-08T15:44:25.000Z,Library,2,quad4_r4_c1,Mellow,2.7,en
+2026-10-08T19:00:41.000Z,Library,1,quad4_r4_c3,Pacífico,6.5,es
+2026-10-09T16:32:31.000Z,Science Center,1,quad3_r3_c3,Enojado,3.3,es
+2026-10-09T17:38:36.000Z,Science Center,1,quad2_r2_c3,Discouraged,3.0,en
+2026-10-10T13:06:41.000Z,Innovation Center,2,quad3_r1_c5,Impactado,6.4,es
+2026-10-10T13:07:48.000Z,Innovation Center,3,quad4_r5_c2,Complacent,1.6,en
+2026-10-10T13:16:21.000Z,Library,1,quad3_r1_c5,Shocked,2.9,en
+2026-10-10T13:46:04.000Z,Library,1,quad3_r1_c4,Jittery,1.9,en
+2026-10-10T15:06:20.000Z,Science Center,1,quad3_r3_c2,Frightened,6.8,en
+2026-10-10T17:23:30.000Z,Science Center,2,quad1_r5_c4,Playful,4.6,en
+2026-10-11T13:49:01.000Z,Library,2,quad1_r1_c2,Upbeat,2.6,en
+2026-10-11T14:31:04.000Z,Library,1,quad2_r3_c5,Tired,4.5,en
+2026-10-11T15:58:53.000Z,Library,1,quad3_r1_c3,Estresado,3.9,es
+2026-10-11T16:54:23.000Z,Library,1,quad2_r5_c1,Desesperado,2.2,es
+2026-10-11T17:29:50.000Z,Science Center,1,quad1_r2_c4,Inspired,2.1,en
+2026-10-11T18:09:55.000Z,Science Center,1,quad3_r1_c1,Enraged,2.3,en
+2026-10-11T21:56:48.000Z,Library,2,quad2_r2_c3,Discouraged,3.3,en
+2026-10-12T12:32:32.000Z,Innovation Center,3,quad2_r1_c3,Disappointed,5.3,en
+2026-10-12T12:38:13.000Z,Innovation Center,2,quad4_r4_c3,Peaceful,4.8,en
+2026-10-12T14:28:46.000Z,Library,1,quad2_r4_c2,Depressed,2.2,en
+2026-10-12T14:37:39.000Z,Innovation Center,3,quad2_r2_c5,Bored,5.5,en
+2026-10-12T16:00:24.000Z,Library,1,quad4_r3_c3,Restful,6.7,en
+2026-10-13T12:35:35.000Z,Library,1,quad3_r1_c3,Stressed,8.8,en
+2026-10-13T13:00:19.000Z,Innovation Center,1,quad3_r3_c5,Restless,5.2,en
+2026-10-13T13:38:34.000Z,Science Center,2,quad1_r1_c4,Exhilarated,3.5,en
+2026-10-13T14:35:36.000Z,Innovation Center,3,quad3_r4_c1,Ansioso,1.5,es
+2026-10-13T16:52:18.000Z,Science Center,1,quad2_r5_c2,Desahuciado,2.1,es
+2026-10-13T20:02:35.000Z,Innovation Center,3,quad2_r5_c1,Despairing,8.5,en
+2026-10-14T13:35:54.000Z,Library,2,quad4_r3_c4,Blessed,3.0,en
+2026-10-14T13:57:20.000Z,Science Center,2,quad2_r2_c5,Aburrido,6.3,es
+2026-10-14T15:02:18.000Z,Innovation Center,2,quad4_r4_c3,Peaceful,3.6,en
+2026-10-14T21:55:48.000Z,Innovation Center,1,quad1_r3_c5,Entusiasta,3.8,es
+2026-10-15T17:47:57.000Z,Science Center,1,quad4_r4_c4,Comfortable,5.4,en
+2026-10-15T17:52:42.000Z,Library,1,quad1_r4_c3,Happy,2.7,en
+2026-10-15T19:41:17.000Z,Science Center,1,quad2_r3_c2,Miserable,3.7,en
+2026-10-16T11:56:16.000Z,Innovation Center,1,quad3_r5_c2,Troubled,6.5,en
+2026-10-16T12:30:41.000Z,Library,1,quad1_r4_c5,Emocionadísimo,9.4,es
+2026-10-16T12:44:35.000Z,Library,1,quad2_r1_c5,Apático,7.6,es
+2026-10-16T13:06:51.000Z,Library,3,quad3_r5_c3,Preocupado,5.8,es
+2026-10-16T13:40:34.000Z,Library,2,quad3_r4_c4,Irritado,4.4,es
+2026-10-16T13:44:44.000Z,Library,1,quad4_r1_c1,At Ease,3.8,en
+2026-10-16T14:36:38.000Z,Library,2,quad2_r1_c4,Down,4.0,en
+2026-10-16T15:42:20.000Z,Library,2,quad2_r3_c5,Cansado,6.0,es
+2026-10-17T10:37:21.000Z,Innovation Center,2,quad2_r3_c5,Tired,7.9,en
+2026-10-18T13:25:16.000Z,Library,1,quad3_r2_c4,Tense,2.9,en
+2026-10-18T15:20:58.000Z,Library,1,quad4_r2_c2,Secure,3.0,en
+2026-10-18T17:44:16.000Z,Science Center,2,quad1_r4_c5,Thrilled,6.5,en
+2026-10-19T14:20:41.000Z,Innovation Center,1,quad1_r4_c5,Thrilled,5.3,en
+2026-10-19T14:39:19.000Z,Library,1,quad4_r3_c5,Balanced,1.3,en
+2026-10-19T14:48:30.000Z,Science Center,3,quad2_r3_c3,Lonely,0.9,en
+2026-10-19T15:02:58.000Z,Science Center,1,quad2_r1_c2,Glum,2.0,en
+2026-10-20T17:47:53.000Z,Science Center,3,quad1_r1_c2,Upbeat,5.7,en
+2026-10-20T18:57:55.000Z,Library,1,quad2_r1_c5,Apático,1.7,es
+2026-10-20T19:01:46.000Z,Science Center,1,quad1_r4_c1,Pleased,9.7,en
+2026-10-21T09:27:39.000Z,Library,1,quad4_r2_c4,Grateful,4.1,en
+2026-10-21T10:07:24.000Z,Library,5,quad4_r1_c2,Relajado,8.6,es
+2026-10-22T12:06:28.000Z,Innovation Center,1,quad4_r3_c2,Chill,2.8,en
+2026-10-22T15:47:21.000Z,Science Center,1,quad2_r5_c1,Despairing,6.8,en
+2026-10-23T16:16:34.000Z,Library,3,quad3_r5_c2,Troubled,7.5,en
+2026-10-24T13:23:31.000Z,Innovation Center,2,quad2_r3_c5,Tired,5.2,en
+2026-10-25T13:12:18.000Z,Science Center,1,quad4_r5_c4,Acogedor,5.3,es
+2026-10-25T15:24:03.000Z,Science Center,2,quad4_r4_c4,Comfortable,3.9,en
+2026-10-26T13:22:35.000Z,Library,1,quad4_r5_c2,Complacent,2.4,en
+2026-10-26T15:43:52.000Z,Library,1,quad2_r4_c1,Despondent,1.9,en
+2026-10-26T20:49:57.000Z,Library,1,quad2_r5_c5,Drenado,7.7,es
+2026-10-27T16:52:29.000Z,Library,3,quad2_r5_c4,Spent,3.7,en
+2026-10-28T10:58:02.000Z,Science Center,1,quad4_r3_c2,Chill,0.9,en
+2026-10-28T11:42:48.000Z,Science Center,1,quad1_r2_c2,Alegre,3.7,es
+2026-10-28T12:28:48.000Z,Innovation Center,1,quad2_r2_c3,Discouraged,3.5,en
+2026-10-29T12:27:04.000Z,Library,1,quad1_r4_c3,Happy,1.9,en
+2026-10-29T14:43:54.000Z,Library,1,quad3_r5_c4,Uneasy,2.6,en
+2026-10-29T14:49:10.000Z,Library,2,quad4_r1_c1,Tranquilo,8.6,es
+2026-10-29T14:53:06.000Z,Innovation Center,1,quad1_r4_c2,Focused,6.8,en
+2026-10-29T15:12:25.000Z,Library,4,quad3_r1_c1,Enraged,4.1,en
+2026-10-29T16:09:17.000Z,Innovation Center,1,quad2_r3_c4,Disheartened,3.0,en
+2026-10-30T16:19:59.000Z,Library,1,quad4_r2_c2,Secure,5.4,en
+2026-10-31T09:33:50.000Z,Library,2,quad4_r2_c4,Agradecido,4.6,es
+2026-10-31T13:19:46.000Z,Innovation Center,1,quad4_r3_c4,Blessed,3.6,en
+2026-11-01T11:40:43.000Z,Library,1,quad1_r1_c3,Festivo,3.4,es
+2026-11-01T22:37:24.000Z,Science Center,1,quad2_r4_c2,Depressed,3.2,en
+2026-11-02T13:24:00.000Z,Innovation Center,1,quad2_r2_c2,Morose,2.9,en
+2026-11-02T14:00:23.000Z,Library,2,quad4_r4_c1,Mellow,5.8,en
+2026-11-02T16:12:40.000Z,Library,1,quad3_r1_c4,Jittery,2.6,en
+2026-11-02T18:02:52.000Z,Library,1,quad3_r4_c4,Irritated,6.2,en
+2026-11-03T16:46:35.000Z,Library,1,quad4_r3_c3,Descansado,5.3,es
+2026-11-05T15:40:47.000Z,Science Center,2,quad1_r2_c2,Cheerful,3.6,en
+2026-11-05T16:55:31.000Z,Science Center,1,quad4_r2_c4,Grateful,5.0,en
+2026-11-05T18:34:11.000Z,Innovation Center,2,quad1_r3_c4,Optimistic,2.6,en
+2026-11-06T14:39:08.000Z,Science Center,2,quad3_r4_c4,Irritated,2.2,en
+2026-11-06T17:58:14.000Z,Library,1,quad3_r3_c1,Fuming,2.6,en
+2026-11-06T19:56:37.000Z,Library,1,quad1_r2_c4,Inspired,5.9,en
+2026-11-06T23:59:59.000Z,Library,2,quad1_r4_c4,Proud,6.9,en
+2026-11-07T11:42:33.000Z,Library,2,quad4_r1_c3,Content,3.8,en
+2026-11-07T12:34:08.000Z,Science Center,1,quad2_r1_c4,Down,4.3,en
+2026-11-07T17:25:56.000Z,Science Center,1,quad1_r3_c3,Excited,4.2,en
+2026-11-07T18:51:08.000Z,Library,2,quad4_r5_c5,Serene,1.1,en
+2026-11-09T14:16:31.000Z,Library,1,quad1_r1_c2,Upbeat,2.6,en
+2026-11-09T17:49:24.000Z,Library,1,quad2_r3_c4,Desalentado,6.8,es
+2026-11-10T10:02:04.000Z,Library,2,quad1_r4_c3,Happy,1.3,en
+2026-11-10T12:19:46.000Z,Library,4,quad1_r4_c1,Pleased,3.4,en
+2026-11-10T14:11:27.000Z,Library,1,quad1_r2_c5,Elated,3.9,en
+2026-11-10T16:47:38.000Z,Science Center,2,quad3_r5_c1,Repulsed,3.1,en
+2026-11-10T17:29:11.000Z,Innovation Center,3,quad1_r3_c2,Lively,3.2,en
+2026-11-10T18:12:28.000Z,Innovation Center,1,quad2_r5_c2,Hopeless,5.9,en
+2026-11-10T18:30:07.000Z,Innovation Center,2,quad4_r4_c4,Cómodo,4.0,es
+2026-11-10T19:20:29.000Z,Library,1,quad1_r3_c3,Emocionado,3.9,es
+2026-11-11T03:58:12.000Z,Science Center,1,quad3_r4_c4,Irritated,1.9,en
+2026-11-11T11:49:44.000Z,Innovation Center,3,quad4_r4_c4,Comfortable,1.3,en
+2026-11-12T14:52:13.000Z,Science Center,2,quad1_r4_c4,Proud,5.0,en
+2026-11-13T16:51:20.000Z,Library,4,quad3_r4_c3,Worried,4.4,en
+2026-11-14T16:00:32.000Z,Library,1,quad1_r2_c2,Alegre,4.8,es
+2026-11-14T18:58:44.000Z,Innovation Center,1,quad1_r4_c1,Pleased,8.4,en
+2026-11-15T13:02:27.000Z,Library,3,quad4_r3_c4,Bendecido,4.8,es
+2026-11-15T13:21:44.000Z,Science Center,2,quad4_r2_c3,Satisfied,5.7,en
+2026-11-16T17:40:54.000Z,Innovation Center,1,quad2_r4_c1,Despondent,7.9,en
+2026-11-17T11:59:53.000Z,Science Center,1,quad4_r2_c2,Secure,3.2,en
+2026-11-17T13:15:04.000Z,Innovation Center,1,quad3_r5_c4,Uneasy,6.6,en
+2026-11-17T14:24:55.000Z,Innovation Center,1,quad3_r5_c1,Repulsed,3.3,en
+2026-11-17T18:41:51.000Z,Library,1,quad1_r3_c1,Energizado,3.9,es
+2026-11-17T19:00:53.000Z,Library,2,quad2_r5_c3,Desolate,2.9,en
+2026-11-19T09:36:49.000Z,Library,1,quad2_r1_c2,Glum,6.0,en
+2026-11-19T14:10:35.000Z,Library,1,quad4_r4_c1,Mellow,1.0,en
+2026-11-20T11:34:37.000Z,Science Center,1,quad4_r1_c1,At Ease,3.2,en
+2026-11-21T16:10:51.000Z,Science Center,2,quad4_r1_c4,Loving,3.9,en
+2026-11-24T15:12:19.000Z,Library,1,quad1_r2_c3,Motivado,4.4,es
+2026-11-25T18:59:19.000Z,Library,3,quad1_r4_c3,Happy,2.0,en
+2026-11-26T09:47:50.000Z,Science Center,1,quad2_r3_c1,Alienated,2.8,en
+2026-11-26T12:24:54.000Z,Library,1,quad4_r2_c4,Grateful,7.4,en
+2026-11-26T13:12:17.000Z,Science Center,1,quad3_r2_c3,Frustrated,3.2,en
+2026-11-28T06:40:20.000Z,Innovation Center,1,quad4_r4_c2,Thoughtful,7.0,en
+2026-11-28T13:41:56.000Z,Library,1,quad3_r1_c5,Shocked,3.2,en
+2026-11-29T16:08:31.000Z,Innovation Center,2,quad4_r5_c3,Tranquil,3.3,en
+2026-11-30T09:56:52.000Z,Library,1,quad4_r4_c2,Thoughtful,2.3,en
+2026-11-30T10:16:41.000Z,Science Center,1,quad1_r1_c3,Festive,3.3,en
+2026-12-01T16:49:10.000Z,Library,1,quad4_r5_c3,Tranquilo,1.5,es
+2026-12-02T04:58:04.000Z,Library,1,quad4_r4_c5,Carefree,2.6,en
+2026-12-03T15:20:17.000Z,Library,1,quad4_r3_c5,Balanced,2.9,en
+2026-12-03T15:29:35.000Z,Innovation Center,1,quad1_r2_c2,Cheerful,4.4,en
+2026-12-04T11:35:14.000Z,Science Center,1,quad2_r5_c4,Spent,1.6,en
+2026-12-04T13:55:07.000Z,Innovation Center,2,quad4_r3_c1,Relaxed,7.0,en
+2026-12-04T19:56:39.000Z,Science Center,2,quad3_r2_c2,Furious,4.7,en
+2026-12-05T14:31:08.000Z,Innovation Center,1,quad3_r3_c1,Encolerizado,3.8,es
+2026-12-05T16:19:08.000Z,Library,2,quad4_r2_c3,Satisfied,5.5,en
+2026-12-06T08:14:55.000Z,Innovation Center,2,quad3_r5_c2,Troubled,4.0,en
+2026-12-06T10:48:20.000Z,Library,2,quad1_r2_c4,Inspired,2.3,en
+2026-12-06T11:38:15.000Z,Science Center,1,quad4_r3_c1,Relaxed,3.3,en
+2026-12-06T12:44:59.000Z,Science Center,1,quad3_r4_c3,Preocupado,1.3,es
+2026-12-06T14:05:49.000Z,Innovation Center,1,quad3_r4_c1,Anxious,2.8,en
+2026-12-06T14:33:51.000Z,Science Center,1,quad3_r3_c1,Fuming,3.1,en
+2026-12-06T18:42:02.000Z,Science Center,2,quad4_r5_c4,Cozy,4.2,en
+2026-12-07T11:49:36.000Z,Library,1,quad3_r4_c1,Anxious,4.3,en
+2026-12-07T13:50:31.000Z,Innovation Center,1,quad2_r2_c4,Sad,2.2,en
+2026-12-07T14:36:20.000Z,Library,1,quad1_r5_c2,Joyful,5.4,en
+2026-12-07T14:44:50.000Z,Innovation Center,1,quad3_r4_c3,Worried,5.3,en
+2026-12-08T12:36:05.000Z,Science Center,1,quad1_r3_c2,Vivaz,3.2,es
+2026-12-08T13:33:04.000Z,Innovation Center,3,quad4_r2_c2,Secure,3.7,en
+2026-12-09T12:42:57.000Z,Innovation Center,2,quad1_r3_c2,Lively,5.8,en
+2026-12-09T17:04:07.000Z,Innovation Center,2,quad3_r3_c2,Frightened,5.5,en
+2026-12-10T06:05:50.000Z,Science Center,2,quad1_r4_c3,Happy,6.3,en
+2026-12-10T13:35:01.000Z,Library,1,quad4_r4_c3,Pacífico,5.6,es
+2026-12-10T14:31:15.000Z,Science Center,1,quad2_r4_c3,Sullen,4.5,en
+2026-12-10T14:38:23.000Z,Library,3,quad2_r2_c5,Bored,6.9,en
+2026-12-10T14:59:02.000Z,Library,1,quad3_r4_c4,Irritated,4.7,en
+2026-12-10T17:57:11.000Z,Innovation Center,1,quad2_r2_c4,Sad,1.3,en
+2026-12-10T19:28:30.000Z,Library,2,quad1_r4_c4,Proud,2.7,en
+2026-12-11T10:42:27.000Z,Innovation Center,1,quad2_r4_c1,Despondent,1.2,en
+2026-12-11T13:48:02.000Z,Library,3,quad4_r1_c4,Cariñoso,8.1,es
+2026-12-11T14:07:34.000Z,Innovation Center,1,quad4_r2_c3,Satisfied,8.0,en
+2026-12-11T14:07:42.000Z,Library,2,quad2_r1_c5,Apático,6.6,es
+2026-12-11T14:22:39.000Z,Science Center,3,quad4_r1_c1,At Ease,9.1,en
+2026-12-11T15:58:36.000Z,Innovation Center,1,quad4_r3_c2,Chill,5.7,en
+2026-12-11T17:41:20.000Z,Innovation Center,1,quad3_r5_c2,Troubled,1.6,en
+2026-12-12T10:00:03.000Z,Innovation Center,2,quad4_r4_c2,Thoughtful,0.8,en
+2026-12-12T10:45:00.000Z,Library,2,quad3_r2_c2,Furious,4.1,en
+2026-12-12T14:05:40.000Z,Science Center,2,quad2_r4_c3,Sullen,1.8,en
+2026-12-12T16:36:47.000Z,Innovation Center,1,quad1_r3_c4,Optimistic,6.2,en
+2026-12-12T18:41:09.000Z,Science Center,1,quad3_r2_c2,Furious,2.0,en
+2026-12-13T19:01:14.000Z,Library,2,quad3_r3_c4,Nervous,3.3,en
+2026-12-13T21:00:30.000Z,Library,1,quad1_r3_c3,Excited,7.2,en
+2026-12-14T13:53:47.000Z,Innovation Center,2,quad3_r5_c2,Troubled,2.6,en
+2026-12-14T15:30:47.000Z,Science Center,2,quad4_r2_c5,Touched,2.1,en
+2026-12-16T09:41:59.000Z,Library,1,quad4_r4_c4,Cómodo,1.9,es
+2026-12-16T18:36:25.000Z,Science Center,1,quad3_r1_c2,Panicked,1.8,en
+2026-12-17T09:41:21.000Z,Innovation Center,2,quad2_r4_c5,Fatigued,5.4,en
+2026-12-17T15:23:39.000Z,Library,1,quad2_r1_c4,Down,3.0,en
