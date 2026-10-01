@@ -1134,8 +1134,25 @@
       });
     }
 
+    var _debugLogged = false;
     function updateBarTargets(counts, max) {
       var denom = Math.max(1, max);
+      var nonZeroKeys = Object.keys(counts).filter(function(k){ return counts[k] && counts[k].some(function(v){return v>0;}); });
+      if (!_debugLogged && nonZeroKeys.length > 0) {
+        _debugLogged = true;
+        var k = nonZeroKeys[0];
+        var entry = barsByKey[k];
+        console.log("DEBUG updateBarTargets:", {
+          sampleKey: k,
+          foundInBarsByKey: !!entry,
+          segCount: entry ? entry.segs.length : "n/a",
+          counts: counts[k],
+          max: max,
+          denom: denom,
+          allBarsByKeyCount: Object.keys(barsByKey).length,
+          allLocations: allLocations,
+        });
+      }
       Object.keys(barsByKey).forEach(function (key) {
         var entry = barsByKey[key];
         var segArr = counts[key];
