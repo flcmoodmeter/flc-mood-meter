@@ -1082,7 +1082,6 @@
 
     function buildBars() {
       var geo = new THREE.BoxGeometry(CELL * 0.72, 1, CELL * 0.72);
-      geo.translate(0, 0.5, 0); // pivot at bottom so bars grow upward from y=0
       var segCount = Math.max(1, allLocations.length);
       var offsets = shadeOffsets(segCount);
       Object.keys(QUAD_INFO).forEach(function (qStr) {
@@ -1687,15 +1686,11 @@
           var s = b.segs[i];
           s.current += (s.target - s.current) * (1 - Math.pow(1 - TRANSITION_LERP, dt * 60));
           var h = s.current;
-          // Show whenever there's data — use a minimum display height so the
-          // bar is always a visible sliver, not a flat line at floor level.
-          var MIN_DISPLAY = 0.15; // world units — tall enough to see at camera angle
           var lit = s.target > 0 || h > 0.002;
-          var displayH = lit ? Math.max(h, MIN_DISPLAY) : 0;
           s.mesh.visible = lit;
-          s.mesh.scale.y = lit ? Math.max(h, MIN_DISPLAY) : 0.001;
-          s.mesh.position.y = cum;
-          cum += displayH;
+          s.mesh.scale.y = lit ? Math.max(h, 0.001) : 0.001;
+          s.mesh.position.y = cum + (lit ? Math.max(h, 0.001) : 0) / 2;
+          cum += lit ? Math.max(h, 0.001) : 0;
           targetTotal += s.target;
         }
 
@@ -1721,6 +1716,22 @@
 
     /* ------------------------------------------------------ boot */
 
+    function clearBars() {
+      var disposedGeo = null;
+      bars.forEach(function (b) {
+        b.segs.forEach(function (s) {
+          scene.remove(s.mesh);
+          if (!disposedGeo) { s.mesh.geometry.dispose(); disposedGeo = s.mesh.geometry; }
+          s.mesh.material.dispose();
+        });
+        scene.remove(b.label);
+        if (b.label.material.map) b.label.material.map.dispose();
+        b.label.material.dispose();
+      });
+      bars = [];
+      barsByKey = {};
+    }
+
     function onDataLoaded(rows) {
       allRows = rows;
       allLocations = MoodData.locationsPresent(rows);
@@ -1728,6 +1739,7 @@
       buildLocationLegend();
       try {
         if (!scene) initScene();
+        else { clearBars(); buildBars(); } // rebuild segments for new location count
       } catch(e) {
         $("loadError").textContent = "Scene error: " + e;
         return;
