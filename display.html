@@ -706,8 +706,13 @@
     // than happening independently of it. Guards against a stale playback
     // (the mode or loop moved on while this row's effect was still in
     // flight) so a late arrival can't corrupt the next cycle's counts.
+    var _debugCommit = 0;
     function commitRowToCounts(pb, row, key) {
-      if (!pb || pb !== playback) return;
+      if (!pb || pb !== playback) {
+        if (_debugCommit++ < 5) console.log("DEBUG commitRowToCounts REJECTED", { pbNull: !pb, pbMismatch: pb !== playback, key: key });
+        return;
+      }
+      if (_debugCommit++ < 5) console.log("DEBUG commitRowToCounts OK", { key: key, row_quad: row.quad, row_rowNum: row.rowNum, row_colNum: row.colNum });
       var segArr = pb.counts[key] || (pb.counts[key] = new Array(Math.max(1, allLocations.length)).fill(0));
       var li = locIdxFor(row);
       segArr[li] = (segArr[li] || 0) + 1;
