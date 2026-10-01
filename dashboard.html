@@ -1503,7 +1503,7 @@
     pleasant: new Set(),
     dateStart: "",
     dateEnd: "",
-    hourStart: 0,
+    hourStart: 6,
     hourEnd: 23,
     labelSearch: "",
     excludeSuspicious: false
@@ -1831,12 +1831,12 @@
     if (!$("hourStart").dataset.wired) {
       [$("hourStart"), $("hourEnd")].forEach(function (sel, which) {
         sel.dataset.wired = "1";
-        for (var h = 0; h <= 23; h++) {
+        for (var h = 6; h <= 23; h++) {
           var opt = document.createElement("option");
           opt.value = String(h); opt.textContent = hourLabel(h);
           sel.appendChild(opt);
         }
-        sel.value = which === 0 ? "0" : "23";
+        sel.value = which === 0 ? "6" : "23";
         sel.addEventListener("change", function () {
           filters.hourStart = Number($("hourStart").value);
           filters.hourEnd = Number($("hourEnd").value);
@@ -1867,11 +1867,11 @@
     filters.years.clear(); filters.months.clear(); filters.dows.clear();
     filters.energy.clear(); filters.pleasant.clear();
     filters.dateStart = ""; filters.dateEnd = "";
-    filters.hourStart = 0; filters.hourEnd = 23;
+    filters.hourStart = 6; filters.hourEnd = 23;
     filters.labelSearch = "";
     filters.excludeSuspicious = false;
     $("dateStart").value = ""; $("dateEnd").value = "";
-    $("hourStart").value = "0"; $("hourEnd").value = "23";
+    $("hourStart").value = "6"; $("hourEnd").value = "23";
     $("labelSearch").value = "";
     $("excludeSuspiciousToggle").checked = false;
     Array.prototype.forEach.call(document.querySelectorAll(".chip"), function (b) { b.classList.remove("on"); });
