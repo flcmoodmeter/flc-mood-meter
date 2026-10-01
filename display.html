@@ -230,6 +230,20 @@
   }
   .load-error { margin-top: 14px; font-size: 12.5px; color: #ff9a8b; min-height: 1em; }
 
+  /* source toggle */
+  .source-toggle {
+    display: inline-flex; border-radius: 999px;
+    border: 1px solid var(--line); overflow: hidden;
+    margin-bottom: 22px;
+  }
+  .source-toggle button {
+    padding: 7px 16px; font-size: 12.5px; font-weight: 560;
+    background: none; border: none; color: var(--muted); cursor: pointer;
+    transition: background .15s, color .15s;
+  }
+  .source-toggle button.on { background: var(--ink); color: #0b0d12; }
+  .source-toggle button:not(.on):hover { color: var(--ink); }
+
   .fs-btn {
     position: absolute; top: 28px; right: 32px;
     pointer-events: auto; background: none; border: 1px solid var(--line);
@@ -287,7 +301,19 @@
     <div class="load-card">
       <div class="mark"></div>
       <h2>Mood Meter — Display</h2>
+      <div class="source-toggle">
+        <button type="button" id="srcSheets" class="on">📊 Google Sheets</button>
+        <button type="button" id="srcLocal">📁 Local CSV</button>
+      </div>
       <p id="loadMsg">Connecting to Google Sheets…</p>
+      <div id="localCsvArea" style="display:none; margin-bottom:20px;">
+        <label class="pick-btn" for="fileInput">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v10M5 7l5-5 5 5"/><rect x="2" y="13" width="16" height="5" rx="1.5"/></svg>
+          Choose CSV File
+        </label>
+        <input type="file" id="fileInput" accept=".csv,text/csv">
+        <p id="fileNameDisplay" style="font-size:12px;color:var(--muted);margin-top:8px;"></p>
+      </div>
       <div class="load-error" id="loadError"></div>
       <div><button class="sample-btn" id="sampleBtn" type="button">Load Sample Data</button></div>
     </div>
@@ -371,37 +397,86 @@
     /* ------------------------------------------------------ data source */
 
     var SHEETS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSHrL-P3Xgs96UdKWcso5UhIVl891t211CWYRaAC1PhG0Twm8_ybBtjbSa8Tsx7SEHPF7d1OwpaQoMh/pub?gid=0&single=true&output=csv";
-    var SHEETS_REFRESH_MS = 5 * 60 * 1000; // refresh every 5 minutes
-    var sheetsLoaded = false;
+    var SHEETS_REFRESH_MS = 5 * 60 * 1000;
+    var dataLoaded = false;
+    var dataSource = "sheets"; // "sheets" | "local"
+    var sheetsRefreshTimer = null;
+
+    function ingestCsvText(text) {
+      var result = MoodData.rowsFromCsvText(text);
+      if (result.error) { $("loadError").textContent = result.error; return; }
+      if (!result.rows.length) { $("loadError").textContent = "No data found."; return; }
+      $("loadError").textContent = "";
+      if (!dataLoaded) {
+        dataLoaded = true;
+        onDataLoaded(result.rows);
+      } else {
+        allRows = result.rows;
+        modes = buildModes(result.rows);
+      }
+    }
 
     function loadFromSheets() {
       fetch(SHEETS_CSV_URL).then(function (resp) {
         if (!resp.ok) throw new Error("HTTP " + resp.status);
         return resp.text();
       }).then(function (text) {
-        var result = MoodData.rowsFromCsvText(text);
-        if (result.error) { $("loadError").textContent = result.error; return; }
-        if (!result.rows.length) { $("loadError").textContent = "No data in sheet yet."; return; }
-        $("loadError").textContent = "";
-        if (!sheetsLoaded) {
-          sheetsLoaded = true;
-          onDataLoaded(result.rows);
-        } else {
-          // Silent refresh — update data without resetting the display
-          allRows = result.rows;
-          modes = buildModes(result.rows);
-        }
-      }).catch(function (err) {
-        if (!sheetsLoaded) {
+        ingestCsvText(text);
+      }).catch(function () {
+        if (!dataLoaded) {
           $("loadMsg").textContent = "Could not reach Google Sheets.";
-          $("loadError").textContent = "Check your internet connection, or use the sample data below.";
+          $("loadError").textContent = "Check your internet connection, or use Local CSV / sample data below.";
         }
       });
     }
 
-    // Auto-load on page open, then refresh every 5 minutes
-    loadFromSheets();
-    setInterval(loadFromSheets, SHEETS_REFRESH_MS);
+    function startSheetsMode() {
+      dataSource = "sheets";
+      $("loadMsg").textContent = "Connecting to Google Sheets…";
+      $("loadError").textContent = "";
+      $("localCsvArea").style.display = "none";
+      $("srcSheets").classList.add("on");
+      $("srcLocal").classList.remove("on");
+      loadFromSheets();
+      if (sheetsRefreshTimer) clearInterval(sheetsRefreshTimer);
+      sheetsRefreshTimer = setInterval(loadFromSheets, SHEETS_REFRESH_MS);
+    }
+
+    function startLocalMode() {
+      dataSource = "local";
+      if (sheetsRefreshTimer) { clearInterval(sheetsRefreshTimer); sheetsRefreshTimer = null; }
+      $("loadMsg").textContent = "Choose a CSV file to load.";
+      $("loadError").textContent = "";
+      $("localCsvArea").style.display = "block";
+      $("srcSheets").classList.remove("on");
+      $("srcLocal").classList.add("on");
+    }
+
+    $("srcSheets").addEventListener("click", function () {
+      if (dataSource === "sheets") return;
+      dataLoaded = false;
+      startSheetsMode();
+    });
+
+    $("srcLocal").addEventListener("click", function () {
+      if (dataSource === "local") return;
+      startLocalMode();
+    });
+
+    $("fileInput").addEventListener("change", function () {
+      var file = this.files && this.files[0];
+      if (!file) return;
+      $("fileNameDisplay").textContent = file.name;
+      $("loadError").textContent = "";
+      $("loadMsg").textContent = "Reading file…";
+      var reader = new FileReader();
+      reader.onload = function (e) { ingestCsvText(e.target.result); };
+      reader.onerror = function () { $("loadError").textContent = "Could not read file."; };
+      reader.readAsText(file);
+    });
+
+    // Auto-load Sheets on open
+    startSheetsMode();
 
     $("sampleBtn").addEventListener("click", function () {
       $("loadError").textContent = "";
@@ -409,11 +484,8 @@
         if (!resp.ok) throw new Error("HTTP " + resp.status);
         return resp.text();
       }).then(function (text) {
-        var result = MoodData.rowsFromCsvText(text);
-        if (result.error) { $("loadError").textContent = result.error; return; }
-        if (!result.rows.length) { $("loadError").textContent = "No usable rows found in sample data."; return; }
-        sheetsLoaded = true;
-        onDataLoaded(result.rows);
+        dataLoaded = true;
+        ingestCsvText(text);
       }).catch(function () {
         $("loadError").textContent = "Could not load sample data.";
       });
