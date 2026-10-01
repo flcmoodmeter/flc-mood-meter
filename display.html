@@ -1722,13 +1722,16 @@
     /* ------------------------------------------------------ boot */
 
     function onDataLoaded(rows) {
+      console.log("[MoodMeter] onDataLoaded rows=" + rows.length);
       allRows = rows;
       allLocations = MoodData.locationsPresent(rows);
       modes = buildModes(rows);
       buildLocationLegend();
       $("loadScreen").classList.add("hidden");
-      $("loadScreen").classList.add("can-close"); // show "Resume" button if reopened
+      $("loadScreen").classList.add("can-close");
+      console.log("[MoodMeter] initScene start, THREE=" + (typeof THREE));
       if (!scene) initScene();
+      console.log("[MoodMeter] initScene done");
       modeIndex = 0;
       goToMode(defaultModeIndex(modes));
     }
