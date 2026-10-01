@@ -3851,9 +3851,10 @@
   // handful of places sonifyCtx itself changes: first Play, and the
   // offline-render swap-in/swap-out in renderSonifyOffline.
   function ensureToneContext(ctx) {
-    var current = Tone.getContext();
-    if (current && current.rawContext === ctx) return;
-    Tone.setContext(ctx);
+    // Always call setContext — the rawContext equality check was skipping this
+    // in Firefox (where Tone auto-creates a context that appears to match),
+    // leaving Tone's nodes disconnected from sonifyCtx.
+    try { Tone.setContext(ctx); } catch (e) {}
   }
 
   // Builds the whole mixing graph (master volume, dry/reverb send, one
