@@ -448,8 +448,7 @@
       if (!result.rows.length) { $("loadError").textContent = "CSV fetched but no usable rows found. Check the sheet has data rows below the header."; return; }
       $("loadError").textContent = "";
       if (!dataLoaded) {
-        dataLoaded = true;
-        onDataLoaded(result.rows);
+        onDataLoaded(result.rows); // sets dataLoaded=true only on success
       } else {
         allRows = result.rows;
         modes = buildModes(result.rows);
@@ -1727,8 +1726,6 @@
       allLocations = MoodData.locationsPresent(rows);
       modes = buildModes(rows);
       buildLocationLegend();
-      $("loadScreen").classList.add("hidden");
-      $("loadScreen").classList.add("can-close");
       console.log("[MoodMeter] initScene start, THREE=" + (typeof THREE));
       try {
         if (!scene) initScene();
@@ -1736,8 +1733,11 @@
       } catch(e) {
         console.error("[MoodMeter] initScene THREW: " + e + "\n" + e.stack);
         $("loadError").textContent = "Scene init error: " + e;
-        $("loadScreen").classList.remove("hidden");
+        return; // don't hide load screen or mark loaded
       }
+      dataLoaded = true;
+      $("loadScreen").classList.add("hidden");
+      $("loadScreen").classList.add("can-close");
       modeIndex = 0;
       goToMode(defaultModeIndex(modes));
     }
