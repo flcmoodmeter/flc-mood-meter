@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Mood Meter — Display</title>
+<style>
+  :root {
+    --bg: #05070b;
+    --panel: rgba(12, 16, 24, 0.72);
+    --line: rgba(255, 255, 255, 0.10);
+    --ink: #eef1f6;
+    --muted: #8b93a4;
+    --accent: #6ee7c8;
+
+    --q1: #facc15;  /* high energy, pleasant */
+    --q2: #3b82f6;  /* low energy, unpleasant */
+    --q3: #ef4444;  /* high energy, unpleasant */
+    --q4: #12d9a0;  /* low energy, pleasant */
+
+    --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; background: var(--bg); }
+  body {
+    color: var(--ink);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  button { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  #stage { position: fixed; inset: 0; }
+  #stage canvas { display: block; }
+
+  /* ---------------- HUD ---------------- */
+
+  .hud { position: fixed; inset: 0; pointer-events: none; z-index: 5; }
+  .hud::before {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 34vh;
+    background: linear-gradient(to top, rgba(3,4,7,0.82), rgba(3,4,7,0));
+    pointer-events: none;
+  }
+
+  .hud-corner {
+    position: absolute; top: 28px; left: 32px;
+    display: flex; align-items: baseline; gap: 10px;
+    font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .hud-corner .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+
+  .hud-clock {
+    position: absolute; top: 28px; right: 32px;
+    font-family: var(--mono); font-variant-numeric: tabular-nums;
+    font-size: 15px; color: var(--muted); letter-spacing: 0.04em;
+  }
+
+  /* Date + latest-response chip, lower-right — clear of the grid regardless
+     of camera orbit, since (unlike the old center-of-scene 3D sprite this
+     replaces) it's a fixed screen-space HUD element. */
+  .hud-info {
+    position: absolute; right: 32px; bottom: 64px;
+    display: flex; flex-direction: column; align-items: flex-end; gap: 8px;
+    text-align: right;
+  }
+  .hud-info .info-date {
+    margin: 0; font-size: clamp(22px, 2.6vw, 38px); font-weight: 650;
+    letter-spacing: -0.01em; text-wrap: balance;
+    text-shadow: 0 2px 24px rgba(0,0,0,0.55);
+    opacity: 0; transition: opacity .4s;
+  }
+  .hud-info .info-date.on { opacity: 0.95; }
+  .hud-info .info-chip {
+    display: flex; align-items: center; gap: 9px;
+    font-size: 15px; font-weight: 560; letter-spacing: 0.01em;
+    opacity: 0; transition: opacity .25s;
+  }
+  .hud-info .info-chip.on { opacity: 0.92; }
+  .hud-info .info-chip .chip-swatch {
+    width: 15px; height: 15px; border-radius: 5px; flex: 0 0 auto;
+    box-shadow: 0 0 8px rgba(0,0,0,0.4);
+  }
+  .hud-info .info-aqi {
+    display: flex; align-items: center; gap: 9px;
+    font-size: 13px; font-weight: 540; letter-spacing: 0.01em;
+    opacity: 0; transition: opacity .4s;
+  }
+  .hud-info .info-aqi.on { opacity: 0.80; }
+  .hud-info .info-aqi .aqi-dot {
+    width: 11px; height: 11px; border-radius: 50%; flex: 0 0 auto;
+  }
+  .hud-info .info-aqi .aqi-label {
+    color: var(--muted);
+  }
+
+  .hud-dots { position: absolute; left: 0; right: 0; bottom: 30px; display: flex; justify-content: center; gap: 7px; }
+  .hud-dots .d { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.18); transition: background .3s, transform .3s; }
+  .hud-dots .d.on { background: var(--ink); transform: scale(1.35); }
+
+  /* Column of fixed reference panels on the left — legend, then the style/
+     speed menu below it. Stacked with flex so the menu panel's height never
+     has to be guessed or hard-coded against the legend's. Sized to fit
+     entirely on screen with no scrolling — this is a single-finger
+     touchscreen kiosk, and a scrollable panel means a tap can turn into an
+     accidental drag instead of a selection. Never moves with the orbiting
+     scene, and is the one part of the HUD that takes real clicks/taps. */
+  .hud-left {
+    position: absolute; left: 24px; top: 48px;
+    width: 220px;
+    max-height: calc(100vh - 64px);
+    display: flex; flex-direction: column; gap: 10px;
+    pointer-events: auto;
+    overflow: hidden;
+  }
+
+  .legend-panel, .menu-panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 14px 15px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 18px 44px rgba(0,0,0,0.4);
+  }
+  .legend-panel h3 {
+    margin: 0 0 8px; font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); font-weight: 650;
+  }
+  .legend-panel .legend-rows { display: flex; flex-direction: column; gap: 7px; }
+  .legend-panel .legend-row { display: flex; align-items: center; gap: 9px; font-size: 13px; color: var(--ink); font-weight: 550; }
+  .legend-panel .swatch-quad {
+    width: 15px; height: 15px; border-radius: 5px; flex: 0 0 auto;
+    box-shadow: 0 0 8px rgba(0,0,0,0.35);
+  }
+  .legend-panel .swatch-loc {
+    width: 26px; height: 11px; border-radius: 3px; flex: 0 0 auto;
+    background: #9ca3af;
+  }
+  .legend-panel .legend-divider { height: 1px; background: var(--line); margin: 10px 0; }
+  #locLegendRows .legend-row { font-size: 12px; color: var(--ink); font-weight: 500; }
+
+  /* ---------------- style / speed menu (left column, below the legend) ---------------- */
+
+  .menu-panel h3 {
+    margin: 0 0 7px; font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); font-weight: 650;
+  }
+  .menu-panel .menu-divider { height: 1px; background: var(--line); margin: 10px 0; }
+  .menu-rows { display: flex; flex-direction: column; gap: 5px; }
+  .menu-rows button {
+    width: 100%; min-height: 34px;
+    padding: 6px 11px; border-radius: 8px; text-align: left;
+    border: 1px solid var(--line); background: rgba(255,255,255,0.04);
+    color: var(--muted); font-size: 12.5px; font-weight: 560;
+    cursor: pointer; transition: background .15s, color .15s, border-color .15s;
+  }
+  .menu-rows button.on { background: var(--ink); color: #0b0d12; border-color: var(--ink); }
+  .menu-rows button:not(.on):hover { color: var(--ink); border-color: rgba(255,255,255,0.3); }
+  .menu-rows.speed-rows { flex-direction: row; }
+  .menu-rows.speed-rows button { text-align: center; min-height: 30px; padding: 6px 8px; }
+
+  .hint {
+    position: absolute; bottom: 30px; right: 32px;
+    font-size: 11px; color: var(--muted); opacity: 0;
+    transition: opacity .4s; letter-spacing: 0.02em;
+  }
+  body.show-hints .hint { opacity: 0.85; }
+
+  .paused-badge {
+    position: absolute; top: 64px; left: 50%; transform: translateX(-50%);
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted); opacity: 0; transition: opacity .3s;
+  }
+  body.is-paused .paused-badge { opacity: 0.9; }
+
+  /* ---------------- load screen ---------------- */
+
+  #loadScreen {
+    position: fixed; inset: 0; z-index: 10;
+    display: flex; align-items: center; justify-content: center;
+    background: radial-gradient(ellipse at 50% 30%, #101726 0%, #05070b 70%);
+  }
+  #loadScreen.hidden { display: none; }
+  .load-card {
+    width: min(560px, 88vw);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 44px 40px;
+    text-align: center;
+    backdrop-filter: blur(8px);
+  }
+  .load-card .mark {
+    width: 46px; height: 46px; margin: 0 auto 18px;
+    border-radius: 12px;
+    background: conic-gradient(from 45deg, var(--q1), var(--q3), var(--q2), var(--q4), var(--q1));
+  }
+  .load-card h2 { margin: 0 0 8px; font-size: 22px; font-weight: 650; }
+  .load-card p { margin: 0 0 26px; font-size: 14px; color: var(--muted); line-height: 1.55; }
+  .load-card .filename { color: var(--ink); font-family: var(--mono); }
+
+  .pick-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 13px 26px; border-radius: 999px; border: 1px solid var(--line);
+    background: var(--ink); color: #0b0d12; font-size: 14px; font-weight: 650;
+    cursor: pointer; transition: transform .15s ease;
+  }
+  .pick-btn:hover { transform: translateY(-1px); }
+  .pick-btn:active { transform: translateY(0); }
+  #fileInput { display: none; }
+
+  .sample-btn {
+    margin-top: 14px; background: none; border: none;
+    color: var(--muted); font-size: 12px; text-decoration: underline;
+    text-underline-offset: 3px; cursor: pointer; padding: 4px;
+  }
+  .sample-btn:hover { color: var(--ink); }
+
+  .load-note {
+    margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line);
+    font-size: 11.5px; color: var(--muted); line-height: 1.6; text-align: left;
+  }
+  .load-note code {
+    font-family: var(--mono); font-size: 11px; color: var(--ink);
+    background: rgba(255,255,255,0.06); padding: 1px 5px; border-radius: 4px;
+  }
+  .load-error { margin-top: 14px; font-size: 12.5px; color: #ff9a8b; min-height: 1em; }
+
+  .fs-btn {
+    position: absolute; top: 28px; right: 32px;
+    pointer-events: auto; background: none; border: 1px solid var(--line);
+    color: var(--muted); border-radius: 8px; padding: 6px 11px; font-size: 11px;
+    cursor: pointer; letter-spacing: 0.04em;
+  }
+  .fs-btn:hover { color: var(--ink); border-color: rgba(255,255,255,0.3); }
+</style>
+</head>
+<body>
+
+  <div id="stage"></div>
+
+  <div class="hud" id="hud">
+    <div class="hud-corner"><span class="dot"></span> Mood Meter — Live</div>
+    <div class="hud-clock" id="clock">--:--</div>
+    <div class="hud-left">
+      <div class="legend-panel">
+        <h3>Mood Quadrants</h3>
+        <div class="legend-rows" id="legend"></div>
+        <div class="legend-divider" id="locLegendDivider" hidden></div>
+        <h3 id="locLegendHeading" hidden>By Site</h3>
+        <div class="legend-rows" id="locLegendRows"></div>
+      </div>
+      <div class="menu-panel">
+        <h3>Visualization</h3>
+        <div class="menu-rows" id="styleMenu"></div>
+        <div class="menu-divider"></div>
+        <h3>Build Speed</h3>
+        <div class="menu-rows speed-rows" id="speedCtrl">
+          <button type="button" data-speed="slow">Slow</button>
+          <button type="button" data-speed="medium">Medium</button>
+          <button type="button" data-speed="fast">Fast</button>
+        </div>
+      </div>
+    </div>
+    <div class="paused-badge" id="pausedBadge">Paused — press space to resume</div>
+    <div class="hud-dots" id="dots"></div>
+    <div class="hud-info" id="hudInfo">
+      <div class="info-date" id="infoDate"></div>
+      <div class="info-chip" id="infoChip">
+        <span class="chip-swatch" id="infoChipSwatch"></span>
+        <span id="infoChipName"></span>
+      </div>
+      <div class="info-aqi" id="infoAqi">
+        <span class="aqi-dot" id="aqiDot"></span>
+        <span id="aqiValue"></span>
+        <span class="aqi-label">AQI · Outdoor</span>
+      </div>
+    </div>
+    <div class="hint">&larr; &rarr; change view · space pause · F fullscreen</div>
+  </div>
+
+  <div id="loadScreen">
+    <div class="load-card">
+      <div class="mark"></div>
+      <h2>Mood Meter — Display</h2>
+      <p id="loadMsg">Connecting to Google Sheets…</p>
+      <div class="load-error" id="loadError"></div>
+      <div><button class="sample-btn" id="sampleBtn" type="button">Load Sample Data</button></div>
+    </div>
+  </div>
+
+  <script src="vendor/three.min.js"></script>
+  <script src="shared-mood-data.js"></script>
+  <script>
+  (function () {
+    "use strict";
+
+    var QUAD_INFO = MoodData.QUAD_INFO;
+    var TRANSITION_LERP = 0.06;  // per-frame smoothing toward target bar heights
+    var MAX_BAR_HEIGHT = 6.2;
+
+    // Build speeds: how long it takes a mode's rows to finish stacking up,
+    // from empty to the full total — "Fast" is the requested one-minute pace.
+    var SPEED_MS = { slow: 240000, medium: 120000, fast: 60000 };
+    var currentSpeed = "medium";
+    var BUILD_HOLD_MS = 4500;   // pause on the finished tableau before auto-advancing
+    var EMPTY_HOLD_MS = 3000;   // shorter pause for a mode with no rows to build
+
+    // Visualization styles — the extra flourish that plays on top of the bar
+    // growth (which always happens, in every style) each time a row lands.
+    // Each has its own sensible default pace: a simple/cheap style can keep
+    // up with a fast, dense build; an elaborate one reads better slower, with
+    // more room between arrivals. Picking a style applies its default speed
+    // automatically; the Slow/Medium/Fast buttons still override it afterward.
+    var STYLE_DEFS = {
+      none:   { label: "Bars",   sub: "No extra motion",        defaultSpeed: "fast",   maxConcurrent: 0   },
+      rain:   { label: "Drop",   sub: "Drops land on each hit", defaultSpeed: "medium", maxConcurrent: 140 },
+      ball:   { label: "Bounce", sub: "Balls bounce into place",defaultSpeed: "medium", maxConcurrent: 90  },
+      meteor: { label: "Streaks",sub: "Streaks of light",       defaultSpeed: "fast",   maxConcurrent: 160 },
+      tile:   { label: "Tiles",  sub: "Squares drop and land",  defaultSpeed: "medium", maxConcurrent: 140 },
+      tron:   { label: "Trace",  sub: "Trails drive in",        defaultSpeed: "slow",   maxConcurrent: 45  }
+    };
+    var STYLE_ORDER = ["none", "rain", "ball", "meteor", "tile", "tron"];
+    var currentStyle = "rain";
+
+    /* ------------------------------------------------------ HUD chrome */
+
+    function $(id) { return document.getElementById(id); }
+
+    QUAD_INFO && Object.keys(QUAD_INFO).forEach(function (q) {
+      var info = QUAD_INFO[q];
+      var row = document.createElement("div");
+      row.className = "legend-row";
+      row.innerHTML = '<span class="swatch-quad" style="background:' + info.color + '"></span>' + info.name;
+      $("legend").appendChild(row);
+    });
+
+    function tickClock() {
+      var d = new Date();
+      var h = d.getHours(), m = d.getMinutes();
+      var period = h < 12 ? "AM" : "PM";
+      var h12 = h % 12; if (h12 === 0) h12 = 12;
+      $("clock").textContent = h12 + ":" + (m < 10 ? "0" + m : m) + " " + period + "  ·  " +
+        d.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
+    }
+    tickClock();
+    setInterval(tickClock, 15000);
+
+    var hintTimer = null;
+    function nudgeHints() {
+      document.body.classList.add("show-hints");
+      clearTimeout(hintTimer);
+      hintTimer = setTimeout(function () { document.body.classList.remove("show-hints"); }, 4000);
+    }
+    window.addEventListener("mousemove", nudgeHints, { passive: true });
+    window.addEventListener("keydown", nudgeHints);
+
+    var fsBtn = document.createElement("button");
+    fsBtn.className = "fs-btn"; fsBtn.type = "button"; fsBtn.textContent = "Fullscreen";
+    fsBtn.addEventListener("click", toggleFullscreen);
+    $("hud").appendChild(fsBtn);
+    function toggleFullscreen() {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else document.documentElement.requestFullscreen().catch(function () {});
+    }
+
+    /* ------------------------------------------------------ data source */
+
+    var SHEETS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSHrL-P3Xgs96UdKWcso5UhIVl891t211CWYRaAC1PhG0Twm8_ybBtjbSa8Tsx7SEHPF7d1OwpaQoMh/pub?gid=0&single=true&output=csv";
+    var SHEETS_REFRESH_MS = 5 * 60 * 1000; // refresh every 5 minutes
+    var sheetsLoaded = false;
+
+    function loadFromSheets() {
+      fetch(SHEETS_CSV_URL).then(function (resp) {
+        if (!resp.ok) throw new Error("HTTP " + resp.status);
+        return resp.text();
+      }).then(function (text) {
+        var result = MoodData.rowsFromCsvText(text);
+        if (result.error) { $("loadError").textContent = result.error; return; }
+        if (!result.rows.length) { $("loadError").textContent = "No data in sheet yet."; return; }
+        $("loadError").textContent = "";
+        if (!sheetsLoaded) {
+          sheetsLoaded = true;
+          onDataLoaded(result.rows);
+        } else {
+          // Silent refresh — update data without resetting the display
+          allRows = result.rows;
+          modes = buildModes(result.rows);
+        }
+      }).catch(function (err) {
+        if (!sheetsLoaded) {
+          $("loadMsg").textContent = "Could not reach Google Sheets.";
+          $("loadError").textContent = "Check your internet connection, or use the sample data below.";
+        }
+      });
+    }
+
+    // Auto-load on page open, then refresh every 5 minutes
+    loadFromSheets();
+    setInterval(loadFromSheets, SHEETS_REFRESH_MS);
+
+    $("sampleBtn").addEventListener("click", function () {
+      $("loadError").textContent = "";
+      fetch("sample_data/mm_data_test.csv").then(function (resp) {
+        if (!resp.ok) throw new Error("HTTP " + resp.status);
+        return resp.text();
+      }).then(function (text) {
+        var result = MoodData.rowsFromCsvText(text);
+        if (result.error) { $("loadError").textContent = result.error; return; }
+        if (!result.rows.length) { $("loadError").textContent = "No usable rows found in sample data."; return; }
+        sheetsLoaded = true;
+        onDataLoaded(result.rows);
+      }).catch(function () {
+        $("loadError").textContent = "Could not load sample data.";
+      });
+    });
+
+    /* ------------------------------------------------------ modes (time range × location) */
+
+    var modes = [];
+    var modeIndex = 0;
+    var paused = false;
+
+    function buildModes(rows) {
+      var locs = MoodData.locationsPresent(rows);
+      var locList = locs.length ? ["__ALL__"].concat(locs) : [null];
+      var list = [];
+      locList.forEach(function (loc) {
+        MoodData.TIME_RANGE_ORDER.forEach(function (rk) {
+          list.push({ range: rk, location: loc });
+        });
+      });
+      return list;
+    }
+
+    function defaultModeIndex(list) {
+      for (var i = 0; i < list.length; i++) {
+        if (list[i].range === "year" && list[i].location === "__ALL__") return i;
+      }
+      return 0;
+    }
+
+    function modeLabel(mode) {
+      var rangeLabel = MoodData.TIME_RANGES[mode.range].label;
+      if (!mode.location) return rangeLabel;
+      if (mode.location === "__ALL__") return rangeLabel + " · All Locations";
+      return rangeLabel + " · " + mode.location;
+    }
+
+    function renderDots() {
+      var wrap = $("dots"); wrap.innerHTML = "";
+      modes.forEach(function (m, i) {
+        var d = document.createElement("span");
+        d.className = "d" + (i === modeIndex ? " on" : "");
+        wrap.appendChild(d);
+      });
+    }
+
+    function goToMode(i) {
+      modeIndex = ((i % modes.length) + modes.length) % modes.length;
+      applyMode(modes[modeIndex]);
+      renderDots();
+    }
+    function nextMode() { goToMode(modeIndex + 1); }
+    function prevMode() { goToMode(modeIndex - 1); }
+
+    window.addEventListener("keydown", function (e) {
+      if (!modes.length) return;
+      if (e.key === "ArrowRight") { nextMode(); }
+      else if (e.key === "ArrowLeft") { prevMode(); }
+      else if (e.code === "Space") { e.preventDefault(); togglePause(); }
+      else if (e.key === "f" || e.key === "F") { toggleFullscreen(); }
+    });
+    document.addEventListener("click", function (e) {
+      if (!modes.length) return;
+      if (e.target.closest(".fs-btn") || e.target.closest(".hud-left") || e.target.closest("#loadScreen")) return;
+      nextMode();
+    });
+
+    function togglePause() {
+      paused = !paused;
+      document.body.classList.toggle("is-paused", paused);
+    }
+
+    function refreshSpeedButtons() {
+      Array.prototype.forEach.call($("speedCtrl").querySelectorAll("button"), function (b) {
+        b.classList.toggle("on", b.dataset.speed === currentSpeed);
+      });
+    }
+    function refreshStyleButtons() {
+      Array.prototype.forEach.call($("styleMenu").querySelectorAll("button"), function (b) {
+        b.classList.toggle("on", b.dataset.style === currentStyle);
+      });
+    }
+
+    Array.prototype.forEach.call($("speedCtrl").querySelectorAll("button"), function (btn) {
+      btn.addEventListener("click", function () {
+        if (btn.dataset.speed === currentSpeed) return;
+        currentSpeed = btn.dataset.speed;
+        refreshSpeedButtons();
+        if (modes.length) applyMode(modes[modeIndex]); // restart the current mode's build at the new pace
+      });
+    });
+    refreshSpeedButtons();
+
+    // Style menu — built from STYLE_DEFS rather than hand-written, so adding
+    // a new visualization later is just one more entry in that table.
+    STYLE_ORDER.forEach(function (key) {
+      var def = STYLE_DEFS[key];
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.dataset.style = key;
+      btn.textContent = def.label;
+      btn.addEventListener("click", function () {
+        if (key === currentStyle) return;
+        currentStyle = key;
+        currentSpeed = def.defaultSpeed; // each style has its own appropriate pace
+        refreshStyleButtons();
+        refreshSpeedButtons();
+        clearEffects();
+        if (modes.length) applyMode(modes[modeIndex]); // restart the current mode's build in the new style
+      });
+      $("styleMenu").appendChild(btn);
+    });
+    refreshStyleButtons();
+
+    /* ------------------------------------------------------ data → playback (bars build up row by row) */
+
+    var allRows = [];
+    var allLocations = [];   // fixed order for the whole session, set once at load — same order the stack and legend both use
+    var playback = null; // { rows, revealTimes, total, durationMs, holdMs, elapsedMs, revealedIdx, counts, max, phase }
+    var barsDirty = false; // set whenever a row actually lands on its cell; bar targets are recomputed once per frame when true
+
+    function cellKeyFor(r) {
+      if (!r.quad || !r.rowNum || !r.colNum) return null;
+      return r.quad + "_" + r.rowNum + "_" + r.colNum;
+    }
+
+    // Which stack segment (and legend slot) a row's location belongs to.
+    // A row whose location wasn't in the fixed list (blank, or new since
+    // load) falls back to segment 0 rather than being dropped.
+    function locIdxFor(r) {
+      if (!allLocations.length) return 0;
+      var i = allLocations.indexOf(r.session);
+      return i < 0 ? 0 : i;
+    }
+
+    // Actually adds a row to its cell's tally — called the instant a row's
+    // flourish (or, in "Bars Only", the row itself) arrives, never at the
+    // moment it's merely revealed/spawned. This is what makes the bar's
+    // growth read as caused by the drop/streak/tile actually landing rather
+    // than happening independently of it. Guards against a stale playback
+    // (the mode or loop moved on while this row's effect was still in
+    // flight) so a late arrival can't corrupt the next cycle's counts.
+    function commitRowToCounts(pb, row, key) {
+      if (!pb || pb !== playback) return;
+      var segArr = pb.counts[key] || (pb.counts[key] = new Array(Math.max(1, allLocations.length)).fill(0));
+      var li = locIdxFor(row);
+      segArr[li] = (segArr[li] || 0) + 1;
+      var cellTotal = segArr.reduce(function (a, b) { return a + b; }, 0);
+      if (cellTotal > pb.max) pb.max = cellTotal;
+      barsDirty = true;
+    }
+
+    // A shared lightness ladder, darkest-to-lightest, applied identically to
+    // every quadrant's own hue — so the pattern to learn is "shade = site",
+    // regardless of which quadrant color it's shading.
+    function shadeOffsets(n) {
+      if (n <= 1) return [0];
+      var offsets = [];
+      for (var i = 0; i < n; i++) offsets.push(-0.16 + (0.32 * i) / (n - 1));
+      return offsets;
+    }
+
+    function buildLocationLegend() {
+      var wrap = $("locLegendRows");
+      wrap.innerHTML = "";
+      var show = allLocations.length >= 2; // nothing to disambiguate with 0 or 1 site
+      $("locLegendDivider").hidden = !show;
+      $("locLegendHeading").hidden = !show;
+      if (!show) return;
+      var offsets = shadeOffsets(allLocations.length);
+      var refColor = new THREE.Color(0x9ca3af); // neutral swatch — the actual bars use each quadrant's own hue
+      allLocations.forEach(function (loc, i) {
+        var c = refColor.clone().offsetHSL(0, 0, offsets[i]);
+        var row = document.createElement("div");
+        row.className = "legend-row";
+        row.innerHTML = '<span class="swatch-loc" style="background:#' + c.getHexString() + '"></span>' + loc;
+        wrap.appendChild(row);
+      });
+    }
+
+    function applyMode(mode) {
+      var nowD = new Date();
+      var inRange = MoodData.rowsInTimeRange(allRows, mode.range, nowD);
+      var filtered = (mode.location && mode.location !== "__ALL__")
+        ? inRange.filter(function (r) { return r.session === mode.location; })
+        : inRange;
+
+      // Chronological order, so the build genuinely replays the data's own
+      // timeline rather than an arbitrary row order.
+      filtered = filtered.slice().sort(function (a, b) { return a.date - b.date; });
+
+      var total = filtered.length;
+      var durationMs = total ? SPEED_MS[currentSpeed] : 0;
+      var revealTimes = [];
+      if (total > 1) {
+        var minT = filtered[0].date.getTime(), maxT = filtered[total - 1].date.getTime();
+        var span = maxT - minT;
+        for (var i = 0; i < total; i++) {
+          revealTimes.push(span > 0 ? ((filtered[i].date.getTime() - minT) / span) * durationMs : (i / (total - 1)) * durationMs);
+        }
+      } else if (total === 1) {
+        revealTimes.push(0);
+      }
+
+      updateBarTargets({}, 0); // flatten to baseline; the build grows back up from here
+      setHudDate("");
+      setHudChip(null);
+      clearEffects();
+
+      playback = {
+        rows: filtered, revealTimes: revealTimes, total: total,
+        durationMs: durationMs, holdMs: total ? BUILD_HOLD_MS : EMPTY_HOLD_MS,
+        elapsedMs: 0, revealedIdx: 0, counts: {}, max: 0, phase: "building",
+        lastDateText: null
+      };
+    }
+
+    // Resets the current mode's build back to empty and replays it from row
+    // one — same rows, same pacing, no re-filtering needed. This is what
+    // "reaching the end" now does instead of moving on to another mode;
+    // modes only change when someone actually navigates (arrows, tap, or
+    // the mode auto-completing a switch you triggered).
+    function loopPlayback() {
+      if (!playback) return;
+      playback.elapsedMs = 0;
+      playback.revealedIdx = 0;
+      playback.counts = {};
+      playback.max = 0;
+      playback.phase = "building";
+      playback.lastDateText = null;
+      updateBarTargets({}, 0);
+      setHudDate("");
+      setHudChip(null);
+      clearEffects();
+    }
+
+    // Advances the current mode's playback by dt seconds of real time (frozen
+    // while paused). Reveals rows whose place in the mode's own timeline has
+    // been reached, then — once every row is in — holds the finished picture
+    // for a beat before looping back to replay the same mode from the start.
+    function tickPlayback(dt) {
+      if (!playback || paused) return;
+      playback.elapsedMs += dt * 1000;
+
+      if (playback.phase === "building") {
+        var changed = false;
+        while (playback.revealedIdx < playback.total && playback.revealTimes[playback.revealedIdx] <= playback.elapsedMs) {
+          var r = playback.rows[playback.revealedIdx];
+          var key = cellKeyFor(r);
+          // Arriving at the front of the timeline just starts the flourish
+          // (a drop falling, a streak flying in, ...) — the bar itself only
+          // grows once that flourish actually lands on the cell, via
+          // commitRowToCounts, so the two always stay in sync.
+          if (key) spawnEffect(r, key);
+          playback.revealedIdx++;
+          changed = true;
+        }
+        if (changed) {
+          var lastRow = playback.rows[playback.revealedIdx - 1];
+          // The corner chip reflects the most recent data point this frame
+          // brought in — one per frame is plenty even when several rows
+          // land in the same tick at a fast build speed.
+          setHudChip(lastRow);
+          if (lastRow.date) {
+            var dtext = formatMonthDay(lastRow.date);
+            if (dtext !== playback.lastDateText) {
+              playback.lastDateText = dtext;
+              setHudDate(dtext);
+            }
+          }
+        }
+        // Don't call the build "done" while flourishes are still in flight —
+        // otherwise the hold-then-loop would clear them before they land and
+        // their rows would never actually show up on the bars.
+        if (playback.revealedIdx >= playback.total && activeEffects.length === 0 && tronQueue.length === 0) {
+          playback.phase = "holding";
+          playback.holdStart = playback.elapsedMs;
+        }
+      } else if (playback.phase === "holding") {
+        if (playback.elapsedMs - playback.holdStart >= playback.holdMs) {
+          loopPlayback();
+        }
+      }
+    }
+
+    /* ------------------------------------------------------ three.js scene */
+
+    var CELL = 1.05, GAP_BETWEEN_QUADS = 1.5;
+    var SUB = 5; // 5x5 per quadrant
+    var subSpan = (SUB - 1) * CELL;
+    var half = subSpan / 2;
+
+    // Quadrant corner offsets, arranged as the familiar Mood Meter cross:
+    // Q3 (red, high-energy/unpleasant) top-left, Q1 (yellow, high-energy/pleasant) top-right,
+    // Q2 (blue, low-energy/unpleasant) bottom-left, Q4 (green, low-energy/pleasant) bottom-right.
+    var QUAD_OFFSET = {
+      3: { x: -(half + GAP_BETWEEN_QUADS / 2 + half), z: -(half + GAP_BETWEEN_QUADS / 2 + half) },
+      1: { x:  (half + GAP_BETWEEN_QUADS / 2 + half), z: -(half + GAP_BETWEEN_QUADS / 2 + half) },
+      2: { x: -(half + GAP_BETWEEN_QUADS / 2 + half), z:  (half + GAP_BETWEEN_QUADS / 2 + half) },
+      4: { x:  (half + GAP_BETWEEN_QUADS / 2 + half), z:  (half + GAP_BETWEEN_QUADS / 2 + half) }
+    };
+
+    var scene, camera, renderer;
+    var bars = [];       // { segs: [{mesh, target, current}, ...], label, labelOpacity } — one entry per cell, one seg per location
+    var barsByKey = {};
+
+    function initScene() {
+      scene = new THREE.Scene();
+      scene.fog = new THREE.FogExp2(0x05070b, 0.024);
+
+      camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.1, 200);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setClearColor(0x05070b, 1);
+      $("stage").appendChild(renderer.domElement);
+
+      scene.add(new THREE.AmbientLight(0x6b7280, 0.7));
+      var key = new THREE.DirectionalLight(0xffffff, 0.9);
+      key.position.set(10, 18, 8);
+      scene.add(key);
+      var rim = new THREE.DirectionalLight(0x6ee7c8, 0.35);
+      rim.position.set(-12, 6, -10);
+      scene.add(rim);
+
+      var floorSize = 2 * subSpan + GAP_BETWEEN_QUADS + 6;
+      var floor = new THREE.Mesh(
+        new THREE.PlaneGeometry(floorSize, floorSize),
+        new THREE.MeshStandardMaterial({ color: 0x0a0e16, roughness: 0.95, metalness: 0.05 })
+      );
+      floor.rotation.x = -Math.PI / 2;
+      floor.position.y = -0.001;
+      scene.add(floor);
+
+      var grid = new THREE.GridHelper(floorSize, 24, 0x1c2433, 0x141a26);
+      grid.position.y = 0;
+      scene.add(grid);
+
+      buildBars();
+      buildAxisLabels();
+      window.addEventListener("resize", onResize);
+      requestAnimationFrame(renderLoop);
+    }
+
+    // Text sprites always face the camera, which is what we want for labels
+    // on a scene that slowly orbits — drawn once to a canvas and used as a
+    // sprite texture, no font-loading machinery required.
+    function makeLabelSprite(text, opts) {
+      opts = opts || {};
+      var fontSize = opts.fontSize || 64;
+      var color = opts.color || "rgba(238,241,246,0.55)";
+      var canvas = document.createElement("canvas");
+      var ctx = canvas.getContext("2d");
+      var fontSpec = "700 " + fontSize + "px " + getComputedStyle(document.body).fontFamily;
+      ctx.font = fontSpec;
+      var textWidth = ctx.measureText(text || " ").width;
+      var padX = fontSize * 0.5;
+      canvas.width = Math.ceil(textWidth + padX * 2);
+      canvas.height = Math.ceil(fontSize * 1.7);
+      ctx.font = fontSpec;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      if (!opts.noSpacing) ctx.letterSpacing = "3px";
+      if (opts.stroke) {
+        ctx.lineWidth = fontSize * 0.18;
+        ctx.lineJoin = "round";
+        ctx.strokeStyle = opts.strokeColor || "rgba(4,5,9,0.85)";
+        ctx.strokeText(text, canvas.width / 2, canvas.height / 2);
+      }
+      ctx.fillStyle = color;
+      ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+
+      var tex = new THREE.CanvasTexture(canvas);
+      tex.minFilter = THREE.LinearFilter;
+      tex.anisotropy = 4;
+      var mat = new THREE.SpriteMaterial({
+        map: tex, transparent: true, depthWrite: false,
+        opacity: opts.opacity != null ? opts.opacity : 1
+      });
+      var sprite = new THREE.Sprite(mat);
+      var worldPerPx = (opts.worldPerPx || 0.0125) * (opts.scale || 1);
+      sprite.scale.set(canvas.width * worldPerPx, canvas.height * worldPerPx, 1);
+      return sprite;
+    }
+
+    // Date + latest-response chip — a fixed screen-space HUD readout in the
+    // lower-right corner (see .hud-info), not a sprite living in the 3D
+    // scene. Anything anchored to a world position near the grid's center
+    // ends up fighting the grid for space as the camera orbits around it;
+    // pinning this to the corner instead means it never overlaps a bar or
+    // an in-flight effect, regardless of view angle.
+    function setHudDate(text) {
+      var el = $("infoDate");
+      if (!el) return;
+      el.textContent = text || "";
+      el.classList.toggle("on", !!text);
+    }
+
+    // Shows which cell the most recently landed data point belongs to —
+    // its quadrant color plus the emotion word, same word the bar's own
+    // permanent label uses (MoodData.englishLabelFor via row.labelEn).
+    function setHudChip(row) {
+      var chip = $("infoChip"), swatch = $("infoChipSwatch"), name = $("infoChipName");
+      if (!chip || !swatch || !name) return;
+      if (!row) { chip.classList.remove("on"); return; }
+      var info = QUAD_INFO[row.quad];
+      swatch.style.background = info ? info.color : "#999";
+      name.textContent = row.labelEn || row.label || "";
+      chip.classList.add("on");
+    }
+
+    // ── PurpleAir AQI ──────────────────────────────────────────────────────
+    // Polls sensor 127669 (InnovationCenter FLC Outdoor) every 5 minutes.
+    // Uses the EPA NowCast AQI color scale for the dot color.
+    var PURPLEAIR_KEY    = "72FA650F-E8E0-11EC-8561-42010A800005";
+    var PURPLEAIR_SENSOR = 127669;
+    var PURPLEAIR_FIELDS = "pm2.5_10minute_a,pm2.5_10minute_b";
+    var PURPLEAIR_INTERVAL = 5 * 60 * 1000; // 5 minutes
+
+    function pm25ToAqi(pm) {
+      // EPA breakpoints for PM2.5 (µg/m³) → AQI
+      var bp = [
+        [0,     12.0,   0,   50],
+        [12.1,  35.4,   51,  100],
+        [35.5,  55.4,   101, 150],
+        [55.5,  150.4,  151, 200],
+        [150.5, 250.4,  201, 300],
+        [250.5, 350.4,  301, 400],
+        [350.5, 500.4,  401, 500]
+      ];
+      for (var i = 0; i < bp.length; i++) {
+        var b = bp[i];
+        if (pm >= b[0] && pm <= b[1]) {
+          return Math.round(((b[3] - b[2]) / (b[1] - b[0])) * (pm - b[0]) + b[2]);
+        }
+      }
+      return pm > 500 ? 500 : 0;
+    }
+
+    function aqiColor(aqi) {
+      if (aqi <= 50)  return "#00e400"; // Good
+      if (aqi <= 100) return "#ffff00"; // Moderate
+      if (aqi <= 150) return "#ff7e00"; // Unhealthy for Sensitive Groups
+      if (aqi <= 200) return "#ff0000"; // Unhealthy
+      if (aqi <= 300) return "#8f3f97"; // Very Unhealthy
+      return "#7e0023";                  // Hazardous
+    }
+
+    function setHudAqi(aqi, color) {
+      var el = $("infoAqi"), dot = $("aqiDot"), val = $("aqiValue");
+      if (!el || !dot || !val) return;
+      if (aqi == null) { el.classList.remove("on"); return; }
+      dot.style.background = color;
+      val.textContent = aqi;
+      el.classList.add("on");
+    }
+
+    function fetchPurpleAir() {
+      var url = "https://api.purpleair.com/v1/sensors/" + PURPLEAIR_SENSOR +
+                "?fields=" + PURPLEAIR_FIELDS;
+      fetch(url, { headers: { "X-API-Key": PURPLEAIR_KEY } })
+        .then(function(r) { return r.ok ? r.json() : Promise.reject(r.status); })
+        .then(function(data) {
+          var s = data.sensor || {};
+          // Average channel A and B for better accuracy; fall back to whichever is present
+          var a = parseFloat(s["pm2.5_10minute_a"]);
+          var b = parseFloat(s["pm2.5_10minute_b"]);
+          var pm;
+          if (!isNaN(a) && !isNaN(b)) pm = (a + b) / 2;
+          else if (!isNaN(a)) pm = a;
+          else if (!isNaN(b)) pm = b;
+          if (pm != null) {
+            var aqi = pm25ToAqi(pm);
+            setHudAqi(aqi, aqiColor(aqi));
+          }
+        })
+        .catch(function(err) {
+          console.warn("[PurpleAir] fetch error:", err);
+        });
+    }
+
+    // Initial fetch + recurring poll
+    fetchPurpleAir();
+    setInterval(fetchPurpleAir, PURPLEAIR_INTERVAL);
+    // ───────────────────────────────────────────────────────────────────────
+
+    function formatMonthDay(d) {
+      return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+    }
+
+    function buildAxisLabels() {
+      var outer = 1.5 * subSpan + GAP_BETWEEN_QUADS / 2; // outer edge of the bar grid
+      var margin = 1.1;
+      var y = 2.1; // held well above the grid so it reads as a floating axis label
+                   // from any orbit angle, rather than colliding with the caption
+                   // text whenever this edge happens to be the near one.
+      var labelOpts = { fontSize: 46, color: "rgba(238,241,246,0.42)" };
+
+      var high = makeLabelSprite("HIGH ENERGY", labelOpts);
+      high.position.set(0, y, -(outer + margin));
+      scene.add(high);
+
+      var low = makeLabelSprite("LOW ENERGY", labelOpts);
+      low.position.set(0, y, outer + margin);
+      scene.add(low);
+
+      var unpleasant = makeLabelSprite("UNPLEASANT", labelOpts);
+      unpleasant.position.set(-(outer + margin), y, 0);
+      scene.add(unpleasant);
+
+      var pleasant = makeLabelSprite("PLEASANT", labelOpts);
+      pleasant.position.set(outer + margin, y, 0);
+      scene.add(pleasant);
+    }
+
+    function buildBars() {
+      var geo = new THREE.BoxGeometry(CELL * 0.72, 1, CELL * 0.72);
+      var segCount = Math.max(1, allLocations.length);
+      var offsets = shadeOffsets(segCount);
+      Object.keys(QUAD_INFO).forEach(function (qStr) {
+        var q = Number(qStr);
+        var baseColor = new THREE.Color(QUAD_INFO[q].color);
+        var offset = QUAD_OFFSET[q];
+        for (var row = 1; row <= SUB; row++) {
+          for (var col = 1; col <= SUB; col++) {
+            var x = offset.x - half + (col - 1) * CELL;
+            var z = offset.z - half + (row - 1) * CELL;
+
+            // One stacked box per location, shaded darkest-to-lightest in
+            // the same fixed order as the legend — so a bar's makeup by
+            // site reads directly off its layers, and with one location
+            // (or none) this collapses to a single solid-colored bar, same
+            // as before.
+            var segs = [];
+            for (var s = 0; s < segCount; s++) {
+              var segColor = baseColor.clone().offsetHSL(0, 0, offsets[s]);
+              var mat = new THREE.MeshStandardMaterial({
+                color: segColor, emissive: segColor, emissiveIntensity: 0.18,
+                roughness: 0.45, metalness: 0.15
+              });
+              var mesh = new THREE.Mesh(geo, mat);
+              mesh.position.set(x, 0, z);
+              mesh.scale.y = 0.001;
+              scene.add(mesh);
+              segs.push({ mesh: mesh, target: 0, current: 0 });
+            }
+
+            // The emotion word this cell represents (e.g. "Cheerful") — same
+            // grid MoodData.englishLabelFor uses for CSV rows, so the label
+            // is exactly the word that button on the kiosk actually said.
+            // Starts invisible and fades in the first time this cell gets a
+            // hit, floating just above the whole stack's (growing) top.
+            var word = MoodData.englishLabelFor(q, row, col);
+            var label = makeLabelSprite(word, {
+              fontSize: 30, color: "rgba(255,255,255,0.95)",
+              stroke: true, noSpacing: true, worldPerPx: 0.0072, opacity: 0
+            });
+            label.position.set(x, 0.3, z);
+            scene.add(label);
+
+            var entry = { segs: segs, label: label, labelOpacity: 0 };
+            bars.push(entry);
+            barsByKey[q + "_" + row + "_" + col] = entry;
+          }
+        }
+      });
+    }
+
+    function updateBarTargets(counts, max) {
+      var denom = Math.max(1, max);
+      Object.keys(barsByKey).forEach(function (key) {
+        var entry = barsByKey[key];
+        var segArr = counts[key];
+        var total = 0;
+        if (segArr) for (var i = 0; i < segArr.length; i++) total += (segArr[i] || 0);
+        if (total <= 0) {
+          // No data yet for this cell — a flat baseline marker on the
+          // bottom segment only, everything above it empty.
+          entry.segs.forEach(function (s, i) { s.target = i === 0 ? 0.08 : 0; });
+        } else {
+          entry.segs.forEach(function (s, i) {
+            s.target = ((segArr[i] || 0) / denom) * MAX_BAR_HEIGHT;
+          });
+        }
+      });
+    }
+
+    /* ------------------------------------------------------ landing effects (extra flourish on top of the bar growth) */
+
+    function cellWorldPos(q, rowNum, colNum) {
+      var offset = QUAD_OFFSET[q];
+      return {
+        x: offset.x - half + (colNum - 1) * CELL,
+        z: offset.z - half + (rowNum - 1) * CELL
+      };
+    }
+
+    function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+    function easeInCubic(t) { return t * t * t; }
+
+    // A small radial-gradient "flash" texture, generated once and shared by
+    // every landing ring regardless of visualization style — the one bit of
+    // canvas work all the effects have in common.
+    var flashTexture = (function () {
+      var c = document.createElement("canvas");
+      c.width = c.height = 128;
+      var ctx = c.getContext("2d");
+      var g = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+      g.addColorStop(0, "rgba(255,255,255,0.95)");
+      g.addColorStop(0.5, "rgba(255,255,255,0.35)");
+      g.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, 128, 128);
+      var tex = new THREE.CanvasTexture(c);
+      return tex;
+    })();
+
+    // Every particle-style effect (drop, ball, meteor, light-cycle head,
+    // square) waits this long after its landing flash appears before the
+    // bar actually grows — so the sequence always reads as impact, flash,
+    // then growth, rather than the flash and the growth popping in on the
+    // same frame.
+    var IMPACT_FLASH_DELAY = 0.1;
+
+    var activeEffects = [];
+
+    function clearEffects() {
+      activeEffects.forEach(function (fx) { if (fx.dispose) fx.dispose(); });
+      activeEffects = [];
+      tronQueue = [];
+      tronActive = false;
+    }
+
+    // Landing flash — a hot white "pop" (quick, small, blinding) layered
+    // under a much bigger colored glow, both additive-blended so they read
+    // as one bright burst rather than a faint colored puff.
+    function spawnLandingFlash(pos, color, scale) {
+      scale = scale || 1;
+
+      var coreMat = new THREE.SpriteMaterial({
+        map: flashTexture, color: 0xffffff, transparent: true,
+        depthWrite: false, blending: THREE.AdditiveBlending, opacity: 1
+      });
+      var core = new THREE.Sprite(coreMat);
+      core.position.set(pos.x, 0.04, pos.z);
+      core.scale.set(0.6, 0.6, 1);
+      scene.add(core);
+
+      var mat = new THREE.SpriteMaterial({
+        map: flashTexture, color: color, transparent: true,
+        depthWrite: false, blending: THREE.AdditiveBlending, opacity: 1
+      });
+      var sprite = new THREE.Sprite(mat);
+      sprite.position.set(pos.x, 0.03, pos.z);
+      sprite.scale.set(0.5, 0.5, 1);
+      scene.add(sprite);
+
+      var t = 0, DUR = 0.55, s0 = 0.5, s1 = scale * 4.2;
+      var CORE_DUR = 0.16, coreS0 = 0.6, coreS1 = scale * 2.4;
+      return {
+        update: function (dt) {
+          t += dt;
+          var p = Math.min(1, t / DUR);
+          var s = s0 + (s1 - s0) * easeOutCubic(p);
+          sprite.scale.set(s, s, 1);
+          mat.opacity = 1 - p;
+
+          var cp = Math.min(1, t / CORE_DUR);
+          var cs = coreS0 + (coreS1 - coreS0) * easeOutCubic(cp);
+          core.scale.set(cs, cs, 1);
+          coreMat.opacity = 1 - cp;
+
+          return p < 1;
+        },
+        dispose: function () { scene.remove(sprite); mat.dispose(); scene.remove(core); coreMat.dispose(); }
+      };
+    }
+
+    // Falling drop — a small sphere drops straight down onto its cell. On
+    // touchdown the landing flash appears first; the bar only grows (via
+    // onLand) a beat later, once the flash has had a moment to register.
+    function makeRainEffect(pos, color, onLand) {
+      var geo = new THREE.SphereGeometry(0.1, 10, 8);
+      var mat = new THREE.MeshBasicMaterial({ color: color, transparent: true });
+      var mesh = new THREE.Mesh(geo, mat);
+      var startY = 7 + Math.random() * 2;
+      mesh.position.set(pos.x, startY, pos.z);
+      scene.add(mesh);
+      var t = 0, DUR = 0.55, landed = false, flash = null, committed = false, delayT = 0;
+      return {
+        update: function (dt) {
+          if (!landed) {
+            t += dt;
+            var p = Math.min(1, t / DUR);
+            mesh.position.y = startY + (0.06 - startY) * easeInCubic(p);
+            if (p >= 1) {
+              landed = true;
+              scene.remove(mesh); mat.dispose();
+              flash = spawnLandingFlash(pos, color, 0.9);
+            }
+            return true;
+          }
+          if (!committed) {
+            delayT += dt;
+            if (delayT >= IMPACT_FLASH_DELAY) { committed = true; onLand(); }
+          }
+          var alive = flash.update(dt);
+          return alive || !committed;
+        },
+        dispose: function () { scene.remove(mesh); mat.dispose(); if (flash) flash.dispose(); }
+      };
+    }
+
+    // Bouncing ball — falls straight down and hits its cell (that touch is
+    // the "arrival": onLand fires and the flash appears right there), then
+    // takes one bounce that carries it up and away, off the edge of the
+    // grid entirely, fading out as it goes — a single clean drop-hit-bounce,
+    // not a series of little decaying hops in place.
+    function makeBallEffect(pos, color, onLand) {
+      var geo = new THREE.SphereGeometry(0.12, 10, 8);
+      var mat = new THREE.MeshBasicMaterial({ color: color, transparent: true });
+      var mesh = new THREE.Mesh(geo, mat);
+      var startY = MAX_BAR_HEIGHT + 1.6 + Math.random();
+      var landY = 0.08;
+      mesh.position.set(pos.x, startY, pos.z);
+      scene.add(mesh);
+
+      // Direction away from the grid center (with a little randomness), far
+      // enough to clear the grid's edge before it fades out.
+      var awayAngle = (pos.x || pos.z) ? Math.atan2(pos.z, pos.x) : Math.random() * Math.PI * 2;
+      awayAngle += (Math.random() - 0.5) * 0.7;
+      var awayDist = subSpan * 1.5 + Math.random() * subSpan * 0.7;
+      var awayX = pos.x + Math.cos(awayAngle) * awayDist;
+      var awayZ = pos.z + Math.sin(awayAngle) * awayDist;
+      var bouncePeak = 1.0 + Math.random() * 0.5;
+
+      var FALL = 0.42, BOUNCE = 0.55, t = 0, phase = "fall", flash = null;
+      var committed = false, delayT = 0;
+      return {
+        update: function (dt) {
+          t += dt;
+          if (phase === "fall") {
+            var p = Math.min(1, t / FALL);
+            mesh.position.y = startY + (landY - startY) * easeInCubic(p);
+            if (p >= 1) {
+              phase = "bounceAway"; t = 0;
+              flash = spawnLandingFlash(pos, color, 0.8);
+            }
+            return true;
+          }
+          // The flash appears right at impact; the bar waits a beat behind
+          // it, independent of the (already-underway) bounce-away motion.
+          if (!committed) {
+            delayT += dt;
+            if (delayT >= IMPACT_FLASH_DELAY) { committed = true; onLand(); }
+          }
+          if (flash) {
+            var alive = flash.update(dt);
+            if (!alive) { flash.dispose(); flash = null; }
+          }
+          var bp = Math.min(1, t / BOUNCE);
+          mesh.position.x = pos.x + (awayX - pos.x) * bp;
+          mesh.position.z = pos.z + (awayZ - pos.z) * bp;
+          mesh.position.y = landY + Math.sin(bp * Math.PI) * bouncePeak;
+          mat.opacity = 1 - Math.max(0, bp - 0.55) / 0.45; // fade out over the back half of the bounce
+          return bp < 1 || !!flash || !committed;
+        },
+        dispose: function () { scene.remove(mesh); mat.dispose(); if (flash) flash.dispose(); }
+      };
+    }
+
+    // Meteor streak — an elongated, glowing sliver flies in from a random
+    // point beyond the grid's edge and arrives as a flash, comet-style.
+    function makeMeteorEffect(pos, color, onLand) {
+      var angle = Math.random() * Math.PI * 2;
+      var dist = subSpan * 1.9;
+      var start = { x: pos.x + Math.cos(angle) * dist, y: 4 + Math.random() * 3, z: pos.z + Math.sin(angle) * dist };
+      var end = { x: pos.x, y: 0.1, z: pos.z };
+
+      var geo = new THREE.BoxGeometry(1, 0.05, 0.05);
+      var mat = new THREE.MeshBasicMaterial({ color: color, transparent: true, blending: THREE.AdditiveBlending });
+      var mesh = new THREE.Mesh(geo, mat);
+      var dir = new THREE.Vector3(end.x - start.x, end.y - start.y, end.z - start.z);
+      var full = dir.length();
+      dir.normalize();
+      mesh.quaternion.setFromUnitVectors(new THREE.Vector3(1, 0, 0), dir);
+      scene.add(mesh);
+
+      var t = 0, DUR = 0.32, landed = false, flash = null, committed = false, delayT = 0;
+      return {
+        update: function (dt) {
+          if (!landed) {
+            t += dt;
+            var p = Math.min(1, t / DUR);
+            var ep = easeInCubic(p);
+            var tipX = start.x + (end.x - start.x) * ep;
+            var tipY = start.y + (end.y - start.y) * ep;
+            var tipZ = start.z + (end.z - start.z) * ep;
+            var length = Math.max(0.15, full * (1 - ep) * 0.6);
+            mesh.scale.x = length;
+            // position the box so its leading tip is at the current point
+            mesh.position.set(tipX - dir.x * length / 2, tipY - dir.y * length / 2, tipZ - dir.z * length / 2);
+            mat.opacity = 0.25 + 0.65 * p;
+            if (p >= 1) {
+              landed = true;
+              scene.remove(mesh); mat.dispose();
+              flash = spawnLandingFlash(pos, color, 1.1);
+            }
+            return true;
+          }
+          if (!committed) {
+            delayT += dt;
+            if (delayT >= IMPACT_FLASH_DELAY) { committed = true; onLand(); }
+          }
+          var alive = flash.update(dt);
+          return alive || !committed;
+        },
+        dispose: function () { scene.remove(mesh); mat.dispose(); if (flash) flash.dispose(); }
+      };
+    }
+
+    // Falling square — same shape as Falling Drops (straight fall, lands,
+    // flash, then the bar grows) but a plain cube instead of a sphere, and
+    // no word texture or separate tumble/hold/fade choreography.
+    function makeTileEffect(pos, color, onLand) {
+      var geo = new THREE.BoxGeometry(0.32, 0.32, 0.32);
+      var mat = new THREE.MeshBasicMaterial({ color: color, transparent: true });
+      var mesh = new THREE.Mesh(geo, mat);
+      var startY = 7 + Math.random() * 2;
+      var spin0 = Math.random() * Math.PI * 2;
+      mesh.position.set(pos.x, startY, pos.z);
+      mesh.rotation.y = spin0;
+      scene.add(mesh);
+      var t = 0, DUR = 0.55, landed = false, flash = null, committed = false, delayT = 0;
+      return {
+        update: function (dt) {
+          if (!landed) {
+            t += dt;
+            var p = Math.min(1, t / DUR);
+            mesh.position.y = startY + (0.06 - startY) * easeInCubic(p);
+            if (p >= 1) {
+              landed = true;
+              scene.remove(mesh); mat.dispose();
+              flash = spawnLandingFlash(pos, color, 0.9);
+            }
+            return true;
+          }
+          if (!committed) {
+            delayT += dt;
+            if (delayT >= IMPACT_FLASH_DELAY) { committed = true; onLand(); }
+          }
+          var alive = flash.update(dt);
+          return alive || !committed;
+        },
+        dispose: function () { scene.remove(mesh); mat.dispose(); if (flash) flash.dispose(); }
+      };
+    }
+
+    // Light cycle — a dot leaves the center of the grid, drawing a lit trail
+    // behind it in two right-angle legs, Tron-style, until it arrives at its
+    // cell (the bar grows here, with a flash). The trail then keeps going on
+    // its own: it retracts from the tail end forward, the same way it grew,
+    // until the trail itself has also arrived at the cell. Only then is this
+    // light cycle actually done — which is what the queue waits for before
+    // starting the next one.
+    function makeTronEffect(pos, color, onHeadArrive, onTrailArrive) {
+      var corner = { x: pos.x, z: 0 };
+      var legs = [
+        { from: { x: 0, z: 0 }, to: corner },
+        { from: corner, to: { x: pos.x, z: pos.z } }
+      ];
+      var y = 0.04;
+      var group = new THREE.Group();
+      scene.add(group);
+
+      var legMeshes = legs.map(function (leg) {
+        var len = Math.max(0.001, Math.hypot(leg.to.x - leg.from.x, leg.to.z - leg.from.z));
+        var geo = new THREE.BoxGeometry(1, 0.035, 0.07);
+        var mat = new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0, blending: THREE.AdditiveBlending });
+        var mesh = new THREE.Mesh(geo, mat);
+        mesh.position.set((leg.from.x + leg.to.x) / 2, y, (leg.from.z + leg.to.z) / 2);
+        var angle = Math.atan2(leg.to.z - leg.from.z, leg.to.x - leg.from.x);
+        mesh.rotation.y = -angle;
+        mesh.scale.x = 0.001;
+        group.add(mesh);
+        return { mesh: mesh, mat: mat, len: len, angle: angle, from: leg.from, to: leg.to };
+      });
+
+      var headGeo = new THREE.SphereGeometry(0.09, 8, 8);
+      var headMat = new THREE.MeshBasicMaterial({ color: color, transparent: true, blending: THREE.AdditiveBlending });
+      var head = new THREE.Mesh(headGeo, headMat);
+      head.position.set(0, y, 0);
+      group.add(head);
+
+      // The two legs are independent boxes meeting at a right angle, which
+      // otherwise leaves an unlit notch right at the bend (a butt joint, not
+      // a miter) — this small square plug sits exactly on the corner and is
+      // shown whenever either leg currently reaches it, so the route always
+      // reads as one unbroken line rather than two separate segments.
+      var cornerGeo = new THREE.BoxGeometry(0.07, 0.035, 0.07);
+      var cornerMat = new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0, blending: THREE.AdditiveBlending });
+      var cornerMesh = new THREE.Mesh(cornerGeo, cornerMat);
+      cornerMesh.position.set(corner.x, y, corner.z);
+      group.add(cornerMesh);
+      // The corner plug should only be lit while the drawn trail actually
+      // passes through the corner point — not just whenever leg 0 has *any*
+      // coverage. (The earlier version tied it to leg 0's opacity, which
+      // switches to full brightness the instant any tiny sliver of leg 0 is
+      // drawn, so the plug flashed on at the bend well before the growing
+      // line's tip had actually gotten there — a floating, disconnected
+      // square, which is exactly the "not contiguous" look.) The two paint
+      // functions below compute the real answer — does the current trail
+      // interval include the corner's distance-from-origin — and store it
+      // here for syncCorner to apply.
+      var cornerOn = false;
+      function syncCorner() {
+        cornerMat.opacity = cornerOn ? 0.85 : 0;
+      }
+
+      var totalLen = legMeshes[0].len + legMeshes[1].len;
+      var t = 0, DRIVE = 0.55, HOLD = 0.15, RETRACT = 0.45, phase = "drive", flash = null;
+      var headCommitted = false;
+
+      // Draws (or, in "retract", undraws) each leg up to a given distance
+      // along the whole route, measured from the origin — used for both the
+      // outbound trail (phase "drive") and the trail sweeping itself back
+      // into the destination afterward (phase "retract"), which is why both
+      // phases below share this one helper.
+      function paintLegsUpTo(distFromOrigin) {
+        var remaining = distFromOrigin;
+        var tip = null;
+        legMeshes.forEach(function (leg, i) {
+          var covered = Math.max(0, Math.min(leg.len, remaining));
+          var frac = covered / leg.len || 0;
+          // The box geometry is a fixed 1-world-unit length, scaled to its
+          // real size — that has to be the actual covered distance (world
+          // units), not the 0..1 fraction. Scaling by the bare fraction left
+          // every leg longer than 1 unit rendering far short of where it was
+          // positioned to reach, which is what actually produced the gap.
+          leg.mesh.scale.x = covered || 0.001;
+          var cx = leg.from.x + (leg.to.x - leg.from.x) * frac;
+          var cz = leg.from.z + (leg.to.z - leg.from.z) * frac;
+          leg.mesh.position.set((leg.from.x + cx) / 2, y, (leg.from.z + cz) / 2);
+          leg.mat.opacity = covered > 0 ? 0.85 : 0;
+          remaining -= leg.len;
+          if (covered > 0) tip = { x: cx, z: cz };
+          // The tip has reached the corner only once leg 0 is drawn all the
+          // way to its own end — before that, the corner stays dark.
+          if (i === 0) cornerOn = covered >= leg.len - 1e-4;
+        });
+        return tip;
+      }
+
+      // Same idea, but keeps only the segment from a given distance-from-
+      // origin onward (i.e. removes the front `retracted` amount of trail
+      // instead of drawing up to it) — used while the trail is sweeping
+      // itself away after the dot has already arrived.
+      function paintLegsFrom(retractedFromOrigin) {
+        var consumed = retractedFromOrigin;
+        legMeshes.forEach(function (leg, i) {
+          var eaten = Math.max(0, Math.min(leg.len, consumed));
+          var remain = leg.len - eaten;
+          if (remain <= 0.0005) {
+            leg.mat.opacity = 0;
+          } else {
+            var startFrac = eaten / leg.len;
+            var sx = leg.from.x + (leg.to.x - leg.from.x) * startFrac;
+            var sz = leg.from.z + (leg.to.z - leg.from.z) * startFrac;
+            leg.mesh.scale.x = remain;
+            leg.mesh.position.set((sx + leg.to.x) / 2, y, (sz + leg.to.z) / 2);
+            leg.mat.opacity = 0.85;
+          }
+          // Symmetric with the drive phase: the retracting back-edge has
+          // swept past the corner only once leg 0 has been fully eaten away.
+          if (i === 0) cornerOn = eaten < leg.len - 1e-4;
+          consumed -= leg.len;
+        });
+      }
+
+      return {
+        update: function (dt) {
+          t += dt;
+          if (phase === "drive") {
+            var p = Math.min(1, t / DRIVE);
+            var tip = paintLegsUpTo(p * totalLen);
+            syncCorner();
+            if (tip) head.position.set(tip.x, y, tip.z);
+            if (p >= 1) {
+              // The dot has reached the cell — this is the "arrival" instant,
+              // so the flash appears right here. The bar itself grows a beat
+              // later (see the "hold" phase below), rather than on this same
+              // frame as the flash.
+              phase = "hold"; t = 0; head.visible = false;
+              flash = spawnLandingFlash(pos, color, 1.0);
+            }
+            return true;
+          }
+          if (phase === "hold") {
+            if (flash) flash.update(dt);
+            if (!headCommitted && t >= IMPACT_FLASH_DELAY) { headCommitted = true; onHeadArrive(); }
+            if (t >= HOLD) { phase = "retract"; t = 0; }
+            return true;
+          }
+          if (phase === "retract") {
+            if (flash) flash.update(dt);
+            var rp = Math.min(1, t / RETRACT);
+            paintLegsFrom(rp * totalLen);
+            syncCorner();
+            if (rp >= 1) {
+              // The trail itself has now caught up and arrived too — only
+              // now is this light cycle actually finished, which is the
+              // signal the queue waits on to start the next one.
+              phase = "done"; t = 0;
+              onTrailArrive();
+            }
+            return true;
+          }
+          // "done" — nothing left to animate but a still-fading flash, if any.
+          return flash ? flash.update(dt) : false;
+        },
+        dispose: function () {
+          scene.remove(group);
+          legMeshes.forEach(function (leg) { leg.mesh.geometry.dispose(); leg.mat.dispose(); });
+          headGeo.dispose(); headMat.dispose();
+          cornerGeo.dispose(); cornerMat.dispose();
+          if (flash) flash.dispose();
+        }
+      };
+    }
+
+    // Light cycles run strictly one at a time — a second one starting while
+    // the first is still mid-drive would just be two trails crossing the
+    // grid at once, which defeats the "it's arriving from the center" read.
+    // Rows queue up here instead. The bar grows the instant the dot itself
+    // reaches the cell, but the next queued row doesn't start until this
+    // whole light cycle is done — dot AND trail both arrived, i.e. the trail
+    // has fully retracted into the cell behind it.
+    var tronQueue = [];
+    var tronActive = false;
+
+    function pumpTronQueue() {
+      if (tronActive || !tronQueue.length) return;
+      var next = tronQueue.shift();
+      tronActive = true;
+      var fx = makeTronEffect(
+        next.pos, next.color,
+        function onHeadArrive() { commitRowToCounts(next.pbRef, next.row, next.key); },
+        function onTrailArrive() {
+          tronActive = false;
+          pumpTronQueue(); // the trail has caught up too — let the next one start
+        }
+      );
+      activeEffects.push(fx);
+    }
+
+    // Starts a row on its way to its cell. In "Bars Only" (or if the scene
+    // isn't ready, or the style's in-flight/queued cap is maxed out) there's
+    // no flourish to wait for, so the row commits to its bar right away —
+    // same as before. Otherwise the row's own commit is handed to the
+    // flourish as its onLand callback, so the bar grows exactly when — and
+    // only when — that flourish actually lands.
+    function spawnEffect(row, key) {
+      if (currentStyle === "none" || !scene) { commitRowToCounts(playback, row, key); return; }
+      var def = STYLE_DEFS[currentStyle];
+      var entry = barsByKey[key];
+      if (!entry) { commitRowToCounts(playback, row, key); return; }
+      var color = QUAD_INFO[row.quad] ? QUAD_INFO[row.quad].color : "#ffffff";
+      var pos = cellWorldPos(row.quad, row.rowNum, row.colNum);
+      var pbRef = playback;
+
+      if (currentStyle === "tron") {
+        if (tronQueue.length >= def.maxConcurrent) { commitRowToCounts(pbRef, row, key); return; }
+        tronQueue.push({ row: row, key: key, pos: pos, color: color, pbRef: pbRef });
+        pumpTronQueue();
+        return;
+      }
+
+      if (activeEffects.length >= def.maxConcurrent) { commitRowToCounts(pbRef, row, key); return; }
+      function onLand() { commitRowToCounts(pbRef, row, key); }
+      var fx;
+      if (currentStyle === "rain") fx = makeRainEffect(pos, color, onLand);
+      else if (currentStyle === "ball") fx = makeBallEffect(pos, color, onLand);
+      else if (currentStyle === "meteor") fx = makeMeteorEffect(pos, color, onLand);
+      else if (currentStyle === "tile") fx = makeTileEffect(pos, color, onLand);
+      if (fx) activeEffects.push(fx);
+      else commitRowToCounts(pbRef, row, key);
+    }
+
+    var clock3d = new THREE.Clock();
+    var orbitT = 0;
+
+    function renderLoop() {
+      requestAnimationFrame(renderLoop);
+      var dt = Math.min(0.05, clock3d.getDelta());
+
+      tickPlayback(dt);
+
+      if (activeEffects.length) {
+        for (var i = activeEffects.length - 1; i >= 0; i--) {
+          var alive = false;
+          try { alive = activeEffects[i].update(dt); } catch (e) { alive = false; }
+          if (!alive) {
+            activeEffects[i].dispose();
+            activeEffects.splice(i, 1);
+          }
+        }
+      }
+
+      // Recompute bar targets at most once per frame, after every row that
+      // landed this frame (whether instantly, in "Bars Only", or via a
+      // flourish finishing its flight) has been committed above.
+      if (barsDirty && playback) {
+        updateBarTargets(playback.counts, playback.max);
+        barsDirty = false;
+      }
+
+      bars.forEach(function (b) {
+        var cum = 0, targetTotal = 0;
+        for (var i = 0; i < b.segs.length; i++) {
+          var s = b.segs[i];
+          s.current += (s.target - s.current) * (1 - Math.pow(1 - TRANSITION_LERP, dt * 60));
+          var h = Math.max(0.0004, s.current);
+          s.mesh.scale.y = h;
+          s.mesh.position.y = cum + h / 2;
+          cum += h;
+          targetTotal += s.target;
+        }
+
+        // Label rides just above the growing stack, and only shows once the
+        // cell actually has a hit (target above the flat baseline) — an
+        // empty cell stays unlabeled rather than cluttering the floor.
+        var activeTarget = targetTotal > 0.081 ? 0.95 : 0;
+        b.labelOpacity += (activeTarget - b.labelOpacity) * (1 - Math.pow(1 - TRANSITION_LERP, dt * 60));
+        b.label.material.opacity = b.labelOpacity;
+        b.label.position.y = cum + 0.34;
+      });
+
+      orbitT += dt * 0.045;
+      var radius = 20, camY = 17;
+      camera.position.set(Math.sin(orbitT) * radius, camY, Math.cos(orbitT) * radius);
+      camera.lookAt(0, 0.6, 0);
+
+      renderer.render(scene, camera);
+    }
+
+    function onResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    /* ------------------------------------------------------ boot */
+
+    function onDataLoaded(rows) {
+      allRows = rows;
+      allLocations = MoodData.locationsPresent(rows);
+      modes = buildModes(rows);
+      buildLocationLegend();
+      $("loadScreen").classList.add("hidden");
+      if (!scene) initScene();
+      modeIndex = 0;
+      goToMode(defaultModeIndex(modes));
+    }
+  })();
+  </script>
+</body>
+</html>
