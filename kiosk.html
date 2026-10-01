@@ -1,0 +1,2062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Feelings Check-in</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --line: #d8d3ca;
+    --line-strong: #b9b2a5;
+    --ink: #211f1c;
+    --muted: #746c60;
+    --accent: #3f5b4f;
+    --accent-ink: #2c4238;
+    --accent-soft: #dde7e0;
+    --warn-soft: #fbf0da;
+    --warn-ink: #7a5a12;
+    --danger: #8c3b2e;
+
+    /* Flat tint colors (used for the Screen 1 picker buttons). */
+    --q1: #facc15;  /* high energy, pleasant   — green to yellow  */
+    --q2: #3b82f6;  /* low energy, unpleasant  — blue to purple   */
+    --q3: #ef4444;  /* high energy, unpleasant — orange to red    */
+    --q4: #14b8a6;  /* low energy, pleasant    — teal to light blue */
+
+    /* Diagonal gradients for the emotion-grid buttons themselves.
+       Matched from a reference Mood Meter kiosk screenshot: every
+       quadrant uses the same top-left-to-bottom-right diagonal, only
+       the color pair changes. */
+    --q1-grad: linear-gradient(to bottom left, #4ade80, #facc15);  /* green to yellow */
+    --q2-grad: linear-gradient(to bottom left, #3b82f6, #a855f7);  /* blue to purple */
+    --q3-grad: linear-gradient(to top left, #fb923c, #ef4444);  /* orange to red */
+    --q4-grad: linear-gradient(to bottom right, #12d9a0, #0ea5e9);  /* green through teal to blue */
+
+    --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  button { font: inherit; color: inherit; }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+  .kiosk { height: 100%; position: relative; user-select: none; -webkit-user-select: none; }
+  .screen {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 4vh 4vw;
+  }
+
+  /* ---------------- screen 1 (quadrant picker) ---------------- */
+
+  .gear-btn {
+    position: absolute;
+    top: 3vh;
+    left: 3vh;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    background: var(--surface);
+    color: var(--muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 15;
+    transition: color 120ms ease, border-color 120ms ease, transform 120ms ease;
+  }
+  .gear-btn svg { width: 28px; height: 28px; }
+  .gear-btn:hover { color: var(--accent); border-color: var(--accent); }
+  .gear-btn:active { transform: scale(0.94); }
+
+  .lang-menu {
+    position: absolute;
+    top: calc(3vh + 64px);
+    left: 3vh;
+    z-index: 16;
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    border-radius: 14px;
+    padding: 10px;
+    box-shadow: 0 12px 28px -10px rgba(0,0,0,0.28);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 200px;
+  }
+
+  .lang-menu-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    padding: 6px 10px 4px;
+  }
+
+  .lang-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+    padding: 10px 10px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: left;
+    color: var(--ink);
+  }
+  .lang-option:hover { background: var(--accent-soft); }
+  .lang-option.active { background: var(--accent-soft); font-weight: 650; }
+  .lang-option .lang-code {
+    flex: none;
+    width: 30px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 0.03em;
+  }
+  .lang-option .lang-name { flex: 1 1 auto; }
+
+  .picker-prompt {
+    font-size: clamp(42px, 4.4vw, 84px);
+    font-weight: 650;
+    letter-spacing: -0.015em;
+    margin: 0 0 5.2vh;
+    text-align: center;
+  }
+
+  .picker-plot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .picker-row {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 1vw;
+  }
+
+  .picker-axisbox {
+    position: relative;
+    padding: 22px;
+  }
+
+  .picker-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 8px;
+    /* Square: bounded by whichever of viewport width/height is tighter.
+       64vh is computed to fit exactly a 1920x1080 display alongside the
+       heading, axis label, and See-all button, with a small safety margin
+       — this screen never scrolls, so it must fit without clipping. */
+    width: min(84vw, 64vh, 1300px);
+    height: min(84vw, 64vh, 1300px);
+    max-width: 100%;
+  }
+
+  .picker-btn {
+    border: none;
+    border-radius: 36px;
+    background: var(--surface);
+    color: #fff;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.45);
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: clamp(28px, 3.2vw, 46px);
+    font-weight: 620;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    padding: 30px;
+    transition: transform 120ms ease, filter 90ms ease;
+  }
+  .picker-btn[data-quad="1"] { background: var(--q1-grad); }
+  .picker-btn[data-quad="2"] { background: var(--q2-grad); }
+  .picker-btn[data-quad="3"] { background: var(--q3-grad); }
+  .picker-btn[data-quad="4"] { background: var(--q4-grad); }
+  .picker-btn:hover { filter: brightness(1.1); }
+  .picker-btn:active, .picker-btn.flash { transform: scale(0.97); filter: brightness(0.88); }
+
+  .seeall-btn {
+    margin-top: 2.2vh;
+    background: var(--accent);
+    border: none;
+    border-radius: 999px;
+    padding: 20px 42px;
+    font-size: clamp(20px, 2.1vw, 26px);
+    font-weight: 620;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 0 0 0 rgba(63, 91, 79, 0.45);
+    animation: seeall-pulse 2.4s ease-out infinite;
+    transition: background 120ms ease, transform 120ms ease;
+  }
+  .seeall-btn:hover { background: var(--accent-ink); }
+  .seeall-btn:active, .seeall-btn.flash { transform: scale(0.96); }
+
+  @keyframes seeall-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(63, 91, 79, 0.45); }
+    70%  { box-shadow: 0 0 0 16px rgba(63, 91, 79, 0); }
+    100% { box-shadow: 0 0 0 16px rgba(63, 91, 79, 0); }
+  }
+
+  /* ---------------- single-quadrant screen ---------------- */
+
+  #screenQuad { padding: 2.2vh 2.2vw; }
+
+  .sq-header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 2vh;
+  }
+
+  .sq-back {
+    flex: none;
+    background: transparent;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    padding: 10px 18px;
+    font-size: clamp(13px, 1.3vw, 16px);
+    font-weight: 560;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .sq-back:hover { border-color: var(--accent); color: var(--accent-ink); }
+  .sq-back:active { transform: scale(0.96); }
+
+  .sq-title {
+    flex: 1 1 auto;
+    text-align: center;
+    font-size: clamp(20px, 2.6vw, 32px);
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+
+  .sq-spacer { flex: none; width: 92px; }
+
+  .sq-plot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  .sq-row {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    width: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
+    gap: 0.8vw;
+  }
+
+  .sq-axisbox {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    min-width: 0;
+  }
+
+  .sq-grid {
+    position: absolute;
+    inset: 14px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 18px;
+    border-radius: 16px;
+    padding: 21px;
+  }
+  .sq-grid .feel {
+    font-size: clamp(15px, 2.1vw, 26px);
+    font-weight: 600;
+    padding: 6px 8px;
+    border-radius: 12px;
+  }
+
+  /* ---------------- screen 2 ---------------- */
+
+  #screen2 { padding: 2.2vh 2.2vw; }
+
+  .s2-header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 1.2vh;
+  }
+
+  .s2-instruction {
+    font-size: clamp(14px, 1.7vw, 20px);
+    color: var(--muted);
+    margin: 0 0 1.4vh;
+    text-align: center;
+    max-width: 60ch;
+  }
+
+  .s2-plot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  .s2-row {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    width: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
+    gap: 0.8vw;
+  }
+
+  .axis-title {
+    font-size: clamp(12px, 1.3vw, 17px);
+    font-weight: 650;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    flex: none;
+  }
+  .axis-title-v {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+  }
+  .axis-title-h { margin-top: 0.8vh; }
+
+  .s2-axisbox {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    min-width: 0;
+  }
+
+  .quadgrid {
+    position: absolute;
+    inset: 18px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 8px;
+  }
+
+  /* Standard Cartesian style: lines meet flush at the origin (bottom-left),
+     with a single arrowhead each at the positive end only — up for Energy,
+     right for Pleasantness. quadgrid is inset slightly so those arrowheads
+     clear the outermost row/column of buttons. */
+  .axis-line { position: absolute; pointer-events: none; }
+
+  .axis-line-v {
+    left: 0; top: 0; bottom: 0; width: 0;
+    border-left: 2px solid var(--line-strong);
+  }
+  .axis-line-v::before {
+    content: ""; position: absolute; left: 50%; transform: translateX(-50%);
+    top: -1px;
+    width: 0; height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 10px solid var(--line-strong);   /* up arrow */
+  }
+
+  .axis-line-h {
+    bottom: 0; left: 0; right: 0; height: 0;
+    border-top: 2px solid var(--line-strong);
+  }
+  .axis-line-h::after {
+    content: ""; position: absolute; top: 0; transform: translateY(-50%);
+    right: -1px;
+    width: 0; height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 10px solid var(--line-strong);   /* right arrow */
+  }
+
+  .quad {
+    border-radius: 16px;
+    padding: 15px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 8px;
+  }
+
+  .feel {
+    border: none;
+    border-radius: 9px;
+    background: var(--surface);
+    color: var(--ink);
+    cursor: pointer;
+    font-size: clamp(9.5px, 1.05vw, 15px);
+    font-weight: 560;
+    padding: 2px 4px;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+    line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    transition: transform 90ms ease, filter 90ms ease;
+  }
+
+  /* Each quadrant's buttons carry their own diagonal gradient, white text,
+     and a subtle shadow so the text stays legible at any point in the
+     gradient. Empty (unlabeled) placeholder buttons are excluded, so they
+     stay invisible rather than showing a colored tile with no text. */
+  .quad[data-q="1"] .feel:not(.empty),
+  .sq-grid[data-q="1"] .feel:not(.empty) { background: var(--q1-grad); color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,0.45); }
+  .quad[data-q="2"] .feel:not(.empty),
+  .sq-grid[data-q="2"] .feel:not(.empty) { background: var(--q2-grad); color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,0.45); }
+  .quad[data-q="3"] .feel:not(.empty),
+  .sq-grid[data-q="3"] .feel:not(.empty) { background: var(--q3-grad); color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,0.45); }
+  .quad[data-q="4"] .feel:not(.empty),
+  .sq-grid[data-q="4"] .feel:not(.empty) { background: var(--q4-grad); color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,0.45); }
+
+  .feel:not(.empty):hover { filter: brightness(1.1); }
+  .feel.flash { transform: scale(0.93); filter: brightness(0.88); }
+
+  .feel.empty {
+    background: transparent;
+    cursor: default;
+    opacity: 0.28;
+  }
+  .feel.empty:hover { background: transparent; filter: none; }
+
+  /* ---------------- screen 3 ---------------- */
+
+  #screen3 { padding: 3vh 4vw; }
+
+  .s3-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 780px;
+  }
+
+  .s3-thanks {
+    font-size: clamp(38px, 5.6vw, 62px);
+    font-weight: 650;
+    letter-spacing: -0.015em;
+    margin: 0 0 0.8vh;
+    text-align: center;
+  }
+
+  .s3-logged {
+    font-size: clamp(20px, 2.4vw, 27px);
+    color: var(--muted);
+    margin: 0 0 1.8vh;
+    text-align: center;
+  }
+
+  .s3-feeling {
+    font-size: clamp(23px, 2.7vw, 31px);
+    font-weight: 620;
+    color: var(--accent-ink);
+    margin: 0 0 3.2vh;
+    text-align: center;
+  }
+
+  .s3-resources {
+    width: 100%;
+    border: 1px solid var(--line-strong);
+    border-radius: 18px;
+    padding: 2.4vh 5.5%;
+    margin-bottom: 3.2vh;
+  }
+
+  .s3-resources-title {
+    font-size: clamp(19px, 2.1vw, 23.5px);
+    font-weight: 560;
+    line-height: 1.5;
+    text-align: center;
+    color: var(--ink);
+    margin: 0 0 1.8vh;
+    padding-bottom: 1.6vh;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .s3-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 0.9vh 0;
+  }
+
+  .s3-icon {
+    flex: none;
+    width: 30px;
+    height: 30px;
+    margin-top: 2px;
+    color: var(--accent);
+  }
+  .s3-icon svg { width: 100%; height: 100%; display: block; }
+
+  .s3-row-text { flex: 1 1 auto; min-width: 0; }
+  .s3-row-label { font-size: clamp(18px, 1.9vw, 21.5px); font-weight: 600; }
+  .s3-row-detail { font-size: clamp(17.5px, 1.8vw, 20px); color: var(--muted); margin-top: 2px; }
+
+  .s3-back-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 17px 40px;
+    font-size: clamp(19px, 2vw, 23px);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 120ms ease, transform 120ms ease;
+  }
+  .s3-back-btn:hover { background: var(--accent-ink); }
+  .s3-back-btn:active { transform: scale(0.97); }
+
+  /* ---------------- blocked ---------------- */
+
+  .blocked { text-align: center; max-width: 32ch; }
+  .blocked h2 { font-size: clamp(24px, 3.4vw, 40px); margin: 0 0 14px; font-weight: 600; }
+  .blocked p { color: var(--muted); font-size: clamp(15px, 1.8vw, 20px); margin: 0; }
+
+  .hidden { display: none !important; }
+
+  /* invisible corner target that opens the admin gate, present on every screen */
+  .corner {
+    position: fixed; left: 0; bottom: 0; width: 84px; height: 84px;
+    z-index: 20; cursor: default; background: transparent; border: 0; padding: 0;
+  }
+
+  /* ---------------- admin gate + panel (shared chrome) ---------------- */
+
+  .veil {
+    position: fixed; inset: 0; background: rgba(16, 24, 32, 0.55);
+    display: grid; place-items: center; padding: 20px; z-index: 40; overflow: auto;
+  }
+
+  .gate { background: var(--surface); border-radius: 12px; padding: 30px; width: 320px; text-align: center; }
+  .gate h2 { margin: 0 0 4px; font-size: 18px; font-weight: 600; }
+  .gate p { margin: 0 0 20px; color: var(--muted); font-size: 14px; }
+
+  .idle-card {
+    background: var(--surface);
+    border-radius: 16px;
+    padding: 36px 32px;
+    width: 420px;
+    max-width: 90vw;
+    text-align: center;
+  }
+  .idle-card h2 {
+    margin: 0 0 14px;
+    font-size: clamp(21px, 2.5vw, 27px);
+    font-weight: 650;
+  }
+  .idle-card p {
+    margin: 0 0 26px;
+    font-size: clamp(15.5px, 1.75vw, 18.5px);
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .idle-card #idleCountdown { font-weight: 700; color: var(--ink); }
+
+  .idle-btn {
+    width: 100%;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 16px 0;
+    font-size: clamp(16.5px, 1.85vw, 19.5px);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 120ms ease, transform 120ms ease;
+  }
+  .idle-btn:hover { background: var(--accent-ink); }
+  .idle-btn:active { transform: scale(0.97); }
+
+  .pindots { display: flex; gap: 10px; justify-content: center; margin-bottom: 22px; height: 14px; }
+  .pindots i { width: 13px; height: 13px; border-radius: 50%; border: 2px solid var(--line-strong); }
+  .pindots i.on { background: var(--accent); border-color: var(--accent); }
+  .gate.bad .pindots i { border-color: var(--danger); }
+
+  .pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; }
+  .pad button { padding: 15px 0; font-size: 20px; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; cursor: pointer; }
+  .pad button:hover { border-color: var(--accent); }
+  .pad button.wide { font-size: 14px; color: var(--muted); }
+
+  .admin { background: var(--surface); border-radius: 12px; width: min(1100px, 100%); max-height: 92vh; overflow: auto; }
+  .admin-bar {
+    position: sticky; top: 0; background: var(--surface); border-bottom: 1px solid var(--line);
+    padding: 18px 26px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; z-index: 2;
+  }
+  .admin-bar h2 { margin: 0; font-size: 17px; font-weight: 640; }
+  .admin-bar .spacer { flex: 1 1 auto; }
+  .setup-warn {
+    font-size: 13px; font-weight: 600; color: var(--danger);
+    background: #f7ded9; padding: 7px 14px; border-radius: 999px;
+  }
+
+  .admin-body { padding: 26px; display: grid; grid-template-columns: minmax(0,1.3fr) minmax(0,1fr); gap: 26px; align-items: start; }
+
+  .block { border: 1px solid var(--line); border-radius: 8px; padding: 20px; margin-bottom: 18px; }
+  .block > h3 { margin: 0 0 6px; font-size: 14px; font-weight: 640; }
+  .block > p.note { margin: 0 0 16px; font-size: 13.5px; color: var(--muted); max-width: 64ch; }
+
+  .status { display: inline-flex; align-items: center; gap: 9px; padding: 8px 14px; border-radius: 999px; font-size: 13.5px; background: var(--warn-soft); color: var(--warn-ink); }
+  .status.ok { background: var(--accent-soft); color: var(--accent-ink); }
+  .status.bad { background: #f7ded9; color: var(--danger); }
+  .status i { width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex: none; }
+
+  .path { font-family: var(--mono); font-size: 12.5px; word-break: break-all; color: var(--muted); margin: 12px 0 0; }
+
+  .btn { border: 1px solid var(--line-strong); background: var(--surface); border-radius: 6px; padding: 9px 16px; cursor: pointer; font-size: 14.5px; }
+  .btn:hover { border-color: var(--accent); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent-ink); border-color: var(--accent-ink); }
+  .btn-quiet { border-color: transparent; background: transparent; color: var(--muted); }
+  .btn-quiet:hover { color: var(--ink); border-color: var(--line-strong); }
+
+  .row { display: flex; gap: 9px; flex-wrap: wrap; margin-top: 16px; }
+
+  .field { display: block; margin-bottom: 15px; }
+  .field > span { display: block; font-size: 13px; color: var(--muted); margin-bottom: 5px; }
+  input[type="text"], input[type="number"], textarea, select {
+    width: 100%; font: inherit; font-size: 15px; color: var(--ink);
+    padding: 9px 12px; background: var(--surface); border: 1px solid var(--line-strong); border-radius: 5px;
+  }
+  textarea { resize: vertical; min-height: 64px; line-height: 1.45; }
+
+  .stat { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+  .missing-list { font-family: var(--mono); font-size: 11.5px; color: var(--muted); margin-top: 10px; max-height: 90px; overflow: auto; }
+
+  .log { font-family: var(--mono); font-size: 11.5px; line-height: 1.55; max-height: 220px; overflow: auto; border: 1px solid var(--line); border-radius: 5px; background: var(--bg); margin-top: 12px; }
+  .log div { padding: 5px 9px; border-bottom: 1px solid var(--line); white-space: pre-wrap; word-break: break-word; }
+  .log div:last-child { border-bottom: 0; }
+  .log .empty { font-family: var(--sans); color: var(--muted); text-align: center; padding: 20px; font-size: 13px; }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%);
+    background: var(--ink); color: #fff; font-size: 14px; padding: 11px 18px; border-radius: 6px;
+    opacity: 0; pointer-events: none; transition: opacity 160ms ease; z-index: 60; max-width: 90vw; text-align: center;
+  }
+  .toast.show { opacity: 1; }
+
+  @media (max-width: 900px) { .admin-body { grid-template-columns: minmax(0,1fr); } }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+    .seeall-btn { animation: none !important; box-shadow: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="kiosk" id="kiosk">
+
+  <div class="screen" id="screen1">
+    <button class="gear-btn" id="gearBtn" type="button" aria-label="Language">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3.2"/>
+        <path d="M12 2.5v2.4M12 19.1v2.4M21.5 12h-2.4M4.9 12H2.5M18.5 5.5l-1.7 1.7M7.2 16.8l-1.7 1.7M18.5 18.5l-1.7-1.7M7.2 7.2L5.5 5.5"/>
+        <circle cx="12" cy="12" r="7.5"/>
+      </svg>
+    </button>
+
+    <div class="lang-menu hidden" id="langMenu">
+      <div class="lang-menu-label" id="langMenuLabel">Language:</div>
+      <button class="lang-option" data-lang="en" type="button">
+        <span class="lang-code">EN</span><span class="lang-name">US English</span>
+      </button>
+      <button class="lang-option" data-lang="es" type="button">
+        <span class="lang-code">ES</span><span class="lang-name">Espa&ntilde;ol</span>
+      </button>
+      <button class="lang-option hidden" data-lang="ru" type="button">
+        <span class="lang-code">RU</span><span class="lang-name">&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;</span>
+      </button>
+    </div>
+
+    <h1 class="picker-prompt" id="pickerPrompt"></h1>
+    <div class="picker-plot">
+      <div class="picker-row">
+        <span class="axis-title axis-title-v">Energy</span>
+        <div class="picker-axisbox">
+          <div class="picker-grid">
+            <button class="picker-btn" data-quad="3" type="button">High Energy Unpleasant</button>
+            <button class="picker-btn" data-quad="1" type="button">High Energy Pleasant</button>
+            <button class="picker-btn" data-quad="2" type="button">Low Energy Unpleasant</button>
+            <button class="picker-btn" data-quad="4" type="button">Low Energy Pleasant</button>
+          </div>
+          <div class="axis-line axis-line-v" aria-hidden="true"></div>
+          <div class="axis-line axis-line-h" aria-hidden="true"></div>
+        </div>
+      </div>
+      <span class="axis-title axis-title-h">Pleasantness</span>
+    </div>
+    <button class="seeall-btn" id="seeAllBtn" type="button">See all 100 emotions</button>
+  </div>
+
+  <div class="screen hidden" id="screenQuad">
+    <div class="sq-header">
+      <button class="sq-back" id="sqBack" type="button">&lsaquo; Back</button>
+      <h2 class="sq-title" id="sqTitle"></h2>
+      <span class="sq-spacer" aria-hidden="true"></span>
+    </div>
+    <div class="sq-plot">
+      <div class="sq-row">
+        <span class="axis-title axis-title-v">Energy</span>
+        <div class="sq-axisbox">
+          <div class="sq-grid" id="sqGrid"></div>
+          <div class="axis-line axis-line-v" aria-hidden="true"></div>
+          <div class="axis-line axis-line-h" aria-hidden="true"></div>
+        </div>
+      </div>
+      <span class="axis-title axis-title-h">Pleasantness</span>
+    </div>
+  </div>
+
+  <div class="screen hidden" id="screen2">
+    <div class="s2-header">
+      <button class="sq-back" id="s2Back" type="button">&lsaquo; Back</button>
+    </div>
+    <p class="s2-instruction" id="s2Instruction"></p>
+    <div class="s2-plot">
+      <div class="s2-row">
+        <span class="axis-title axis-title-v">Energy</span>
+        <div class="s2-axisbox">
+          <div class="quadgrid" id="quadgrid"></div>
+          <div class="axis-line axis-line-v" aria-hidden="true"></div>
+          <div class="axis-line axis-line-h" aria-hidden="true"></div>
+        </div>
+      </div>
+      <span class="axis-title axis-title-h">Pleasantness</span>
+    </div>
+  </div>
+
+  <div class="screen hidden" id="screen3">
+    <div class="s3-content">
+      <h1 class="s3-thanks">Thank you!</h1>
+      <p class="s3-logged">You've successfully logged your mood</p>
+      <p class="s3-feeling">You're feeling: <span id="s3FeelingWord"></span></p>
+
+      <div class="s3-resources">
+        <h2 class="s3-resources-title" id="resTitle"></h2>
+
+        <div class="s3-row">
+          <span class="s3-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6.6 10.8a15.7 15.7 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1.1-.2c1 .4 2 .6 3 .6a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A16.9 16.9 0 0 1 3 4a1 1 0 0 1 1-1h3.4a1 1 0 0 1 1 1c0 1 .2 2 .6 3a1 1 0 0 1-.2 1.1z"/>
+            </svg>
+          </span>
+          <div class="s3-row-text">
+            <div class="s3-row-label" id="resCenterLabel"></div>
+            <div class="s3-row-detail" id="resMainPhone"></div>
+          </div>
+        </div>
+
+        <div class="s3-row">
+          <span class="s3-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 18h6"/>
+              <path d="M10 21h4"/>
+              <path d="M12 3a6 6 0 0 0-4 10.5c.6.5 1 1.3 1 2.1V16h6v-.4c0-.8.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>
+            </svg>
+          </span>
+          <div class="s3-row-text">
+            <div class="s3-row-label" id="resMentalLabel"></div>
+            <div class="s3-row-detail" id="resMentalPhone"></div>
+          </div>
+        </div>
+
+        <div class="s3-row">
+          <span class="s3-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="5" width="18" height="14" rx="2"/>
+              <path d="M3 7l9 6 9-6"/>
+            </svg>
+          </span>
+          <div class="s3-row-text">
+            <div class="s3-row-label" id="resEmail"></div>
+          </div>
+        </div>
+
+        <div class="s3-row">
+          <span class="s3-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9"/>
+              <path d="M12 7v5l3.2 2"/>
+            </svg>
+          </span>
+          <div class="s3-row-text">
+            <div class="s3-row-label" id="resHoursDays"></div>
+            <div class="s3-row-detail" id="resHoursTime"></div>
+          </div>
+        </div>
+
+        <div class="s3-row">
+          <span class="s3-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/>
+              <circle cx="12" cy="9.5" r="2.4"/>
+            </svg>
+          </span>
+          <div class="s3-row-text">
+            <div class="s3-row-label" id="resLocation"></div>
+          </div>
+        </div>
+      </div>
+
+      <button class="s3-back-btn" id="s3BackBtn" type="button">Back to Home Screen</button>
+    </div>
+  </div>
+
+  <div class="screen hidden" id="screenBlocked">
+    <div class="blocked">
+      <h2 id="blockedTitle">Not available</h2>
+      <p id="blockedBody">Please let a member of staff know.</p>
+    </div>
+  </div>
+
+</div>
+
+<button class="corner" id="corner" aria-hidden="true" tabindex="-1"></button>
+
+<div class="veil hidden" id="idleVeil">
+  <div class="idle-card">
+    <h2 id="idleTitle">Are you still there?</h2>
+    <p><span id="idleBodyPrefix">You'll be returned to the home screen in </span><span id="idleCountdown">30</span> <span id="idleSecondsWord">seconds</span><span id="idleBodySuffix">.</span></p>
+    <button class="idle-btn" id="idleStillHereBtn" type="button">I'm still here!</button>
+  </div>
+</div>
+
+<div class="veil hidden" id="gateVeil">
+  <div class="gate" id="gate">
+    <h2>Administrator</h2>
+    <p>Enter the access code</p>
+    <div class="pindots" id="pindots"></div>
+    <div class="pad" id="pad"></div>
+  </div>
+</div>
+
+<div class="veil hidden" id="adminVeil">
+  <div class="admin">
+    <div class="admin-bar">
+      <h2>Administration</h2>
+      <span class="setup-warn hidden" id="setupWarn"></span>
+      <span class="spacer"></span>
+      <button class="btn" id="fullscreenBtn">Full screen</button>
+      <button class="btn btn-primary" id="closeAdmin">Return to kiosk</button>
+    </div>
+
+    <div class="admin-body">
+      <div>
+        <div class="block">
+          <h3>Data folder</h3>
+          <p class="note">Selections are appended to <b id="fileNameLabel">mm_data.csv</b> in the folder you connect here. The filename is derived from the Location field under "Location" below — set that first so different kiosks never write to the same filename.</p>
+          <div class="status" id="fsStatus"><i></i><span>Checking…</span></div>
+          <p class="path" id="fsPath"></p>
+          <div class="row">
+            <button class="btn btn-primary" id="connectBtn">Connect folder</button>
+            <button class="btn" id="grantBtn">Re-confirm access</button>
+            <button class="btn btn-quiet" id="forgetBtn">Forget folder</button>
+          </div>
+        </div>
+
+        <div class="block">
+          <h3>Labels file</h3>
+          <p class="note">
+            Screen 2's buttons are read from <b id="labelsNameLabel">labels-en.txt</b> in the app's <b>labels</b> folder
+            (next to the <b>html</b> folder this page lives in), loaded automatically on startup. Edit that file's text,
+            save it, then reload here — no need to reopen the page.
+          </p>
+          <div class="status" id="labelsStatus"><i></i><span>Checking…</span></div>
+          <div class="missing-list hidden" id="missingList"></div>
+          <div class="row">
+            <button class="btn" id="reloadLabelsBtn">Reload labels</button>
+            <button class="btn" id="downloadBtn">Download a copy</button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="block">
+          <h3>Location</h3>
+          <label class="field">
+            <span>Location (written to every row — required before returning to the kiosk)</span>
+            <select id="sessionId">
+              <option value="">Choose a location…</option>
+              <option value="Library">Library</option>
+              <option value="Innovation Center">Innovation Center</option>
+              <option value="Science Center">Science Center</option>
+            </select>
+          </label>
+          <label class="field" style="margin-bottom:0">
+            <span>Next respondent number</span>
+            <input type="text" id="respondentNo" inputmode="numeric" placeholder="1">
+          </label>
+        </div>
+
+        <div class="block">
+          <h3>Screen 3 timing</h3>
+          <p class="note">
+            The thank-you message, logged-feeling readout, the intro line, and the Health &amp; Wellness
+            Center contact card are fixed content, not editable here — see the RESOURCE_* constants
+            near the top of this file to change any of that wording, the phone numbers, hours, or room number.
+          </p>
+          <label class="field" style="margin-bottom:0">
+            <span>Seconds Screen 3 is shown before returning to the home screen</span>
+            <input type="number" id="messageSeconds" min="1" max="300" step="1">
+          </label>
+        </div>
+
+        <div class="block">
+          <h3>Inactivity check</h3>
+          <p class="note">
+            On the emotion-grid screens (the quadrant views and "See all 100 emotions"), a
+            "still there?" prompt appears after this many minutes with no taps. It gives a fixed
+            30-second countdown — if nobody responds, the kiosk returns to the home screen without
+            logging anything.
+          </p>
+          <label class="field" style="margin-bottom:0">
+            <span>Minutes of inactivity before the prompt appears</span>
+            <input type="number" id="idleMinutes" min="1" max="60" step="1">
+          </label>
+        </div>
+
+        <div class="block">
+          <h3>Restart</h3>
+          <p class="note" style="margin-bottom:12px">Sends the kiosk back to Screen 1 immediately, without recording anything.</p>
+          <button class="btn" id="restartBtn">Reset now</button>
+        </div>
+
+        <div class="block">
+          <h3>Locking down Escape</h3>
+          <p class="note" style="margin-bottom:0">
+            This page ignores Escape on its own screens, but no web page can stop the browser's
+            built-in Escape-exits-fullscreen shortcut — that's intentional on every major browser.
+            For real lockdown, launch Chrome in its own kiosk mode from a shortcut instead of
+            clicking Full screen here:<br><br>
+            <code style="font-size:12px">chrome.exe --kiosk "http://localhost:8000/kiosk.html"</code>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ===================================================================
+     CONFIGURATION — edit these values in a text editor before deploying.
+     =================================================================== */
+
+  var DATA_FILENAME_BASE = "mm_data";  // becomes mm_data-<location>.csv once a location is set
+  var LABELS_FILENAME = "labels-en.txt";   // read from the labels/ folder next to this app's html/ folder
+  var LABELS_DIR = "../labels/";           // this page lives in html/, labels live one level up in labels/
+
+  // Valid choices for the Location dropdown in the admin panel — matches the
+  // <option> values in the Location <select>. Add or edit campus locations
+  // in both places when deploying to a new site.
+  var VALID_LOCATIONS = ["Library", "Innovation Center", "Science Center"];
+
+  // Each language reads its own labels file: labels-en.txt / labels-es.txt / labels-ru.txt.
+  // This returns just the bare filename (used for display); labelsPath() below
+  // adds the LABELS_DIR prefix used for the actual fetch.
+  function labelsFilename() {
+    if (currentLang === "es") return "labels-es.txt";
+    if (currentLang === "ru") return "labels-ru.txt";
+    return LABELS_FILENAME;
+  }
+
+  function labelsPath() {
+    return LABELS_DIR + labelsFilename();
+  }
+  var ADMIN_PIN       = "1234";         // CHANGE THIS before deploying
+  var ADMIN_TAPS       = 5;             // taps in the bottom-left corner to open the gate
+  var ADMIN_TAP_WINDOW = 4000;          // ...within this many milliseconds
+
+  var DEFAULT_SCREEN1_LABEL       = "How are you feeling?";
+  var DEFAULT_SCREEN2_INSTRUCTION = "Tap the word that best matches how you feel.";
+  var DEFAULT_MESSAGE_SECONDS     = 30;
+  var DEFAULT_IDLE_MINUTES        = 2;   // minutes of no taps on the emotion-grid screens before the "still there?" prompt
+  var IDLE_COUNTDOWN_SECONDS      = 30;  // fixed countdown shown inside that prompt before auto-return
+
+  // Screen 3's resource card is fixed content, not admin-editable — edit these
+  // constants directly if the center's phone numbers, email, hours, or room
+  // number change.
+  var RESOURCE_MAIN_PHONE   = "(916) 608-6782";
+  var RESOURCE_MENTAL_PHONE = "(916) 286-3662";
+  var RESOURCE_EMAIL        = "shwc@flc.losrios.edu";
+  var RESOURCE_HOURS_TIME   = "8:30 am - 4:00 pm";
+  var RESOURCE_LOCATION     = "Falcon's Roost on Lower Level FR-115";
+
+  /* =================================================================== */
+
+  // Interface text only — the 100 emotion words themselves (labels-en.txt, labels-es.txt, labels-ru.txt)
+  // are not translated here; they were chosen deliberately in English and
+  // machine-translating them risks wrong or awkward wording in a wellness
+  // context. Add a language here by copying the "en" block and translating.
+  var TRANSLATIONS = {
+    en: {
+      screen1Label: "How are you feeling?",
+      energyAxis: "Energy",
+      pleasantnessAxis: "Pleasantness",
+      seeAll: "See all 100 emotions",
+      screen2Instruction: "Tap the word that best matches how you feel.",
+      back: "\u2039 Back",
+      quad1: "High Energy Pleasant",
+      quad2: "Low Energy Unpleasant",
+      quad3: "High Energy Unpleasant",
+      quad4: "Low Energy Pleasant",
+      thanks: "Thank you!",
+      logged: "You've successfully logged your mood",
+      feelingPrefix: "You're feeling:",
+      backHome: "Back to Home Screen",
+      resourceIntro: "There is no right or wrong way to feel. All emotions are valid. For support, contact your Student Health & Wellness Center.",
+      resourceCenterName: "FLC Health and Wellness Center",
+      resourceMentalLabel: "Mental Health",
+      resourceHoursDays: "Monday - Friday",
+      idleTitle: "Are you still there?",
+      idleBodyPrefix: "You'll be returned to the home screen in ",
+      idleBodySuffix: ".",
+      idleBtn: "I'm still here!",
+      blockedTitle: "Not available right now",
+      blockedBody: "Please let a member of staff know.",
+      langLabel: "Language:"
+    },
+    es: {
+      screen1Label: "\u00bfC\u00f3mo te sientes?",
+      energyAxis: "Energ\u00eda",
+      pleasantnessAxis: "Agrado",
+      seeAll: "Ver las 100 emociones",
+      screen2Instruction: "Toca la palabra que mejor describa c\u00f3mo te sientes.",
+      back: "\u2039 Atr\u00e1s",
+      quad1: "Alta Energ\u00eda \u00b7 Agradable",
+      quad2: "Baja Energ\u00eda \u00b7 Desagradable",
+      quad3: "Alta Energ\u00eda \u00b7 Desagradable",
+      quad4: "Baja Energ\u00eda \u00b7 Agradable",
+      thanks: "\u00a1Gracias!",
+      logged: "Tu estado de \u00e1nimo se ha registrado con \u00e9xito",
+      feelingPrefix: "Te sientes:",
+      backHome: "Volver a la Pantalla de Inicio",
+      resourceIntro: "No hay una forma correcta o incorrecta de sentir. Todas las emociones son v\u00e1lidas. Para obtener apoyo, comun\u00edcate con el Centro de Salud y Bienestar Estudiantil.",
+      resourceCenterName: "Centro de Salud y Bienestar de FLC",
+      resourceMentalLabel: "Salud Mental",
+      resourceHoursDays: "Lunes a Viernes",
+      idleTitle: "\u00bfSigues ah\u00ed?",
+      idleBodyPrefix: "Volver\u00e1s a la pantalla de inicio en ",
+      idleBodySuffix: ".",
+      idleBtn: "\u00a1Sigo aqu\u00ed!",
+      blockedTitle: "No disponible en este momento",
+      blockedBody: "Por favor avisa a un miembro del personal.",
+      langLabel: "Idioma:"
+    },
+    ru: {
+      screen1Label: "\u041a\u0430\u043a \u0432\u044b \u0441\u0435\u0431\u044f \u0447\u0443\u0432\u0441\u0442\u0432\u0443\u0435\u0442\u0435?",
+      energyAxis: "\u042d\u043d\u0435\u0440\u0433\u0438\u044f",
+      pleasantnessAxis: "\u041f\u0440\u0438\u044f\u0442\u043d\u043e\u0441\u0442\u044c",
+      seeAll: "\u041f\u043e\u043a\u0430\u0437\u0430\u0442\u044c \u0432\u0441\u0435 100 \u044d\u043c\u043e\u0446\u0438\u0439",
+      screen2Instruction: "\u041d\u0430\u0436\u043c\u0438\u0442\u0435 \u043d\u0430 \u0441\u043b\u043e\u0432\u043e, \u043a\u043e\u0442\u043e\u0440\u043e\u0435 \u043b\u0443\u0447\u0448\u0435 \u0432\u0441\u0435\u0433\u043e \u043e\u043f\u0438\u0441\u044b\u0432\u0430\u0435\u0442 \u0432\u0430\u0448\u0435 \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.",
+      back: "\u2039 \u041d\u0430\u0437\u0430\u0434",
+      quad1: "\u0412\u044b\u0441\u043e\u043a\u0430\u044f \u044d\u043d\u0435\u0440\u0433\u0438\u044f \u00b7 \u043f\u0440\u0438\u044f\u0442\u043d\u043e",
+      quad2: "\u041d\u0438\u0437\u043a\u0430\u044f \u044d\u043d\u0435\u0440\u0433\u0438\u044f \u00b7 \u043d\u0435\u043f\u0440\u0438\u044f\u0442\u043d\u043e",
+      quad3: "\u0412\u044b\u0441\u043e\u043a\u0430\u044f \u044d\u043d\u0435\u0440\u0433\u0438\u044f \u00b7 \u043d\u0435\u043f\u0440\u0438\u044f\u0442\u043d\u043e",
+      quad4: "\u041d\u0438\u0437\u043a\u0430\u044f \u044d\u043d\u0435\u0440\u0433\u0438\u044f \u00b7 \u043f\u0440\u0438\u044f\u0442\u043d\u043e",
+      thanks: "\u0421\u043f\u0430\u0441\u0438\u0431\u043e!",
+      logged: "\u0412\u0430\u0448\u0435 \u043d\u0430\u0441\u0442\u0440\u043e\u0435\u043d\u0438\u0435 \u0443\u0441\u043f\u0435\u0448\u043d\u043e \u0437\u0430\u043f\u0438\u0441\u0430\u043d\u043e",
+      feelingPrefix: "\u0412\u044b \u0447\u0443\u0432\u0441\u0442\u0432\u0443\u0435\u0442\u0435:",
+      backHome: "\u0412\u0435\u0440\u043d\u0443\u0442\u044c\u0441\u044f \u043d\u0430 \u0413\u043b\u0430\u0432\u043d\u044b\u0439 \u042d\u043a\u0440\u0430\u043d",
+      resourceIntro: "\u041d\u0435 \u0431\u044b\u0432\u0430\u0435\u0442 \u043f\u0440\u0430\u0432\u0438\u043b\u044c\u043d\u044b\u0445 \u0438\u043b\u0438 \u043d\u0435\u043f\u0440\u0430\u0432\u0438\u043b\u044c\u043d\u044b\u0445 \u0447\u0443\u0432\u0441\u0442\u0432. \u041b\u044e\u0431\u044b\u0435 \u044d\u043c\u043e\u0446\u0438\u0438 \u0432\u0430\u0436\u043d\u044b. \u0417\u0430 \u043f\u043e\u0434\u0434\u0435\u0440\u0436\u043a\u043e\u0439 \u043e\u0431\u0440\u0430\u0449\u0430\u0439\u0442\u0435\u0441\u044c \u0432 \u0426\u0435\u043d\u0442\u0440 \u0437\u0434\u043e\u0440\u043e\u0432\u044c\u044f \u0438 \u0431\u043b\u0430\u0433\u043e\u043f\u043e\u043b\u0443\u0447\u0438\u044f \u0441\u0442\u0443\u0434\u0435\u043d\u0442\u043e\u0432.",
+      resourceCenterName: "\u0426\u0435\u043d\u0442\u0440 \u0437\u0434\u043e\u0440\u043e\u0432\u044c\u044f \u0438 \u0431\u043b\u0430\u0433\u043e\u043f\u043e\u043b\u0443\u0447\u0438\u044f FLC",
+      resourceMentalLabel: "\u041f\u0441\u0438\u0445\u0438\u0447\u0435\u0441\u043a\u043e\u0435 \u0437\u0434\u043e\u0440\u043e\u0432\u044c\u0435",
+      resourceHoursDays: "\u041f\u043e\u043d\u0435\u0434\u0435\u043b\u044c\u043d\u0438\u043a \u2013 \u041f\u044f\u0442\u043d\u0438\u0446\u0430",
+      idleTitle: "\u0412\u044b \u0435\u0449\u0451 \u0437\u0434\u0435\u0441\u044c?",
+      idleBodyPrefix: "\u0412\u044b \u0432\u0435\u0440\u043d\u0451\u0442\u0435\u0441\u044c \u043d\u0430 \u0433\u043b\u0430\u0432\u043d\u044b\u0439 \u044d\u043a\u0440\u0430\u043d \u0447\u0435\u0440\u0435\u0437 ",
+      idleBodySuffix: ".",
+      idleBtn: "\u042f \u0432\u0441\u0451 \u0435\u0449\u0451 \u0437\u0434\u0435\u0441\u044c!",
+      blockedTitle: "\u0421\u0435\u0439\u0447\u0430\u0441 \u043d\u0435\u0434\u043e\u0441\u0442\u0443\u043f\u043d\u043e",
+      blockedBody: "\u041f\u043e\u0436\u0430\u043b\u0443\u0439\u0441\u0442\u0430, \u0441\u043e\u043e\u0431\u0449\u0438\u0442\u0435 \u0441\u043e\u0442\u0440\u0443\u0434\u043d\u0438\u043a\u0443.",
+      langLabel: "\u042f\u0437\u044b\u043a:"
+    }
+  };
+
+  var currentLang = "en";
+
+  function t(key) {
+    var table = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
+    return (table[key] !== undefined ? table[key] : TRANSLATIONS.en[key]) || "";
+  }
+
+  // Russian pluralizes "second(s)" three ways depending on the number
+  // (1, 21, 31... vs 2-4, 22-24... vs everything else). English and
+  // Spanish only need the ordinary singular/plural split.
+  function secondsWord(n) {
+    n = Math.abs(n);
+    if (currentLang === "ru") {
+      var mod10 = n % 10, mod100 = n % 100;
+      if (mod10 === 1 && mod100 !== 11) return "\u0441\u0435\u043a\u0443\u043d\u0434\u0430";
+      if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return "\u0441\u0435\u043a\u0443\u043d\u0434\u044b";
+      return "\u0441\u0435\u043a\u0443\u043d\u0434";
+    }
+    if (currentLang === "es") return n === 1 ? "segundo" : "segundos";
+    return n === 1 ? "second" : "seconds";
+  }
+
+  var COLUMNS = ["timestamp", "session", "respondent", "button_id", "label", "seconds_on_grid", "language"];
+  var EOL = "\r\n";
+  var DB_NAME = "kiosk_feelings";
+  var STORE = "state";
+
+  // Physical placement on the "all 100" screen. quad# meanings (set via labels-en.txt
+  // content, not enforced by code): 1=High Energy/Pleasant, 2=Low Energy/Unpleasant,
+  // 3=High Energy/Unpleasant, 4=Low Energy/Pleasant. Arranged here so High Energy sits
+  // on top, Low Energy on the bottom, Unpleasant on the left, Pleasant on the right —
+  // matching the left/bottom axis lines below.
+  var QUADRANTS = [
+    { n: 3, area: "tl" },
+    { n: 1, area: "tr" },
+    { n: 2, area: "bl" },
+    { n: 4, area: "br" }
+  ];
+
+  var settings = {
+    screen1Label: DEFAULT_SCREEN1_LABEL,
+    screen2Instruction: DEFAULT_SCREEN2_INSTRUCTION,
+    messageSeconds: DEFAULT_MESSAGE_SECONDS,
+    idleMinutes: DEFAULT_IDLE_MINUTES,
+    session: "",
+    respondent: "1"
+  };
+
+  var labelsMap = {};
+  var labelsError = null;
+  var labelsLoadedCount = 0;
+  var TOTAL_BUTTONS = 100;
+
+  var current = "screen1";   // screen1 | screen2 | screen3 | screenBlocked
+  var quadgridFitted = false;   // the 100-button grid only needs fitting once — fixed viewport, content only changes on a labels reload
+  var idleTimer = null;          // fires the "still there?" prompt after N minutes of no taps
+  var idleCountdownTimer = null; // ticks the prompt's own countdown once it's showing
+  var idleCountdownLeft = 0;
+  var screen2ShownAt = 0;
+  var locked = false;
+  var returnTimer = null;
+
+  var dirHandle = null;
+  var fileHandle = null;
+  var writeOffset = 0;
+  var fsState = "none";      // none | prompt | granted | denied | unsupported
+  var sessionRows = [];
+
+  var encoder = new TextEncoder();
+  var fsSupported = typeof window.showDirectoryPicker === "function";
+
+  function $(id) { return document.getElementById(id); }
+
+  function toast(msg) {
+    var t = $("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(toast._t);
+    toast._t = setTimeout(function () { t.classList.remove("show"); }, 3200);
+  }
+
+  function csvCell(v) {
+    var s = v == null ? "" : String(v);
+    return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+  }
+  function csvLine(c) { return c.map(csvCell).join(","); }
+  function headerLine() { return csvLine(COLUMNS); }
+
+  /* ------------------------------------------------------ small IDB store */
+
+  function idb(mode, fn) {
+    return new Promise(function (resolve, reject) {
+      var req;
+      try { req = indexedDB.open(DB_NAME, 1); }
+      catch (e) { reject(e); return; }
+      req.onupgradeneeded = function () {
+        if (!req.result.objectStoreNames.contains(STORE)) req.result.createObjectStore(STORE);
+      };
+      req.onerror = function () { reject(req.error); };
+      req.onsuccess = function () {
+        var db = req.result;
+        var tx = db.transaction(STORE, mode);
+        var out = fn(tx.objectStore(STORE));
+        tx.oncomplete = function () { db.close(); resolve(out && out.result !== undefined ? out.result : undefined); };
+        tx.onerror = function () { db.close(); reject(tx.error); };
+      };
+    });
+  }
+  function idbGet(key) { return idb("readonly", function (s) { return s.get(key); }).catch(function () { return undefined; }); }
+  function idbSet(key, val) { return idb("readwrite", function (s) { s.put(val, key); }).catch(function () {}); }
+  function idbDel(key) { return idb("readwrite", function (s) { s.delete(key); }).catch(function () {}); }
+
+  function persistSettings() { idbSet("settings", settings); }
+
+  /* ------------------------------------------------------ labels file */
+
+  function parseLabels(text) {
+    var map = {};
+    text.split(/\r?\n/).forEach(function (line) {
+      line = line.trim();
+      if (!line || line[0] === "#") return;
+      var i = line.indexOf("=");
+      if (i === -1) return;
+      var key = line.slice(0, i).trim();
+      var val = line.slice(i + 1).trim();
+      if (key) map[key] = val;
+    });
+    return map;
+  }
+
+  function buttonId(q, r, c) { return "quad" + q + "_r" + r + "_c" + c; }
+
+  async function loadLabels() {
+    try {
+      var res = await fetch(labelsPath() + "?t=" + Date.now(), { cache: "no-store" });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      var text = await res.text();
+      labelsMap = parseLabels(text);
+      labelsError = null;
+    } catch (err) {
+      labelsMap = {};
+      labelsError = (err && err.message) ? err.message : "couldn't load";
+    }
+    labelsLoadedCount = 0;
+    QUADRANTS.forEach(function (q) {
+      for (var r = 1; r <= 5; r++) for (var c = 1; c <= 5; c++) {
+        if ((labelsMap[buttonId(q.n, r, c)] || "").trim()) labelsLoadedCount++;
+      }
+    });
+    refreshLabelsStatus();
+    buildGrid();
+    quadgridFitted = fitGridText($("quadgrid"), 8, 26);
+  }
+
+  function refreshLabelsStatus() {
+    var el = $("labelsStatus");
+    var missingBox = $("missingList");
+    $("labelsNameLabel").textContent = labelsFilename();
+    if (labelsError) {
+      el.className = "status bad";
+      el.querySelector("span").textContent = "Couldn't load " + labelsFilename() + " (" + labelsError + ")";
+      missingBox.classList.add("hidden");
+      updateSetupGate();
+      return;
+    }
+    if (labelsLoadedCount === TOTAL_BUTTONS) {
+      el.className = "status ok";
+      el.querySelector("span").textContent = "All " + TOTAL_BUTTONS + " labels loaded";
+      missingBox.classList.add("hidden");
+      updateSetupGate();
+      return;
+    }
+    el.className = "status";
+    el.querySelector("span").textContent = labelsLoadedCount + " of " + TOTAL_BUTTONS + " labels loaded";
+    var missing = [];
+    QUADRANTS.forEach(function (q) {
+      for (var r = 1; r <= 5; r++) for (var c = 1; c <= 5; c++) {
+        var id = buttonId(q.n, r, c);
+        if (!(labelsMap[id] || "").trim()) missing.push(id);
+      }
+    });
+    missingBox.textContent = "Missing: " + missing.join(", ");
+    missingBox.classList.remove("hidden");
+    updateSetupGate();
+  }
+
+  /* ------------------------------------------------------ filesystem (CSV) */
+
+  function slugify(s) {
+    var slug = (s || "").trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    return slug;
+  }
+
+  // mm_data.csv until a location is set, then mm_data-<location>.csv — so files
+  // from different kiosks/locations never collide when gathered into one folder.
+  function dataFilename() {
+    var slug = slugify(settings.session);
+    return slug ? DATA_FILENAME_BASE + "-" + slug + ".csv" : DATA_FILENAME_BASE + ".csv";
+  }
+
+  function setFsStatus(kind, text, path) {
+    var el = $("fsStatus");
+    el.className = "status" + (kind === "ok" ? " ok" : kind === "bad" ? " bad" : "");
+    el.querySelector("span").textContent = text;
+    $("fsPath").textContent = path || "";
+    $("grantBtn").disabled = fsState !== "prompt" && fsState !== "denied";
+    $("forgetBtn").disabled = !dirHandle;
+    updateSetupGate();
+  }
+
+  function refreshFsStatus() {
+    $("fileNameLabel").textContent = dataFilename();
+    if (!fsSupported) { setFsStatus("bad", "This browser can't write to a folder", "Use Chrome, Edge, or another Chromium browser."); return; }
+    if (!dirHandle) { setFsStatus("", "No folder connected", ""); return; }
+    var where = dirHandle.name + " / " + dataFilename();
+    if (fsState === "granted") setFsStatus("ok", "Connected and writing", where);
+    else if (fsState === "denied") setFsStatus("bad", "Write access refused", where);
+    else setFsStatus("", "Needs access re-confirmed", where);
+  }
+
+  async function openDataFile() {
+    fileHandle = await dirHandle.getFileHandle(dataFilename(), { create: true });
+    var file = await fileHandle.getFile();
+    writeOffset = file.size;
+    if (writeOffset === 0) {
+      await writeAt(headerLine() + EOL);
+    } else {
+      var tail = await file.slice(writeOffset - 1, writeOffset).text();
+      if (tail !== "\n") await writeAt(EOL);
+    }
+  }
+
+  async function writeAt(text) {
+    var bytes = encoder.encode(text);
+    var stream = await fileHandle.createWritable({ keepExistingData: true });
+    try {
+      await stream.seek(writeOffset);
+      await stream.write(bytes);
+    } finally {
+      await stream.close();
+    }
+    writeOffset += bytes.length;
+  }
+
+  // Called when a location is picked from the dropdown.
+  async function switchDataFileIfNeeded() {
+    if (!dirHandle || fsState !== "granted") return;
+    var target = dataFilename();
+    if (fileHandle && fileHandle.name === target) return;
+    try {
+      await openDataFile();
+      refreshFsStatus();
+      toast("Now writing to " + target + ".");
+    } catch (err) {
+      toast("Couldn't switch data file: " + (err && err.message ? err.message : "unknown error"));
+    }
+  }
+
+  async function connectFolder() {
+    if (!fsSupported) { toast("This browser doesn't support folder access."); return; }
+    try {
+      var handle = await window.showDirectoryPicker({ mode: "readwrite" });
+      dirHandle = handle;
+      fsState = "granted";
+      await openDataFile();
+      await idbSet("dir", handle);
+      refreshFsStatus();
+      renderCurrent();
+      toast("Connected. Writing to " + dataFilename() + ".");
+    } catch (err) {
+      if (err && err.name === "AbortError") return;
+      fsState = "denied";
+      refreshFsStatus();
+      toast("Couldn't connect: " + (err && err.message ? err.message : "unknown error"));
+    }
+  }
+
+  async function grantAccess() {
+    if (!dirHandle) return;
+    try {
+      var state = await dirHandle.requestPermission({ mode: "readwrite" });
+      if (state === "granted") { fsState = "granted"; await openDataFile(); toast("Access confirmed."); }
+      else { fsState = "denied"; toast("Access was refused."); }
+    } catch (err) {
+      fsState = "denied";
+      toast("Couldn't confirm access: " + (err && err.message ? err.message : "unknown error"));
+    }
+    refreshFsStatus();
+    renderCurrent();
+  }
+
+  async function forgetFolder() {
+    if (!confirm("Forget the connected folder?\n\nThe CSV file itself is not deleted or changed.")) return;
+    dirHandle = null;
+    fileHandle = null;
+    fsState = "none";
+    await idbDel("dir");
+    refreshFsStatus();
+    renderCurrent();
+    toast("Folder forgotten.");
+  }
+
+  function downloadCopy() {
+    if (!sessionRows.length) { toast("Nothing recorded since this page opened."); return; }
+    var text = [headerLine()].concat(sessionRows.map(csvLine)).join(EOL) + EOL;
+    var url = URL.createObjectURL(new Blob([text], { type: "text/csv;charset=utf-8" }));
+    var a = document.createElement("a");
+    a.href = url; a.download = dataFilename();
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  }
+
+  function fsReady() { return fsState === "granted" && !!fileHandle; }
+  function labelsReady() { return !labelsError && labelsLoadedCount > 0; }
+  function locationReady() { return VALID_LOCATIONS.indexOf(settings.session) !== -1; }
+
+  /* ------------------------------------------------------ screen flow */
+
+  function clearIdleTimers() {
+    clearTimeout(idleTimer);
+    clearInterval(idleCountdownTimer);
+  }
+
+  function hideIdlePopup() {
+    clearInterval(idleCountdownTimer);
+    $("idleVeil").classList.add("hidden");
+  }
+
+  // Schedules the "still there?" prompt. Safe to call from anywhere — it
+  // no-ops unless we're actually on one of the two emotion-grid screens with
+  // no other overlay (admin panel, PIN gate) currently open on top.
+  function armIdleTimer() {
+    clearIdleTimers();
+    hideIdlePopup();
+    if (current !== "screen2" && current !== "screenQuad") return;
+    if (!$("adminVeil").classList.contains("hidden")) return;
+    if (!$("gateVeil").classList.contains("hidden")) return;
+    var minutes = Number(settings.idleMinutes) > 0 ? Number(settings.idleMinutes) : DEFAULT_IDLE_MINUTES;
+    idleTimer = setTimeout(showIdlePopup, minutes * 60 * 1000);
+  }
+
+  function updateIdleCountdownText() {
+    $("idleCountdown").textContent = idleCountdownLeft;
+    $("idleSecondsWord").textContent = secondsWord(idleCountdownLeft);
+  }
+
+  function showIdlePopup() {
+    if (current !== "screen2" && current !== "screenQuad") return;
+    idleCountdownLeft = IDLE_COUNTDOWN_SECONDS;
+    $("idleTitle").textContent = t("idleTitle");
+    $("idleBodyPrefix").textContent = t("idleBodyPrefix");
+    $("idleBodySuffix").textContent = t("idleBodySuffix");
+    $("idleStillHereBtn").textContent = t("idleBtn");
+    updateIdleCountdownText();
+    $("idleVeil").classList.remove("hidden");
+    idleCountdownTimer = setInterval(function () {
+      idleCountdownLeft--;
+      updateIdleCountdownText();
+      if (idleCountdownLeft <= 0) {
+        hideIdlePopup();
+        if (currentLang !== "en") setLanguage("en");   // timed out — reset for the next visitor
+        goScreen1();   // no selection was made, so this does not count a respondent
+      }
+    }, 1000);
+  }
+
+  function dismissIdlePopup() {
+    hideIdlePopup();
+    armIdleTimer();   // restart the inactivity clock from zero
+  }
+
+  function showScreen(name) {
+    current = name;
+    clearIdleTimers();
+    hideIdlePopup();
+    ["screen1", "screen2", "screen3", "screenBlocked", "screenQuad"].forEach(function (id) {
+      $(id).classList.toggle("hidden", id !== name);
+    });
+  }
+
+  function showBlocked(title, body) {
+    $("blockedTitle").textContent = title;
+    $("blockedBody").textContent = body;
+    showScreen("screenBlocked");
+  }
+
+  function effectiveText(customValue, defaultValue, key) {
+    return customValue === defaultValue ? t(key) : customValue;
+  }
+
+  function showUnavailable() {
+    showBlocked(t("blockedTitle"), t("blockedBody"));
+  }
+
+  function goScreen1() {
+    clearTimeout(returnTimer);
+    $("pickerPrompt").textContent = effectiveText(settings.screen1Label, DEFAULT_SCREEN1_LABEL, "screen1Label");
+    ["quadgrid", "sqGrid"].forEach(function (gridId) {
+      var el = $(gridId);
+      if (!el) return;
+      var flashed = el.querySelectorAll(".feel.flash");
+      for (var i = 0; i < flashed.length; i++) flashed[i].classList.remove("flash");
+    });
+    showScreen("screen1");
+  }
+
+  function goScreen2() {
+    if (!labelsReady()) {
+      showUnavailable();
+      return;
+    }
+    $("s2Instruction").textContent = effectiveText(settings.screen2Instruction, DEFAULT_SCREEN2_INSTRUCTION, "screen2Instruction");
+    screen2ShownAt = Date.now();
+    showScreen("screen2");
+    if (!quadgridFitted) quadgridFitted = fitGridText($("quadgrid"), 8, 26);
+    armIdleTimer();
+  }
+
+  function goScreenQuad(quadNum, title) {
+    if (!labelsReady()) {
+      showUnavailable();
+      return;
+    }
+    $("sqTitle").textContent = title;
+    buildSingleQuadGrid(quadNum);
+    screen2ShownAt = Date.now();
+    showScreen("screenQuad");
+    fitGridText($("sqGrid"), 14, 44);
+    armIdleTimer();
+  }
+
+  function finishRespondentAndReturn(isTimeout) {
+    clearTimeout(returnTimer);
+    var n = parseInt(settings.respondent, 10);
+    settings.respondent = String(isNaN(n) ? 2 : n + 1);
+    $("respondentNo").value = settings.respondent;
+    persistSettings();
+    if (isTimeout && currentLang !== "en") setLanguage("en");   // timed out — reset for the next visitor
+    goScreen1();
+  }
+
+  function goScreen3(label) {
+    $("s3FeelingWord").textContent = label || "";
+    showScreen("screen3");
+    clearTimeout(returnTimer);
+    var seconds = Number(settings.messageSeconds) > 0 ? Number(settings.messageSeconds) : DEFAULT_MESSAGE_SECONDS;
+    returnTimer = setTimeout(function () { finishRespondentAndReturn(true); }, seconds * 1000);
+  }
+
+  function renderCurrent() {
+    if ((current === "screen2" || current === "screenQuad") && !labelsReady()) {
+      showUnavailable();
+      return;
+    }
+    if (current === "screen1") goScreen1();
+  }
+
+  /* ------------------------------------------------------ grid + recording */
+
+  // Sizes each button's text as large as possible without wrapping. Uses a
+  // Canvas for measurement (fast — no per-button layout thrashing) rather
+  // than trial-and-error DOM resizing. Only runs meaningfully once a grid is
+  // actually visible: a hidden (display:none) container reports 0 width, so
+  // callers must invoke this after showScreen(), not right after building
+  // the buttons.
+  var fitCanvas = document.createElement("canvas");
+  var fitCtx = fitCanvas.getContext("2d");
+
+  function fitButtonFont(btn, minPx, maxPx) {
+    var label = btn.textContent;
+    if (!label) return;
+    var cs = getComputedStyle(btn);
+    var availW = btn.clientWidth - (parseFloat(cs.paddingLeft) || 0) - (parseFloat(cs.paddingRight) || 0);
+    var availH = btn.clientHeight - (parseFloat(cs.paddingTop) || 0) - (parseFloat(cs.paddingBottom) || 0);
+    if (availW <= 0 || availH <= 0) return;
+
+    var refSize = 100;
+    fitCtx.font = cs.fontWeight + " " + refSize + "px " + cs.fontFamily;
+    var textW = fitCtx.measureText(label).width;
+    if (textW <= 0) return;
+
+    var byWidth = (availW / textW) * refSize;
+    var byHeight = availH / 1.15;             // rough single-line height allowance
+    var size = Math.min(byWidth, byHeight) * 0.94;   // small safety margin
+    size = Math.max(minPx, Math.min(maxPx, size));
+    btn.style.fontSize = size.toFixed(1) + "px";
+  }
+
+  function fitGridText(container, minPx, maxPx) {
+    if (!container || container.clientWidth === 0) return false;
+    var buttons = container.querySelectorAll(".feel:not(.empty)");
+    buttons.forEach(function (btn) { fitButtonFont(btn, minPx, maxPx); });
+    return true;
+  }
+
+  // Picker buttons wrap across lines, so the risk isn't the whole phrase
+  // overflowing — it's a single long word (e.g. Spanish "Desagradable")
+  // being wider than the button and getting clipped. Size all four
+  // uniformly to whatever the single longest word across all of them needs.
+  function fitPickerButtons() {
+    var btns = document.querySelectorAll(".picker-btn");
+    if (!btns.length || btns[0].clientWidth === 0) return;
+
+    var refSize = 100;
+    var cs = getComputedStyle(btns[0]);
+    fitCtx.font = cs.fontWeight + " " + refSize + "px " + cs.fontFamily;
+
+    var maxWordWidth = 0;
+    btns.forEach(function (btn) {
+      btn.textContent.trim().split(/\s+/).forEach(function (word) {
+        var w = fitCtx.measureText(word).width;
+        if (w > maxWordWidth) maxWordWidth = w;
+      });
+    });
+    if (maxWordWidth <= 0) return;
+
+    var availW = btns[0].clientWidth - (parseFloat(cs.paddingLeft) || 0) - (parseFloat(cs.paddingRight) || 0);
+    var availH = btns[0].clientHeight - (parseFloat(cs.paddingTop) || 0) - (parseFloat(cs.paddingBottom) || 0);
+    if (availW <= 0 || availH <= 0) return;
+
+    var byWidth = (availW / maxWordWidth) * refSize;
+    var byHeight = availH / (3 * 1.3);   // budget for up to ~3 wrapped lines
+    var size = Math.min(byWidth, byHeight) * 0.92;
+    size = Math.max(20, Math.min(46, size));
+    btns.forEach(function (btn) { btn.style.fontSize = size.toFixed(1) + "px"; });
+  }
+
+  function makeFeelButton(id, label) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.dataset.id = id;
+    b.dataset.label = label;
+
+    if (label) {
+      b.className = "feel";
+      b.textContent = label;
+      b.addEventListener("click", function () {
+        if (locked) return;
+        this.classList.add("flash");
+        var self = this;
+        setTimeout(function () { selectFeeling(self.dataset.id, self.dataset.label); }, 90);
+      });
+    } else {
+      b.className = "feel empty";
+      b.disabled = true;
+      b.setAttribute("aria-hidden", "true");
+    }
+    return b;
+  }
+
+  function buildGrid() {
+    var grid = $("quadgrid");
+    grid.innerHTML = "";
+    grid.style.gridTemplateAreas = '"tl tr" "bl br"';
+    quadgridFitted = false;   // fresh buttons need a fresh fit
+
+    QUADRANTS.forEach(function (q) {
+      var box = document.createElement("div");
+      box.className = "quad";
+      box.dataset.q = String(q.n);
+      box.style.gridArea = q.area;
+
+      for (var r = 1; r <= 5; r++) {
+        for (var c = 1; c <= 5; c++) {
+          var id = buttonId(q.n, r, c);
+          var label = (labelsMap[id] || "").trim();
+          box.appendChild(makeFeelButton(id, label));
+        }
+      }
+      grid.appendChild(box);
+    });
+  }
+
+  function buildSingleQuadGrid(quadNum) {
+    var grid = $("sqGrid");
+    grid.innerHTML = "";
+    grid.dataset.q = String(quadNum);
+    for (var r = 1; r <= 5; r++) {
+      for (var c = 1; c <= 5; c++) {
+        var id = buttonId(quadNum, r, c);
+        var label = (labelsMap[id] || "").trim();
+        grid.appendChild(makeFeelButton(id, label));
+      }
+    }
+  }
+
+  async function selectFeeling(id, label) {
+    if (locked || !labelsReady()) return;
+
+    if (!fsReady()) {
+      showUnavailable();
+      return;
+    }
+
+    locked = true;
+    var row = [
+      new Date().toISOString(),
+      (settings.session || "").trim(),
+      (settings.respondent || "").trim(),
+      id,
+      label,
+      ((Date.now() - screen2ShownAt) / 1000).toFixed(1),
+      currentLang
+    ];
+
+    try {
+      await writeAt(csvLine(row) + EOL);
+    } catch (err) {
+      fsState = "prompt";
+      locked = false;
+      refreshFsStatus();
+      showUnavailable();
+      return;
+    }
+
+    sessionRows.push(row);
+    locked = false;
+    goScreen3(label);
+  }
+
+  /* ------------------------------------------------------ resource card (static) */
+
+  function renderResourceCard() {
+    $("resTitle").textContent = t("resourceIntro");
+    $("resCenterLabel").textContent = t("resourceCenterName");
+    $("resMainPhone").textContent = RESOURCE_MAIN_PHONE;
+    $("resMentalLabel").textContent = t("resourceMentalLabel");
+    $("resMentalPhone").textContent = RESOURCE_MENTAL_PHONE;
+    $("resEmail").textContent = RESOURCE_EMAIL;
+    $("resHoursDays").textContent = t("resourceHoursDays");
+    $("resHoursTime").textContent = RESOURCE_HOURS_TIME;
+    $("resLocation").textContent = RESOURCE_LOCATION;
+  }
+
+  /* ------------------------------------------------------ language */
+
+  function applyLanguage() {
+    // Structural chrome text — always translated, never admin-customized.
+    document.querySelectorAll(".axis-title-v").forEach(function (el) { el.textContent = t("energyAxis"); });
+    document.querySelectorAll(".axis-title-h").forEach(function (el) { el.textContent = t("pleasantnessAxis"); });
+    $("seeAllBtn").textContent = t("seeAll");
+    $("sqBack").textContent = t("back");
+    $("s3BackBtn").textContent = t("backHome");
+    document.querySelector(".s3-thanks").textContent = t("thanks");
+    document.querySelector(".s3-logged").textContent = t("logged");
+    document.querySelector(".s3-feeling").firstChild.textContent = t("feelingPrefix") + " ";
+
+    document.querySelectorAll(".picker-btn").forEach(function (btn) {
+      btn.textContent = t("quad" + btn.dataset.quad);
+    });
+    fitPickerButtons();
+
+    // Admin-editable text — only swapped if still at the English default.
+    if (current === "screen1") {
+      $("pickerPrompt").textContent = effectiveText(settings.screen1Label, DEFAULT_SCREEN1_LABEL, "screen1Label");
+    }
+    if (current === "screen2") {
+      $("s2Instruction").textContent = effectiveText(settings.screen2Instruction, DEFAULT_SCREEN2_INSTRUCTION, "screen2Instruction");
+    }
+
+    renderResourceCard();
+
+    $("langMenuLabel").textContent = t("langLabel");
+    document.querySelectorAll(".lang-option").forEach(function (b) {
+      b.classList.toggle("active", b.dataset.lang === currentLang);
+    });
+
+    if (!$("idleVeil").classList.contains("hidden")) {
+      $("idleTitle").textContent = t("idleTitle");
+      $("idleBodyPrefix").textContent = t("idleBodyPrefix");
+      $("idleBodySuffix").textContent = t("idleBodySuffix");
+      $("idleStillHereBtn").textContent = t("idleBtn");
+      updateIdleCountdownText();
+    }
+  }
+
+  async function setLanguage(code) {
+    if (!TRANSLATIONS[code]) return;
+    currentLang = code;
+    applyLanguage();
+    await loadLabels();   // fetch that language's labels file and rebuild the 100-button grid
+  }
+
+  /* ------------------------------------------------------ admin rendering */
+
+  function loadSettingsIntoForm() {
+    $("messageSeconds").value = settings.messageSeconds;
+    $("idleMinutes").value = settings.idleMinutes;
+    $("sessionId").value = VALID_LOCATIONS.indexOf(settings.session) !== -1 ? settings.session : "";
+    $("respondentNo").value = settings.respondent;
+  }
+
+  function wireSettingsForm() {
+    $("messageSeconds").addEventListener("input", function () { settings.messageSeconds = this.value; persistSettings(); });
+    $("idleMinutes").addEventListener("input", function () { settings.idleMinutes = this.value; persistSettings(); });
+    $("sessionId").addEventListener("change", function () {
+      settings.session = this.value;
+      persistSettings();
+      switchDataFileIfNeeded();
+      updateSetupGate();
+    });
+    $("respondentNo").addEventListener("input", function () { settings.respondent = this.value; persistSettings(); });
+  }
+
+  /* ------------------------------------------------------ admin gate */
+
+  var pin = "";
+  var taps = [];
+
+  function openGate() {
+    clearIdleTimers();
+    hideIdlePopup();
+    pin = "";
+    $("gate").classList.remove("bad");
+    renderDots();
+    $("gateVeil").classList.remove("hidden");
+  }
+  function closeGate() {
+    $("gateVeil").classList.add("hidden");
+    pin = "";
+    armIdleTimer();   // no-ops unless we're back on screen2/screenQuad with nothing else open
+  }
+
+  function renderDots() {
+    var d = $("pindots");
+    d.innerHTML = "";
+    for (var i = 0; i < ADMIN_PIN.length; i++) {
+      var dot = document.createElement("i");
+      if (i < pin.length) dot.className = "on";
+      d.appendChild(dot);
+    }
+  }
+
+  function pinPress(ch) {
+    $("gate").classList.remove("bad");
+    if (ch === "del") pin = pin.slice(0, -1);
+    else if (ch === "esc") { closeGate(); return; }
+    else if (pin.length < ADMIN_PIN.length) pin += ch;
+    renderDots();
+    if (pin.length === ADMIN_PIN.length) {
+      if (pin === ADMIN_PIN) { closeGate(); openAdmin(); }
+      else { $("gate").classList.add("bad"); setTimeout(function () { pin = ""; renderDots(); $("gate").classList.remove("bad"); }, 700); }
+    }
+  }
+
+  function buildPad() {
+    var pad = $("pad");
+    ["1","2","3","4","5","6","7","8","9","del","0","esc"].forEach(function (ch) {
+      var b = document.createElement("button");
+      b.type = "button";
+      if (ch === "del") { b.textContent = "Back"; b.className = "wide"; }
+      else if (ch === "esc") { b.textContent = "Cancel"; b.className = "wide"; }
+      else b.textContent = ch;
+      b.addEventListener("click", function () { pinPress(ch); });
+      pad.appendChild(b);
+    });
+  }
+
+  function openAdmin() {
+    $("adminVeil").classList.remove("hidden");
+    clearTimeout(returnTimer);
+    clearIdleTimers();
+    hideIdlePopup();
+    refreshFsStatus();
+    refreshLabelsStatus();
+    loadSettingsIntoForm();
+    updateSetupGate();
+  }
+
+  // Keeps "Return to kiosk" disabled until a folder is connected (fsReady()),
+  // the labels file has loaded (labelsReady()), and a location has been
+  // chosen (locationReady()) — otherwise a kiosk could be left running with
+  // nothing actually being saved, or saving under the wrong filename. Called
+  // any time any of the three statuses changes, so the gate always reflects
+  // the current state.
+  function updateSetupGate() {
+    var ready = fsReady() && labelsReady() && locationReady();
+    var btn = $("closeAdmin");
+    var warn = $("setupWarn");
+    btn.disabled = !ready;
+    if (ready) {
+      btn.title = "";
+      warn.classList.add("hidden");
+      warn.textContent = "";
+      return;
+    }
+    var missing = [];
+    if (!locationReady()) missing.push("choose a location");
+    if (!fsReady()) missing.push("connect a data folder");
+    if (!labelsReady()) missing.push("load the labels file");
+    var msg = "Finish setup to continue: " + missing.join(", ") + ".";
+    btn.title = msg;
+    warn.textContent = msg;
+    warn.classList.remove("hidden");
+  }
+
+  function closeAdmin() {
+    if (!fsReady() || !labelsReady() || !locationReady()) {
+      updateSetupGate();
+      toast("Finish setup before returning to the kiosk.");
+      return;
+    }
+    $("adminVeil").classList.add("hidden");
+    goScreen1();
+  }
+
+  function cornerTap() {
+    var now = Date.now();
+    taps = taps.filter(function (t) { return now - t < ADMIN_TAP_WINDOW; });
+    taps.push(now);
+    if (taps.length >= ADMIN_TAPS) { taps = []; openGate(); }
+  }
+
+  /* ------------------------------------------------------ wiring */
+
+  document.querySelectorAll(".picker-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var quad = Number(this.dataset.quad);
+      var title = this.textContent;
+      this.classList.add("flash");
+      var self = this;
+      setTimeout(function () { self.classList.remove("flash"); goScreenQuad(quad, title); }, 90);
+    });
+  });
+
+  $("seeAllBtn").addEventListener("click", function () {
+    this.classList.add("flash");
+    var self = this;
+    setTimeout(function () { self.classList.remove("flash"); goScreen2(); }, 90);
+  });
+
+  $("sqBack").addEventListener("click", function () { goScreen1(); });
+  $("s2Back").addEventListener("click", function () { goScreen1(); });
+  $("s3BackBtn").addEventListener("click", function () { finishRespondentAndReturn(); });
+
+  $("gearBtn").addEventListener("click", function (e) {
+    e.stopPropagation();
+    $("langMenu").classList.toggle("hidden");
+  });
+  document.querySelectorAll(".lang-option").forEach(function (b) {
+    b.addEventListener("click", function () {
+      setLanguage(b.dataset.lang);
+      $("langMenu").classList.add("hidden");
+    });
+  });
+  // Tapping anywhere outside the open menu closes it, same pattern as the idle popup's modality.
+  document.addEventListener("pointerdown", function (e) {
+    var menu = $("langMenu");
+    if (menu.classList.contains("hidden")) return;
+    if (menu.contains(e.target) || e.target === $("gearBtn") || $("gearBtn").contains(e.target)) return;
+    menu.classList.add("hidden");
+  }, true);
+
+  $("corner").addEventListener("click", cornerTap);
+  $("connectBtn").addEventListener("click", connectFolder);
+  $("grantBtn").addEventListener("click", grantAccess);
+  $("forgetBtn").addEventListener("click", forgetFolder);
+  $("downloadBtn").addEventListener("click", downloadCopy);
+  $("reloadLabelsBtn").addEventListener("click", async function () { await loadLabels(); toast("Labels reloaded."); });
+  $("closeAdmin").addEventListener("click", closeAdmin);
+  $("restartBtn").addEventListener("click", function () { goScreen1(); toast("Back to Screen 1."); });
+
+  $("idleStillHereBtn").addEventListener("click", dismissIdlePopup);
+
+  // Any tap on screen2 or screenQuad resets the inactivity clock — but only
+  // while the "still there?" prompt is NOT showing, so that only its own
+  // button counts as a response once it appears.
+  document.addEventListener("pointerdown", function () {
+    if (current !== "screen2" && current !== "screenQuad") return;
+    if (!$("idleVeil").classList.contains("hidden")) return;
+    armIdleTimer();
+  }, true);
+
+  $("fullscreenBtn").addEventListener("click", function () {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen().catch(function () { toast("Full screen was refused."); });
+  });
+
+  wireSettingsForm();
+
+  document.addEventListener("keydown", function (e) {
+    // Escape does nothing on the kiosk screens themselves. The one exception is
+    // canceling PIN entry, which only matters once the secret corner-tap or
+    // Ctrl+Shift+A gesture has already opened the gate — not reachable by a
+    // casual Escape press. Note: this cannot stop the browser's own built-in
+    // Escape-exits-fullscreen shortcut; no page JavaScript can prevent that
+    // by design (see the deployment note in the admin panel for the real fix).
+    if (e.key === "Escape") {
+      var gateOpen = !$("gateVeil").classList.contains("hidden");
+      if (gateOpen) closeGate();
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+    if (e.ctrlKey && e.shiftKey && (e.key === "A" || e.key === "a")) {
+      e.preventDefault();
+      if ($("adminVeil").classList.contains("hidden")) openGate();
+      return;
+    }
+    if (!$("gateVeil").classList.contains("hidden") && e.key >= "0" && e.key <= "9") pinPress(e.key);
+    if (!$("gateVeil").classList.contains("hidden") && e.key === "Backspace") { e.preventDefault(); pinPress("del"); }
+  }, true);
+
+  document.addEventListener("contextmenu", function (e) { e.preventDefault(); });
+  document.addEventListener("dragstart", function (e) { e.preventDefault(); });
+  document.addEventListener("gesturestart", function (e) { e.preventDefault(); });
+  window.addEventListener("beforeunload", function (e) { e.preventDefault(); e.returnValue = ""; });
+
+  /* ------------------------------------------------------ boot */
+
+  (async function boot() {
+    buildPad();
+    renderResourceCard();
+
+    var saved = await idbGet("settings");
+    if (saved) settings = Object.assign(settings, saved);
+
+    await loadLabels();
+
+    if (fsSupported) {
+      var handle = await idbGet("dir");
+      if (handle) {
+        dirHandle = handle;
+        try {
+          var state = await dirHandle.queryPermission({ mode: "readwrite" });
+          fsState = state;
+          if (state === "granted") await openDataFile();
+        } catch (err) { fsState = "prompt"; }
+      }
+    } else {
+      fsState = "unsupported";
+    }
+
+    refreshFsStatus();
+    refreshLabelsStatus();
+    loadSettingsIntoForm();
+    goScreen1();
+    applyLanguage();
+
+    if (!dirHandle) openGate();   // first run: nothing set up yet, so open straight to admin
+  })();
+})();
+</script>
+</body>
+</html>
