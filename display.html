@@ -1082,6 +1082,7 @@
 
     function buildBars() {
       var geo = new THREE.BoxGeometry(CELL * 0.72, 1, CELL * 0.72);
+      geo.translate(0, 0.5, 0); // pivot at bottom so bars grow upward from y=0
       var segCount = Math.max(1, allLocations.length);
       var offsets = shadeOffsets(segCount);
       Object.keys(QUAD_INFO).forEach(function (qStr) {
@@ -1108,6 +1109,7 @@
               var mesh = new THREE.Mesh(geo, mat);
               mesh.position.set(x, 0, z);
               mesh.scale.y = 0.001;
+              mesh.visible = false; // start hidden; render loop reveals when h > 0.01
               scene.add(mesh);
               segs.push({ mesh: mesh, target: 0, current: 0 });
             }
@@ -1687,7 +1689,7 @@
           var h = s.current;
           s.mesh.visible = h > 0.01;
           s.mesh.scale.y = h > 0.01 ? h : 0.0001;
-          s.mesh.position.y = cum + (h > 0.01 ? h : 0) / 2;
+          s.mesh.position.y = cum; // geometry pivot at bottom; bar grows upward from cum
           cum += h > 0.01 ? h : 0;
           targetTotal += s.target;
         }
