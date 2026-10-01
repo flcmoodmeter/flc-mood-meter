@@ -451,6 +451,9 @@
       } else {
         allRows = result.rows;
         modes = buildModes(result.rows);
+        // Restart display from the default mode with fresh data
+        modeIndex = 0;
+        goToMode(defaultModeIndex(modes));
       }
     }
 
