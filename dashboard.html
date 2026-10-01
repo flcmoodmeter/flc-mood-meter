@@ -1353,10 +1353,8 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<!-- Tone.js audio engine — vendored locally (vendor/tone.min.js), not
-     loaded from a CDN, same "fully self-contained, no network needed"
-     convention as the rest of this file. Powers the Sonification tab. -->
-<script src="vendor/tone.min.js"></script>
+<!-- Tone.js is loaded lazily on first Play click to avoid Firefox's
+     AudioContext autoplay block (Tone auto-creates a context on load). -->
 <script>
 (function () {
   "use strict";
@@ -5891,13 +5889,25 @@
     });
   });
 
+  function ensureToneLoaded(cb) {
+    if (typeof Tone !== "undefined") { cb(); return; }
+    var s = document.createElement("script");
+    s.src = "vendor/tone.min.js";
+    s.onload = function () { if (Tone.start) Tone.start().then(cb).catch(cb); else cb(); };
+    s.onerror = function () { toast("Could not load audio engine (tone.min.js)."); };
+    document.head.appendChild(s);
+  }
+
   $("sonifyPlayBtn").addEventListener("click", function () {
     // Single toggle: playing -> pause; paused -> resume; idle -> start fresh.
     if (sonifyState === "playing") { pauseSonify(); return; }
     if (sonifyState === "paused") { resumeSonify(); return; }
-    refreshSonifyScore();
-    if (!sonifyScore || !sonifyScore.notes.length) { toast("Nothing to play — check the date/range and filters."); return; }
-    startSonifyFrom(0);
+    // Load Tone.js lazily on first play (avoids Firefox autoplay block).
+    ensureToneLoaded(function () {
+      refreshSonifyScore();
+      if (!sonifyScore || !sonifyScore.notes.length) { toast("Nothing to play — check the date/range and filters."); return; }
+      startSonifyFrom(0);
+    });
   });
   $("sonifyStopBtn").addEventListener("click", stopSonify);
   $("sonifyExportMidiBtn").addEventListener("click", exportSonifyMidi);
