@@ -823,6 +823,7 @@
           // grows once that flourish actually lands on the cell, via
           // commitRowToCounts, so the two always stay in sync.
           if (key) spawnEffect(r, key);
+          else if (playback.revealedIdx < 3) console.log("DEBUG null key for row", r);
           playback.revealedIdx++;
           changed = true;
         }
@@ -1755,6 +1756,7 @@
     }
 
     function onDataLoaded(rows) {
+      console.log("DEBUG onDataLoaded", rows.length, "rows, sample:", rows[0]);
       allRows = rows;
       allLocations = MoodData.locationsPresent(rows);
       modes = buildModes(rows);
