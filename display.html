@@ -1742,13 +1742,17 @@
       dataLoaded = true;
       $("loadScreen").classList.add("hidden");
       $("loadScreen").classList.add("can-close");
-      modeIndex = 0;
-      goToMode(defaultModeIndex(modes));
       } catch(e) {
         console.error("[MoodMeter] onDataLoaded THREW: " + e + "\n" + e.stack);
         $("loadError").textContent = "Load error: " + e;
         $("loadScreen").classList.remove("hidden");
+        return;
       }
+      // Outside try/catch so errors here don't re-show the load screen
+      console.log("[MoodMeter] goToMode start");
+      modeIndex = 0;
+      goToMode(defaultModeIndex(modes));
+      console.log("[MoodMeter] goToMode done");
     }
 
     // Always-visible indicator button opens the load screen
