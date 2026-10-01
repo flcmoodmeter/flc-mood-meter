@@ -3925,6 +3925,9 @@
       sonifyCtx = new (window.AudioContext || window.webkitAudioContext)();
       buildSonifyGraph(sonifyCtx);
     }
+    // Firefox (and some other browsers) create AudioContexts in a suspended
+    // state even when triggered by a user gesture. Always attempt to resume.
+    if (sonifyCtx.state === "suspended") sonifyCtx.resume();
     return sonifyCtx;
   }
 
