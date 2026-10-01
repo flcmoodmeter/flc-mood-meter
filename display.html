@@ -1687,13 +1687,15 @@
           var s = b.segs[i];
           s.current += (s.target - s.current) * (1 - Math.pow(1 - TRANSITION_LERP, dt * 60));
           var h = s.current;
-          // Show the segment whenever it has a non-zero target OR is still animating down.
-          // Use a small minimum scale so lit cells are always visible, never a zero-height ghost.
-          var lit = s.target > 0 || h > 0.001;
+          // Show whenever there's data — use a minimum display height so the
+          // bar is always a visible sliver, not a flat line at floor level.
+          var MIN_DISPLAY = 0.15; // world units — tall enough to see at camera angle
+          var lit = s.target > 0 || h > 0.002;
+          var displayH = lit ? Math.max(h, MIN_DISPLAY) : 0;
           s.mesh.visible = lit;
-          s.mesh.scale.y = lit ? Math.max(h, 0.04) : 0.001;
+          s.mesh.scale.y = lit ? Math.max(h, MIN_DISPLAY) : 0.001;
           s.mesh.position.y = cum;
-          cum += lit ? Math.max(h, 0.04) : 0;
+          cum += displayH;
           targetTotal += s.target;
         }
 
