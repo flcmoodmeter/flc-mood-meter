@@ -6695,22 +6695,27 @@
     $("localPanelEl").style.display = isSheets ? "none" : "";
     $("addFilesBtn").style.display = isSheets ? "none" : "";
 
+    // Reset the suspicious filter on every source switch — the new dataset
+    // gets re-tagged by onDataChanged, but the checkbox would otherwise carry
+    // over silently and filter against data the user hasn't reviewed.
+    filters.excludeSuspicious = false;
+    $("excludeSuspiciousToggle").checked = false;
+
     if (!isSheets) {
       clearSheetsAutoRefresh();
-      // Remove sheets rows when switching to local
-      var hadSheets = allRows.some(function (r) { return r._sourceFile === "__sheets__"; });
-      if (hadSheets) {
-        allRows = allRows.filter(function (r) { return r._sourceFile !== "__sheets__"; });
-        seenRowKeys = {};
-        allRows.forEach(function (r) { seenRowKeys[r._dedupeKey] = true; });
-        onDataChanged();
-      }
+      // Remove sheets rows when switching to local; always call onDataChanged
+      // so tagSuspicious re-runs on the local rows that remain.
+      allRows = allRows.filter(function (r) { return r._sourceFile !== "__sheets__"; });
+      seenRowKeys = {};
+      allRows.forEach(function (r) { seenRowKeys[r._dedupeKey] = true; });
+      onDataChanged();
     } else {
       // Clear all local CSV data when switching to Sheets
       allRows = [];
       seenRowKeys = {};
       files = {};
       renderFileList();
+      onDataChanged(); // immediately reflect the cleared state
       // Re-apply auto-refresh setting when switching back to Sheets
       if (getSheetsAutoRefresh()) startSheetsAutoRefresh();
       // Load sheets data if we have a URL
