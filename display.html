@@ -1081,7 +1081,9 @@
     }
 
     function buildBars() {
+      // Geometry translated so bottom face sits at y=0 — bars grow upward cleanly.
       var geo = new THREE.BoxGeometry(CELL * 0.72, 1, CELL * 0.72);
+      geo.translate(0, 0.5, 0);
       var segCount = Math.max(1, allLocations.length);
       var offsets = shadeOffsets(segCount);
       Object.keys(QUAD_INFO).forEach(function (qStr) {
@@ -1685,10 +1687,12 @@
         for (var i = 0; i < b.segs.length; i++) {
           var s = b.segs[i];
           s.current += (s.target - s.current) * (1 - Math.pow(1 - TRANSITION_LERP, dt * 60));
-          var h = s.current < 0.001 ? 0.0001 : s.current;
-          s.mesh.scale.y = h;
-          s.mesh.visible = h > 0.001;
-          s.mesh.position.y = cum + h / 2;
+          var h = s.current;
+          s.mesh.visible = h > 0.002;
+          s.mesh.scale.y = h > 0.002 ? h : 0.0001;
+          // geo is translated so bottom face is at y=0 in local space;
+          // mesh origin aligns with bar bottom, so position.y = cum (no +h/2).
+          s.mesh.position.y = cum;
           cum += h;
           targetTotal += s.target;
         }
@@ -1696,7 +1700,7 @@
         // Label rides just above the growing stack, and only shows once the
         // cell actually has a hit (target above the flat baseline) — an
         // empty cell stays unlabeled rather than cluttering the floor.
-        var activeTarget = targetTotal > 0.081 ? 0.95 : 0;
+        var activeTarget = targetTotal > 0.001 ? 0.95 : 0;
         b.labelOpacity += (activeTarget - b.labelOpacity) * (1 - Math.pow(1 - TRANSITION_LERP, dt * 60));
         b.label.material.opacity = b.labelOpacity;
         b.label.position.y = cum + 0.34;
