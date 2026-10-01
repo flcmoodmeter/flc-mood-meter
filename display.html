@@ -443,9 +443,8 @@
 
     function ingestCsvText(text) {
       var result = MoodData.rowsFromCsvText(text);
-      console.log("[MoodMeter] ingestCsvText: rows=" + (result.rows && result.rows.length) + " error=" + result.error + " firstLine=" + text.split("\n")[0]);
       if (result.error) { $("loadError").textContent = "Parse error: " + result.error; return; }
-      if (!result.rows.length) { $("loadError").textContent = "CSV fetched but no usable rows found. Check the sheet has data rows below the header."; return; }
+      if (!result.rows.length) { $("loadError").textContent = "CSV fetched but no usable rows found."; return; }
       $("loadError").textContent = "";
       if (!dataLoaded) {
         onDataLoaded(result.rows); // sets dataLoaded=true only on success
@@ -456,19 +455,15 @@
     }
 
     function loadFromSheets() {
-      $("loadMsg").textContent = "Connecting to Google Sheets…";
       fetch(SHEETS_CSV_URL).then(function (resp) {
-        console.log("[MoodMeter] fetch status=" + resp.status + " ok=" + resp.ok);
         if (!resp.ok) throw new Error("HTTP " + resp.status);
         return resp.text();
       }).then(function (text) {
-        console.log("[MoodMeter] fetched " + text.length + " chars");
         ingestCsvText(text);
       }).catch(function (err) {
-        console.log("[MoodMeter] fetch error: " + err);
         if (!dataLoaded) {
           $("loadMsg").textContent = "Could not reach Google Sheets.";
-          $("loadError").textContent = "Error: " + err + ". Try Local CSV or sample data below.";
+          $("loadError").textContent = "Check your internet connection, or use Local CSV / sample data below.";
         }
       });
     }
@@ -560,11 +555,11 @@
 
     $("sampleBtn").addEventListener("click", function () {
       $("loadError").textContent = "";
+      dataLoaded = false; // force full reload/reset
       fetch("sample_data/mm_data_test.csv").then(function (resp) {
         if (!resp.ok) throw new Error("HTTP " + resp.status);
         return resp.text();
       }).then(function (text) {
-        dataLoaded = true;
         ingestCsvText(text);
       }).catch(function () {
         $("loadError").textContent = "Could not load sample data.";
@@ -1721,41 +1716,21 @@
     /* ------------------------------------------------------ boot */
 
     function onDataLoaded(rows) {
-      try {
-      console.log("[MoodMeter] onDataLoaded rows=" + rows.length);
       allRows = rows;
       allLocations = MoodData.locationsPresent(rows);
-      console.log("[MoodMeter] locationsPresent done: " + allLocations);
       modes = buildModes(rows);
-      console.log("[MoodMeter] buildModes done: " + modes.length);
       buildLocationLegend();
-      console.log("[MoodMeter] buildLocationLegend done");
-      console.log("[MoodMeter] initScene start, THREE=" + (typeof THREE));
       try {
         if (!scene) initScene();
-        console.log("[MoodMeter] initScene done");
       } catch(e) {
-        console.error("[MoodMeter] initScene THREW: " + e + "\n" + e.stack);
-        $("loadError").textContent = "Scene init error: " + e;
-        return; // don't hide load screen or mark loaded
-      }
-      console.log("[MoodMeter] about to set dataLoaded");
-      dataLoaded = true;
-      console.log("[MoodMeter] about to hide loadScreen");
-      $("loadScreen").classList.add("hidden");
-      console.log("[MoodMeter] loadScreen hidden classes: " + $("loadScreen").className);
-      $("loadScreen").classList.add("can-close");
-      } catch(e) {
-        console.error("[MoodMeter] onDataLoaded THREW: " + e + "\n" + e.stack);
-        $("loadError").textContent = "Load error: " + e;
-        $("loadScreen").classList.remove("hidden");
+        $("loadError").textContent = "Scene error: " + e;
         return;
       }
-      // Outside try/catch so errors here don't re-show the load screen
-      console.log("[MoodMeter] goToMode start");
+      dataLoaded = true;
+      $("loadScreen").classList.add("hidden");
+      $("loadScreen").classList.add("can-close");
       modeIndex = 0;
       goToMode(defaultModeIndex(modes));
-      console.log("[MoodMeter] goToMode done");
     }
 
     // Always-visible indicator button opens the load screen
