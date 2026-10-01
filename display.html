@@ -254,6 +254,30 @@
     cursor: pointer; letter-spacing: 0.04em;
   }
   .fs-btn:hover { color: var(--ink); border-color: rgba(255,255,255,0.3); }
+
+  /* always-visible source button in top-left corner */
+  .src-indicator {
+    position: absolute; top: 28px; left: 32px;
+    pointer-events: auto;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .src-indicator .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); flex-shrink: 0; }
+  .src-indicator-label { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .src-change-btn {
+    background: none; border: 1px solid var(--line); color: var(--muted);
+    border-radius: 8px; padding: 4px 10px; font-size: 11px; cursor: pointer;
+    letter-spacing: 0.04em; transition: color .15s, border-color .15s;
+  }
+  .src-change-btn:hover { color: var(--ink); border-color: rgba(255,255,255,0.3); }
+
+  /* close / resume button on load screen (hidden until data is loaded) */
+  .load-close-btn {
+    display: none; margin-top: 18px; background: none; border: none;
+    color: var(--muted); font-size: 12px; text-decoration: underline;
+    text-underline-offset: 3px; cursor: pointer; padding: 4px;
+  }
+  .load-close-btn:hover { color: var(--ink); }
+  #loadScreen.can-close .load-close-btn { display: inline-block; }
 </style>
 </head>
 <body>
@@ -261,7 +285,11 @@
   <div id="stage"></div>
 
   <div class="hud" id="hud">
-    <div class="hud-corner"><span class="dot"></span> Mood Meter — Live</div>
+    <div class="src-indicator">
+      <span class="dot"></span>
+      <span class="src-indicator-label">Mood Meter</span>
+      <button class="src-change-btn" id="srcChangeBtn" type="button">📊 Sheets</button>
+    </div>
     <div class="hud-clock" id="clock">--:--</div>
     <div class="hud-left">
       <div class="legend-panel">
@@ -326,6 +354,7 @@
       </div>
       <div class="load-error" id="loadError"></div>
       <div><button class="sample-btn" id="sampleBtn" type="button">Load Sample Data</button></div>
+      <div><button class="load-close-btn" id="loadCloseBtn" type="button">Resume display →</button></div>
     </div>
   </div>
 
@@ -447,6 +476,8 @@
       // HUD toggles
       $("hudSrcSheets").classList.toggle("on", src === "sheets");
       $("hudSrcLocal").classList.toggle("on", src === "local");
+      // always-visible indicator button
+      $("srcChangeBtn").textContent = src === "sheets" ? "📊 Sheets" : "📁 CSV";
     }
 
     function startSheetsMode() {
@@ -1691,10 +1722,21 @@
       modes = buildModes(rows);
       buildLocationLegend();
       $("loadScreen").classList.add("hidden");
+      $("loadScreen").classList.add("can-close"); // show "Resume" button if reopened
       if (!scene) initScene();
       modeIndex = 0;
       goToMode(defaultModeIndex(modes));
     }
+
+    // Always-visible indicator button opens the load screen
+    $("srcChangeBtn").addEventListener("click", function () {
+      $("loadScreen").classList.remove("hidden");
+    });
+
+    // Close button returns to display
+    $("loadCloseBtn").addEventListener("click", function () {
+      $("loadScreen").classList.add("hidden");
+    });
   })();
   </script>
 </body>
