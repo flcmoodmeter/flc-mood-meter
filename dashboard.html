@@ -5890,15 +5890,21 @@
   });
 
   function ensureToneLoaded(cb) {
-    function startTone() {
-      // Tone.start() resumes the AudioContext from within a user gesture —
-      // required by Firefox. Wait for it to resolve before proceeding.
-      (Tone.start ? Tone.start() : Promise.resolve()).then(cb).catch(function () { cb(); });
+    function afterLoad() {
+      // Manually resume Tone's raw AudioContext synchronously — this is the
+      // only reliable way to unlock audio in Firefox from a user gesture.
+      // Tone.start() is async and loses the gesture context by the time it
+      // resolves, causing the "suspended" warning and connect failures.
+      try {
+        var rawCtx = Tone.getContext().rawContext;
+        if (rawCtx && rawCtx.state === "suspended") rawCtx.resume();
+      } catch (e) {}
+      cb();
     }
-    if (typeof Tone !== "undefined") { startTone(); return; }
+    if (typeof Tone !== "undefined") { afterLoad(); return; }
     var s = document.createElement("script");
     s.src = "vendor/tone.min.js";
-    s.onload = startTone;
+    s.onload = afterLoad;
     s.onerror = function () { toast("Could not load audio engine (tone.min.js)."); };
     document.head.appendChild(s);
   }
