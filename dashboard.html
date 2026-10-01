@@ -4711,6 +4711,9 @@
     // (pause, then resume) to actually land a resume(). resume() is a
     // harmless no-op when already running, so there's no reason to guard it.
     sonifyCtx.resume();
+    // Tone.js maintains its own internal context wrapper; Firefox requires
+    // Tone.start() to be called from within a user gesture to unlock it.
+    if (typeof Tone !== "undefined" && Tone.start) Tone.start();
     var startCtxTime = sonifyCtx.currentTime + 0.05;
     sonifyPlayStartCtxTime = startCtxTime - seekSec;
     sonifyQuadGlideState = {};   // fresh portamento chain for this play/seek
