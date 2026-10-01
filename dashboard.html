@@ -6648,6 +6648,11 @@
       }
     }
 
+    // Flush previous Sheets rows before re-ingesting (refresh replaces, not accumulates).
+    allRows = allRows.filter(function (r) { return r._sourceFile !== "__sheets__"; });
+    seenRowKeys = {};
+    allRows.forEach(function (r) { seenRowKeys[r._dedupeKey] = true; });
+
     var added = 0, dupes = 0;
     for (var i = dataStartIndex; i < rows.length; i++) {
       var r = buildRow(fieldMap, rows[i]);
@@ -6701,6 +6706,11 @@
         onDataChanged();
       }
     } else {
+      // Clear all local CSV data when switching to Sheets
+      allRows = [];
+      seenRowKeys = {};
+      files = {};
+      renderFileList();
       // Re-apply auto-refresh setting when switching back to Sheets
       if (getSheetsAutoRefresh()) startSheetsAutoRefresh();
       // Load sheets data if we have a URL
