@@ -244,6 +244,9 @@
   .source-toggle button.on { background: var(--ink); color: #0b0d12; }
   .source-toggle button:not(.on):hover { color: var(--ink); }
 
+  .hud-source-toggle { margin-top: 2px; width: 100%; border-radius: 8px; }
+  .hud-source-toggle button { flex: 1; text-align: center; font-size: 12px; padding: 6px 10px; }
+
   .fs-btn {
     position: absolute; top: 28px; right: 32px;
     pointer-events: auto; background: none; border: 1px solid var(--line);
@@ -278,6 +281,13 @@
           <button type="button" data-speed="medium">Medium</button>
           <button type="button" data-speed="fast">Fast</button>
         </div>
+        <div class="menu-divider"></div>
+        <h3>Data Source</h3>
+        <div class="source-toggle hud-source-toggle">
+          <button type="button" id="hudSrcSheets" class="on">📊 Sheets</button>
+          <button type="button" id="hudSrcLocal">📁 CSV</button>
+        </div>
+        <input type="file" id="hudFileInput" accept=".csv,text/csv" style="display:none">
       </div>
     </div>
     <div class="paused-badge" id="pausedBadge">Paused — press space to resume</div>
@@ -430,13 +440,21 @@
       });
     }
 
+    function setSrcToggle(src) {
+      // load screen toggles
+      $("srcSheets").classList.toggle("on", src === "sheets");
+      $("srcLocal").classList.toggle("on", src === "local");
+      // HUD toggles
+      $("hudSrcSheets").classList.toggle("on", src === "sheets");
+      $("hudSrcLocal").classList.toggle("on", src === "local");
+    }
+
     function startSheetsMode() {
       dataSource = "sheets";
       $("loadMsg").textContent = "Connecting to Google Sheets…";
       $("loadError").textContent = "";
       $("localCsvArea").style.display = "none";
-      $("srcSheets").classList.add("on");
-      $("srcLocal").classList.remove("on");
+      setSrcToggle("sheets");
       loadFromSheets();
       if (sheetsRefreshTimer) clearInterval(sheetsRefreshTimer);
       sheetsRefreshTimer = setInterval(loadFromSheets, SHEETS_REFRESH_MS);
@@ -448,8 +466,7 @@
       $("loadMsg").textContent = "Choose a CSV file to load.";
       $("loadError").textContent = "";
       $("localCsvArea").style.display = "block";
-      $("srcSheets").classList.remove("on");
-      $("srcLocal").classList.add("on");
+      setSrcToggle("local");
     }
 
     $("srcSheets").addEventListener("click", function () {
@@ -461,6 +478,34 @@
     $("srcLocal").addEventListener("click", function () {
       if (dataSource === "local") return;
       startLocalMode();
+    });
+
+    // HUD source buttons — clicking CSV opens file picker directly
+    $("hudSrcSheets").addEventListener("click", function () {
+      if (dataSource === "sheets") return;
+      dataLoaded = false;
+      startSheetsMode();
+    });
+
+    $("hudSrcLocal").addEventListener("click", function () {
+      if (dataSource === "local") {
+        // Already in local mode — trigger file picker again
+        $("hudFileInput").click();
+        return;
+      }
+      startLocalMode();
+      // Open load screen so user can pick a file (or trigger file input)
+      $("loadScreen").classList.remove("hidden");
+    });
+
+    $("hudFileInput").addEventListener("change", function () {
+      var file = this.files && this.files[0];
+      if (!file) return;
+      $("loadError").textContent = "";
+      var reader = new FileReader();
+      reader.onload = function (e) { ingestCsvText(e.target.result); };
+      reader.onerror = function () { $("loadError").textContent = "Could not read file."; };
+      reader.readAsText(file);
     });
 
     $("fileInput").addEventListener("change", function () {
