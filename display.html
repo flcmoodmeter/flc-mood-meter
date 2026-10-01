@@ -1687,17 +1687,17 @@
           var s = b.segs[i];
           s.current += (s.target - s.current) * (1 - Math.pow(1 - TRANSITION_LERP, dt * 60));
           var h = s.current;
-          s.mesh.visible = h > 0.01;
-          s.mesh.scale.y = h > 0.01 ? h : 0.0001;
-          s.mesh.position.y = cum; // geometry pivot at bottom; bar grows upward from cum
-          cum += h > 0.01 ? h : 0;
+          // Show the segment whenever it has a non-zero target OR is still animating down.
+          // Use a small minimum scale so lit cells are always visible, never a zero-height ghost.
+          var lit = s.target > 0 || h > 0.001;
+          s.mesh.visible = lit;
+          s.mesh.scale.y = lit ? Math.max(h, 0.04) : 0.001;
+          s.mesh.position.y = cum;
+          cum += lit ? Math.max(h, 0.04) : 0;
           targetTotal += s.target;
         }
 
-        // Label rides just above the growing stack, and only shows once the
-        // cell actually has a hit (target above the flat baseline) — an
-        // empty cell stays unlabeled rather than cluttering the floor.
-        var activeTarget = targetTotal > 0.01 ? 0.95 : 0;
+        var activeTarget = targetTotal > 0 ? 0.95 : 0;
         b.labelOpacity += (activeTarget - b.labelOpacity) * (1 - Math.pow(1 - TRANSITION_LERP, dt * 60));
         b.label.material.opacity = b.labelOpacity;
         b.label.position.y = cum + 0.34;
