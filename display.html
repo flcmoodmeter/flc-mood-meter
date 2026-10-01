@@ -1081,9 +1081,7 @@
     }
 
     function buildBars() {
-      // Geometry translated so bottom face sits at y=0 — bars grow upward cleanly.
       var geo = new THREE.BoxGeometry(CELL * 0.72, 1, CELL * 0.72);
-      geo.translate(0, 0.5, 0);
       var segCount = Math.max(1, allLocations.length);
       var offsets = shadeOffsets(segCount);
       Object.keys(QUAD_INFO).forEach(function (qStr) {
@@ -1690,9 +1688,7 @@
           var h = s.current;
           s.mesh.visible = h > 0.002;
           s.mesh.scale.y = h > 0.002 ? h : 0.0001;
-          // geo is translated so bottom face is at y=0 in local space;
-          // mesh origin aligns with bar bottom, so position.y = cum (no +h/2).
-          s.mesh.position.y = cum;
+          s.mesh.position.y = cum + h / 2;
           cum += h;
           targetTotal += s.target;
         }
