@@ -2599,7 +2599,7 @@
     });
 
     container.appendChild(quadsWrap);
-    fitHeatmapCellText(quadsWrap, allWords);
+    requestAnimationFrame(function () { fitHeatmapCellText(quadsWrap, allWords); });
 
     if (compare) {
       // The legend swatches use a neutral reference color (not any one
