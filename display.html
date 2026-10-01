@@ -1141,9 +1141,7 @@
         var total = 0;
         if (segArr) for (var i = 0; i < segArr.length; i++) total += (segArr[i] || 0);
         if (total <= 0) {
-          // No data yet for this cell — a flat baseline marker on the
-          // bottom segment only, everything above it empty.
-          entry.segs.forEach(function (s, i) { s.target = i === 0 ? 0.08 : 0; });
+          entry.segs.forEach(function (s) { s.target = 0; });
         } else {
           entry.segs.forEach(function (s, i) {
             s.target = ((segArr[i] || 0) / denom) * MAX_BAR_HEIGHT;
@@ -1686,17 +1684,18 @@
         for (var i = 0; i < b.segs.length; i++) {
           var s = b.segs[i];
           s.current += (s.target - s.current) * (1 - Math.pow(1 - TRANSITION_LERP, dt * 60));
-          var h = Math.max(0.0004, s.current);
-          s.mesh.scale.y = h;
-          s.mesh.position.y = cum + h / 2;
-          cum += h;
+          var h = s.current;
+          s.mesh.visible = h > 0.01;
+          s.mesh.scale.y = h > 0.01 ? h : 0.0001;
+          s.mesh.position.y = cum + (h > 0.01 ? h : 0) / 2;
+          cum += h > 0.01 ? h : 0;
           targetTotal += s.target;
         }
 
         // Label rides just above the growing stack, and only shows once the
         // cell actually has a hit (target above the flat baseline) — an
         // empty cell stays unlabeled rather than cluttering the floor.
-        var activeTarget = targetTotal > 0.081 ? 0.95 : 0;
+        var activeTarget = targetTotal > 0.01 ? 0.95 : 0;
         b.labelOpacity += (activeTarget - b.labelOpacity) * (1 - Math.pow(1 - TRANSITION_LERP, dt * 60));
         b.label.material.opacity = b.labelOpacity;
         b.label.position.y = cum + 0.34;
