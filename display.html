@@ -1721,11 +1721,15 @@
     /* ------------------------------------------------------ boot */
 
     function onDataLoaded(rows) {
+      try {
       console.log("[MoodMeter] onDataLoaded rows=" + rows.length);
       allRows = rows;
       allLocations = MoodData.locationsPresent(rows);
+      console.log("[MoodMeter] locationsPresent done: " + allLocations);
       modes = buildModes(rows);
+      console.log("[MoodMeter] buildModes done: " + modes.length);
       buildLocationLegend();
+      console.log("[MoodMeter] buildLocationLegend done");
       console.log("[MoodMeter] initScene start, THREE=" + (typeof THREE));
       try {
         if (!scene) initScene();
@@ -1740,6 +1744,11 @@
       $("loadScreen").classList.add("can-close");
       modeIndex = 0;
       goToMode(defaultModeIndex(modes));
+      } catch(e) {
+        console.error("[MoodMeter] onDataLoaded THREW: " + e + "\n" + e.stack);
+        $("loadError").textContent = "Load error: " + e;
+        $("loadScreen").classList.remove("hidden");
+      }
     }
 
     // Always-visible indicator button opens the load screen
