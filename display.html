@@ -1739,8 +1739,11 @@
         $("loadError").textContent = "Scene init error: " + e;
         return; // don't hide load screen or mark loaded
       }
+      console.log("[MoodMeter] about to set dataLoaded");
       dataLoaded = true;
+      console.log("[MoodMeter] about to hide loadScreen");
       $("loadScreen").classList.add("hidden");
+      console.log("[MoodMeter] loadScreen hidden classes: " + $("loadScreen").className);
       $("loadScreen").classList.add("can-close");
       } catch(e) {
         console.error("[MoodMeter] onDataLoaded THREW: " + e + "\n" + e.stack);
