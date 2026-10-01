@@ -3849,10 +3849,13 @@
   // handful of places sonifyCtx itself changes: first Play, and the
   // offline-render swap-in/swap-out in renderSonifyOffline.
   function ensureToneContext(ctx) {
-    // Always call setContext — the rawContext equality check was skipping this
-    // in Firefox (where Tone auto-creates a context that appears to match),
-    // leaving Tone's nodes disconnected from sonifyCtx.
-    try { Tone.setContext(ctx); } catch (e) {}
+    // Let Tone use its own internal context — setContext causes Firefox issues.
+    // We only call this for the offline render path; live playback uses Tone's
+    // own context directly.
+    try {
+      var current = Tone.getContext();
+      if (!current || current.rawContext !== ctx) Tone.setContext(ctx);
+    } catch (e) {}
   }
 
   // Builds the whole mixing graph (master volume, dry/reverb send, one
@@ -3921,11 +3924,11 @@
 
   function ensureAudioCtx() {
     if (!sonifyCtx) {
-      sonifyCtx = new (window.AudioContext || window.webkitAudioContext)();
+      // Use Tone's own internal AudioContext so its nodes connect correctly.
+      // Tone.start() (called before this) unlocks it in Firefox.
+      sonifyCtx = Tone.getContext().rawContext;
       buildSonifyGraph(sonifyCtx);
     }
-    // Firefox (and some other browsers) create AudioContexts in a suspended
-    // state even when triggered by a user gesture. Always attempt to resume.
     if (sonifyCtx.state === "suspended") sonifyCtx.resume();
     return sonifyCtx;
   }
@@ -4710,9 +4713,6 @@
     // (pause, then resume) to actually land a resume(). resume() is a
     // harmless no-op when already running, so there's no reason to guard it.
     sonifyCtx.resume();
-    // Tone.js maintains its own internal context wrapper; Firefox requires
-    // Tone.start() to be called from within a user gesture to unlock it.
-    if (typeof Tone !== "undefined" && Tone.start) Tone.start();
     var startCtxTime = sonifyCtx.currentTime + 0.05;
     sonifyPlayStartCtxTime = startCtxTime - seekSec;
     sonifyQuadGlideState = {};   // fresh portamento chain for this play/seek
@@ -5890,10 +5890,15 @@
   });
 
   function ensureToneLoaded(cb) {
-    if (typeof Tone !== "undefined") { cb(); return; }
+    function startTone() {
+      // Tone.start() resumes the AudioContext from within a user gesture —
+      // required by Firefox. Wait for it to resolve before proceeding.
+      (Tone.start ? Tone.start() : Promise.resolve()).then(cb).catch(function () { cb(); });
+    }
+    if (typeof Tone !== "undefined") { startTone(); return; }
     var s = document.createElement("script");
     s.src = "vendor/tone.min.js";
-    s.onload = function () { if (Tone.start) Tone.start().then(cb).catch(cb); else cb(); };
+    s.onload = startTone;
     s.onerror = function () { toast("Could not load audio engine (tone.min.js)."); };
     document.head.appendChild(s);
   }
