@@ -443,8 +443,9 @@
 
     function ingestCsvText(text) {
       var result = MoodData.rowsFromCsvText(text);
-      if (result.error) { $("loadError").textContent = result.error; return; }
-      if (!result.rows.length) { $("loadError").textContent = "No data found."; return; }
+      console.log("[MoodMeter] ingestCsvText: rows=" + (result.rows && result.rows.length) + " error=" + result.error + " firstLine=" + text.split("\n")[0]);
+      if (result.error) { $("loadError").textContent = "Parse error: " + result.error; return; }
+      if (!result.rows.length) { $("loadError").textContent = "CSV fetched but no usable rows found. Check the sheet has data rows below the header."; return; }
       $("loadError").textContent = "";
       if (!dataLoaded) {
         dataLoaded = true;
@@ -456,15 +457,19 @@
     }
 
     function loadFromSheets() {
+      $("loadMsg").textContent = "Connecting to Google Sheets…";
       fetch(SHEETS_CSV_URL).then(function (resp) {
+        console.log("[MoodMeter] fetch status=" + resp.status + " ok=" + resp.ok);
         if (!resp.ok) throw new Error("HTTP " + resp.status);
         return resp.text();
       }).then(function (text) {
+        console.log("[MoodMeter] fetched " + text.length + " chars");
         ingestCsvText(text);
-      }).catch(function () {
+      }).catch(function (err) {
+        console.log("[MoodMeter] fetch error: " + err);
         if (!dataLoaded) {
           $("loadMsg").textContent = "Could not reach Google Sheets.";
-          $("loadError").textContent = "Check your internet connection, or use Local CSV / sample data below.";
+          $("loadError").textContent = "Error: " + err + ". Try Local CSV or sample data below.";
         }
       });
     }
