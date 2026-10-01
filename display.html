@@ -1730,8 +1730,14 @@
       $("loadScreen").classList.add("hidden");
       $("loadScreen").classList.add("can-close");
       console.log("[MoodMeter] initScene start, THREE=" + (typeof THREE));
-      if (!scene) initScene();
-      console.log("[MoodMeter] initScene done");
+      try {
+        if (!scene) initScene();
+        console.log("[MoodMeter] initScene done");
+      } catch(e) {
+        console.error("[MoodMeter] initScene THREW: " + e + "\n" + e.stack);
+        $("loadError").textContent = "Scene init error: " + e;
+        $("loadScreen").classList.remove("hidden");
+      }
       modeIndex = 0;
       goToMode(defaultModeIndex(modes));
     }
