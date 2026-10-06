@@ -2862,10 +2862,11 @@
     var keys = Object.keys(seen);
 
     if (groupBy === "hour") {
-      keys = [];
-      for (var h = 0; h < 24; h++) keys.push(pad2(h) + ":00");
+      // Only show hours that have data, sorted numerically
+      keys = Object.keys(seen).sort();
     } else if (groupBy === "dow") {
-      keys = DOW_NAMES.slice();
+      // Only show days-of-week that have data, in calendar order
+      keys = DOW_NAMES.filter(function (d) { return seen[d]; });
     } else if (sortNumeric) {
       keys.sort();
     }
