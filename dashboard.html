@@ -3048,37 +3048,63 @@
     });
   }
 
-  function attachTrendClicks(container, keys, colorFn) {
+  function attachTrendClicks(container, keys, colorFn, quadOrder, groups) {
     var hint = document.createElement("div");
     hint.style.cssText = "font-size:10.5px;color:var(--muted);text-align:center;margin-top:4px;";
-    hint.textContent = "Click a bar to view emotion words";
+    hint.textContent = "Click a bar or segment to view emotion words";
     container.appendChild(hint);
 
     var rects = Array.from(container.querySelectorAll("rect"));
-    // Each key gets one or more rect segments; map rects to keys by index of bar group
-    // For stacked: rects appear in segment order per group — group by quadrant count
-    var quadCount = 4; // stacked has 4 segments per bar
     var view = $("trendView").value;
+    var isMix = view === "mix";
+    var quadCount = isMix ? 4 : 1;
 
+    // Tag each rect with its key index and segment index for reliable mapping
     rects.forEach(function (rect, ri) {
-      var keyIndex = view === "mix" ? Math.floor(ri / quadCount) : ri;
-      var key = keys[keyIndex];
+      rect._ki = isMix ? Math.floor(ri / quadCount) : ri;
+      rect._si = isMix ? ri % quadCount : 0;
+    });
+
+    rects.forEach(function (rect) {
+      var key = keys[rect._ki];
       if (!key || !_trendByKey[key]) return;
       rect.style.cursor = "pointer";
       rect.addEventListener("click", function () {
-        if (_trendSelected === key) {
+        var selKey = key;
+        var selSeg = rect._si; // which quadrant segment was clicked (mix only)
+        var selId = selKey + ":" + selSeg;
+
+        if (_trendSelected === selId) {
           _trendSelected = null;
           $("chartTrendDetail").style.display = "none";
           $("chartTrendDetailLoc").style.display = "none";
           rects.forEach(function (r) { r.style.opacity = "1"; });
-        } else {
-          _trendSelected = key;
-          rects.forEach(function (r, ri2) {
-            var ki = view === "mix" ? Math.floor(ri2 / quadCount) : ri2;
-            r.style.opacity = keys[ki] === key ? "1" : "0.35";
-          });
-          renderTrendDetail(key, _trendByKey[key], colorFn ? colorFn(rect) : null);
+          return;
         }
+
+        _trendSelected = selId;
+
+        rects.forEach(function (r) {
+          if (isMix) {
+            // Dim segments that are not the selected key+segment combo
+            r.style.opacity = (keys[r._ki] === selKey && r._si === selSeg) ? "1" : "0.35";
+          } else {
+            r.style.opacity = keys[r._ki] === selKey ? "1" : "0.35";
+          }
+        });
+
+        // Filter rows to bucket, and in mix mode also to the clicked quadrant
+        var bucketRows = _trendByKey[selKey] || [];
+        var filteredRows = bucketRows;
+        var headSuffix = "";
+        if (isMix && quadOrder && groups) {
+          var clickedQuad = quadOrder[selSeg];
+          filteredRows = bucketRows.filter(function (r) { return r.quad === clickedQuad; });
+          var shortNames = { 1: "HE, Pleasant", 3: "HE, Unpleasant", 4: "LE, Pleasant", 2: "LE, Unpleasant" };
+          headSuffix = " · " + shortNames[clickedQuad];
+        }
+
+        renderTrendDetail(selKey + headSuffix, filteredRows, colorFn ? colorFn(rect) : null);
       });
     });
   }
@@ -3114,7 +3140,7 @@
 
       var legend = quadOrder.map(function (q) { return { name: shortNames[q], color: QUAD_INFO[q].color }; });
       drawStackedBarChart($("chartTrend"), groups, { rotateLabels: groups.length > 8, height: 240, legend: legend });
-      attachTrendClicks($("chartTrend"), b.keys, function (rect) { return rect.getAttribute("fill"); });
+      attachTrendClicks($("chartTrend"), b.keys, function (rect) { return rect.getAttribute("fill"); }, quadOrder, groups);
     } else {
       var counts = countBy(dated, b.keyFn);
       var items = b.keys.map(function (k) { return { label: k, value: counts[k] || 0, color: "#3f5b4f" }; });
