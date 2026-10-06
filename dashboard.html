@@ -287,8 +287,8 @@
      so this is the primary signal; color is secondary (tinted per quadrant). */
   .heatmap-fill { position: absolute; left: 0; right: 0; bottom: 0; z-index: 0; transition: height 160ms ease; }
   .heatmap-item-label {
-    font-weight: 700; color: var(--ink); white-space: nowrap; line-height: 1.2;
-    text-align: center; margin-top: 4px;
+    font-weight: 700; color: var(--ink); white-space: normal; line-height: 1.2;
+    text-align: center; margin-top: 4px; font-size: 11px; word-break: break-word;
   }
   .heatmap-legend { display: flex; align-items: center; gap: 10px; font-size: 11.5px; color: var(--muted); margin-top: 14px; }
   .heatmap-legend-gauges { display: flex; align-items: flex-end; gap: 3px; height: 20px; }
@@ -2749,7 +2749,7 @@
     });
 
     container.appendChild(quadsWrap);
-    requestAnimationFrame(function () { fitHeatmapCellText(quadsWrap, allWords); });
+    // fitHeatmapCellText removed — labels use fixed CSS font-size instead
 
     if (compare) {
       // The legend swatches use a neutral reference color (not any one
