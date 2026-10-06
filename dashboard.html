@@ -875,6 +875,10 @@
             <div id="chartTrendDetail" style="margin-top:12px;display:none;">
               <div id="chartTrendDetailHead" style="font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;"></div>
               <div class="chart-svg-wrap" id="chartTrendDetailChart"></div>
+              <div id="chartTrendDetailLoc" style="margin-top:12px;display:none;">
+                <div id="chartTrendDetailLocHead" style="font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;"></div>
+                <div class="chart-svg-wrap" id="chartTrendDetailLocChart"></div>
+              </div>
             </div>
           </div>
 
@@ -3003,12 +3007,45 @@
 
   function renderTrendDetail(key, bucketRows, color) {
     var counts = countBy(bucketRows, function (r) { return r.labelEn; });
+    var usedColor = color || "#3f5b4f";
     var items = Object.keys(counts)
-      .map(function (w) { return { label: w + " (n=" + counts[w] + ")", value: counts[w], color: color || "#3f5b4f" }; })
+      .map(function (w) { return { label: w + " (n=" + counts[w] + ")", value: counts[w], color: usedColor, _word: w }; })
       .sort(function (a, b) { return b.value - a.value; });
     $("chartTrendDetailHead").textContent = key + " — emotion words chosen";
     $("chartTrendDetail").style.display = "block";
+    $("chartTrendDetailLoc").style.display = "none";
     drawHBarChart($("chartTrendDetailChart"), items);
+
+    var hint = document.createElement("div");
+    hint.style.cssText = "font-size:10.5px;color:var(--muted);text-align:center;margin-top:4px;";
+    hint.textContent = "Click a bar to view by location";
+    $("chartTrendDetailChart").appendChild(hint);
+
+    var rects = Array.from($("chartTrendDetailChart").querySelectorAll("rect"));
+    var selectedWord = null;
+    rects.forEach(function (rect, i) {
+      if (!items[i]) return;
+      rect.style.cursor = "pointer";
+      rect.addEventListener("click", function () {
+        var word = items[i]._word;
+        if (selectedWord === word) {
+          selectedWord = null;
+          $("chartTrendDetailLoc").style.display = "none";
+          rects.forEach(function (r) { r.style.opacity = "1"; });
+        } else {
+          selectedWord = word;
+          rects.forEach(function (r, j) { r.style.opacity = items[j] && items[j]._word === word ? "1" : "0.35"; });
+          var wordRows = bucketRows.filter(function (r) { return r.labelEn === word; });
+          var locCounts = countBy(wordRows, function (r) { return r.session || "(none)"; });
+          var locItems = Object.keys(locCounts)
+            .map(function (loc) { return { label: loc + " (n=" + locCounts[loc] + ")", value: locCounts[loc], color: usedColor }; })
+            .sort(function (a, b) { return b.value - a.value; });
+          $("chartTrendDetailLocHead").textContent = word + " — by location";
+          $("chartTrendDetailLoc").style.display = "block";
+          drawHBarChart($("chartTrendDetailLocChart"), locItems);
+        }
+      });
+    });
   }
 
   function attachTrendClicks(container, keys, colorFn) {
@@ -3032,6 +3069,7 @@
         if (_trendSelected === key) {
           _trendSelected = null;
           $("chartTrendDetail").style.display = "none";
+          $("chartTrendDetailLoc").style.display = "none";
           rects.forEach(function (r) { r.style.opacity = "1"; });
         } else {
           _trendSelected = key;
