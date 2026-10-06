@@ -824,6 +824,10 @@
             <div id="chartQuadrantDetail" style="margin-top:12px;display:none;">
               <div id="chartQuadrantDetailHead" style="font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;"></div>
               <div class="chart-svg-wrap" id="chartQuadrantDetailChart"></div>
+              <div id="chartQuadrantDetailLoc" style="margin-top:12px;display:none;">
+                <div id="chartQuadrantDetailLocHead" style="font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;"></div>
+                <div class="chart-svg-wrap" id="chartQuadrantDetailLocChart"></div>
+              </div>
             </div>
           </div>
 
@@ -842,6 +846,10 @@
             <div id="chartDecideTimeDetail" style="margin-top:12px;display:none;">
               <div id="chartDecideTimeDetailHead" style="font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;"></div>
               <div class="chart-svg-wrap" id="chartDecideTimeDetailChart"></div>
+              <div id="chartDecideTimeDetailLoc" style="margin-top:12px;display:none;">
+                <div id="chartDecideTimeDetailLocHead" style="font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;"></div>
+                <div class="chart-svg-wrap" id="chartDecideTimeDetailLocChart"></div>
+              </div>
             </div>
           </div>
 
@@ -2345,12 +2353,44 @@
     var rows = _quadrantRows.filter(function (r) { return r.quad === quad && r.labelEn; });
     var counts = countBy(rows, function (r) { return r.labelEn; });
     var items = Object.keys(counts)
-      .map(function (w) { return { label: w + " (n=" + counts[w] + ")", value: counts[w], color: color }; })
+      .map(function (w) { return { label: w + " (n=" + counts[w] + ")", value: counts[w], color: color, _word: w }; })
       .sort(function (a, b) { return b.value - a.value; });
     var quadNames = { 1: "HE, Pleasant", 2: "LE, Unpleasant", 3: "HE, Unpleasant", 4: "LE, Pleasant" };
     $("chartQuadrantDetailHead").textContent = quadNames[quad] + " — emotion words chosen";
     $("chartQuadrantDetail").style.display = "block";
+    $("chartQuadrantDetailLoc").style.display = "none";
     drawHBarChart($("chartQuadrantDetailChart"), items);
+
+    var hint = document.createElement("div");
+    hint.style.cssText = "font-size:10.5px;color:var(--muted);text-align:center;margin-top:4px;";
+    hint.textContent = "Click a bar to view by location";
+    $("chartQuadrantDetailChart").appendChild(hint);
+
+    var rects = Array.from($("chartQuadrantDetailChart").querySelectorAll("rect"));
+    var selectedWord = null;
+    rects.forEach(function (rect, i) {
+      if (!items[i]) return;
+      rect.style.cursor = "pointer";
+      rect.addEventListener("click", function () {
+        var word = items[i]._word;
+        if (selectedWord === word) {
+          selectedWord = null;
+          $("chartQuadrantDetailLoc").style.display = "none";
+          rects.forEach(function (r) { r.style.opacity = "1"; });
+        } else {
+          selectedWord = word;
+          rects.forEach(function (r, j) { r.style.opacity = items[j] && items[j]._word === word ? "1" : "0.35"; });
+          var wordRows = rows.filter(function (r) { return r.labelEn === word; });
+          var locCounts = countBy(wordRows, function (r) { return r.session || "(none)"; });
+          var locItems = Object.keys(locCounts)
+            .map(function (loc) { return { label: loc + " (n=" + locCounts[loc] + ")", value: locCounts[loc], color: color }; })
+            .sort(function (a, b) { return b.value - a.value; });
+          $("chartQuadrantDetailLocHead").textContent = word + " — by location";
+          $("chartQuadrantDetailLoc").style.display = "block";
+          drawHBarChart($("chartQuadrantDetailLocChart"), locItems);
+        }
+      });
+    });
   }
 
   // Average seconds spent on the grid before tapping, split by quadrant —
@@ -2421,13 +2461,51 @@
     });
     var items = Object.keys(totals)
       .filter(function (w) { return counts[w] >= 1; })
-      .map(function (w) { return { label: w + " (n=" + counts[w] + ")", value: +(totals[w] / counts[w]).toFixed(2), color: color }; })
+      .map(function (w) { return { label: w + " (n=" + counts[w] + ")", value: +(totals[w] / counts[w]).toFixed(2), color: color, _word: w }; })
       .sort(function (a, b) { return b.value - a.value; });
 
     var quadNames = { 1: "HE, Pleasant", 2: "LE, Unpleasant", 3: "HE, Unpleasant", 4: "LE, Pleasant" };
     $("chartDecideTimeDetailHead").textContent = quadNames[quad] + " — avg. seconds by emotion";
     $("chartDecideTimeDetail").style.display = "block";
+    $("chartDecideTimeDetailLoc").style.display = "none";
     drawHBarChart($("chartDecideTimeDetailChart"), items);
+
+    var hint = document.createElement("div");
+    hint.style.cssText = "font-size:10.5px;color:var(--muted);text-align:center;margin-top:4px;";
+    hint.textContent = "Click a bar to view by location";
+    $("chartDecideTimeDetailChart").appendChild(hint);
+
+    var rects = Array.from($("chartDecideTimeDetailChart").querySelectorAll("rect"));
+    var selectedWord = null;
+    rects.forEach(function (rect, i) {
+      if (!items[i]) return;
+      rect.style.cursor = "pointer";
+      rect.addEventListener("click", function () {
+        var word = items[i]._word;
+        if (selectedWord === word) {
+          selectedWord = null;
+          $("chartDecideTimeDetailLoc").style.display = "none";
+          rects.forEach(function (r) { r.style.opacity = "1"; });
+        } else {
+          selectedWord = word;
+          rects.forEach(function (r, j) { r.style.opacity = items[j] && items[j]._word === word ? "1" : "0.35"; });
+          var wordRows = rows.filter(function (r) { return r.labelEn === word; });
+          // Per location: avg seconds
+          var locTotals = {}, locCounts = {};
+          wordRows.forEach(function (r) {
+            var loc = r.session || "(none)";
+            locTotals[loc] = (locTotals[loc] || 0) + r.seconds;
+            locCounts[loc] = (locCounts[loc] || 0) + 1;
+          });
+          var locItems = Object.keys(locTotals)
+            .map(function (loc) { return { label: loc + " (n=" + locCounts[loc] + ")", value: +(locTotals[loc] / locCounts[loc]).toFixed(2), color: color }; })
+            .sort(function (a, b) { return b.value - a.value; });
+          $("chartDecideTimeDetailLocHead").textContent = word + " — avg. seconds by location";
+          $("chartDecideTimeDetailLoc").style.display = "block";
+          drawHBarChart($("chartDecideTimeDetailLocChart"), locItems);
+        }
+      });
+    });
   }
 
   var _topEmotionRows = [];
