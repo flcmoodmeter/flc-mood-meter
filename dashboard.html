@@ -830,6 +830,10 @@
           <div class="chart-card">
             <div class="chart-card-head"><h3>Top emotions</h3></div>
             <div class="chart-svg-wrap" id="chartTopEmotions"></div>
+            <div id="chartTopEmotionsDetail" style="margin-top:12px;display:none;">
+              <div id="chartTopEmotionsDetailHead" style="font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;"></div>
+              <div class="chart-svg-wrap" id="chartTopEmotionsDetailChart"></div>
+            </div>
           </div>
 
           <div class="chart-card">
@@ -2426,7 +2430,14 @@
     drawHBarChart($("chartDecideTimeDetailChart"), items);
   }
 
+  var _topEmotionRows = [];
+  var _topEmotionSelected = null;
+
   function renderTopEmotionsChart(rows) {
+    _topEmotionRows = rows;
+    _topEmotionSelected = null;
+    $("chartTopEmotionsDetail").style.display = "none";
+
     var counts = countBy(rows, function (r) { return r.labelEn; });
     var colorFor = {};
     rows.forEach(function (r) { if (r.labelEn) colorFor[r.labelEn] = r.quadColor; });
@@ -2435,6 +2446,36 @@
       .sort(function (a, b) { return b.value - a.value; })
       .slice(0, 12);
     drawHBarChart($("chartTopEmotions"), items);
+
+    var hint = document.createElement("div");
+    hint.style.cssText = "font-size:10.5px;color:var(--muted);text-align:center;margin-top:4px;";
+    hint.textContent = "Click a bar to view by location";
+    $("chartTopEmotions").appendChild(hint);
+
+    var rects = Array.from($("chartTopEmotions").querySelectorAll("rect"));
+    rects.forEach(function (rect, i) {
+      if (!items[i]) return;
+      rect.style.cursor = "pointer";
+      rect.addEventListener("click", function () {
+        var word = items[i].label;
+        if (_topEmotionSelected === word) {
+          _topEmotionSelected = null;
+          $("chartTopEmotionsDetail").style.display = "none";
+          rects.forEach(function (r) { r.style.opacity = "1"; });
+        } else {
+          _topEmotionSelected = word;
+          rects.forEach(function (r, j) { r.style.opacity = j === i ? "1" : "0.35"; });
+          var wordRows = _topEmotionRows.filter(function (r) { return r.labelEn === word; });
+          var locCounts = countBy(wordRows, function (r) { return r.session || "(none)"; });
+          var locItems = Object.keys(locCounts)
+            .map(function (loc) { return { label: loc + " (n=" + locCounts[loc] + ")", value: locCounts[loc], color: items[i].color }; })
+            .sort(function (a, b) { return b.value - a.value; });
+          $("chartTopEmotionsDetailHead").textContent = word + " — by location";
+          $("chartTopEmotionsDetail").style.display = "block";
+          drawHBarChart($("chartTopEmotionsDetailChart"), locItems);
+        }
+      });
+    });
   }
 
   var LOCATION_METRICS = {
