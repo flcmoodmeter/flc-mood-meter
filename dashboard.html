@@ -821,6 +821,10 @@
           <div class="chart-card">
             <div class="chart-card-head"><h3>By quadrant (energy &times; pleasantness)</h3></div>
             <div class="chart-svg-wrap" id="chartQuadrant"></div>
+            <div id="chartQuadrantDetail" style="margin-top:12px;display:none;">
+              <div id="chartQuadrantDetailHead" style="font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;"></div>
+              <div class="chart-svg-wrap" id="chartQuadrantDetailChart"></div>
+            </div>
           </div>
 
           <div class="chart-card">
@@ -2285,20 +2289,58 @@
     return map;
   }
 
+  var _quadrantRows = [];
+  var _quadrantSelected = null;
+
   function renderQuadrantChart(rows) {
-    var counts = countBy(rows, function (r) { return r.quad; });
-    var items = [1, 3, 4, 2].map(function (q) {
-      return { label: QUAD_INFO[q].name.replace(", ", "\n"), value: counts[q] || 0, color: QUAD_INFO[q].color };
-    }).map(function (it) {
-      // SVG text doesn't wrap; keep labels short instead of using the newline above.
-      return it;
-    });
-    // Shorter labels for the small chart card
+    _quadrantRows = rows;
+    var quadOrder = [1, 3, 4, 2];
     var shortNames = { 1: "HE, Pleasant", 3: "HE, Unpleasant", 4: "LE, Pleasant", 2: "LE, Unpleasant" };
-    var items2 = [1, 3, 4, 2].map(function (q) {
-      return { label: shortNames[q], value: counts[q] || 0, color: QUAD_INFO[q].color };
+    var counts = countBy(rows, function (r) { return r.quad; });
+    var items = quadOrder.map(function (q) {
+      return { label: shortNames[q], value: counts[q] || 0, color: QUAD_INFO[q].color, _quad: q };
     });
-    drawBarChart($("chartQuadrant"), items2, { rotateLabels: true, height: 240 });
+
+    $("chartQuadrantDetail").style.display = "none";
+    _quadrantSelected = null;
+
+    drawBarChart($("chartQuadrant"), items, { rotateLabels: true, height: 240 });
+
+    var container = $("chartQuadrant");
+    var hint = document.createElement("div");
+    hint.style.cssText = "font-size:10.5px;color:var(--muted);text-align:center;margin-top:4px;";
+    hint.textContent = "Click a bar to view by emotion word";
+    container.appendChild(hint);
+
+    var rects = container.querySelectorAll("rect");
+    rects.forEach(function (rect, i) {
+      if (!items[i]) return;
+      rect.style.cursor = "pointer";
+      rect.addEventListener("click", function () {
+        var quad = items[i]._quad;
+        if (_quadrantSelected === quad) {
+          _quadrantSelected = null;
+          $("chartQuadrantDetail").style.display = "none";
+          rects.forEach(function (r) { r.style.opacity = "1"; });
+        } else {
+          _quadrantSelected = quad;
+          rects.forEach(function (r, j) { r.style.opacity = items[j]._quad === quad ? "1" : "0.35"; });
+          renderQuadrantDetail(quad, items[i].color);
+        }
+      });
+    });
+  }
+
+  function renderQuadrantDetail(quad, color) {
+    var rows = _quadrantRows.filter(function (r) { return r.quad === quad && r.labelEn; });
+    var counts = countBy(rows, function (r) { return r.labelEn; });
+    var items = Object.keys(counts)
+      .map(function (w) { return { label: w + " (n=" + counts[w] + ")", value: counts[w], color: color }; })
+      .sort(function (a, b) { return b.value - a.value; });
+    var quadNames = { 1: "HE, Pleasant", 2: "LE, Unpleasant", 3: "HE, Unpleasant", 4: "LE, Pleasant" };
+    $("chartQuadrantDetailHead").textContent = quadNames[quad] + " — emotion words chosen";
+    $("chartQuadrantDetail").style.display = "block";
+    drawHBarChart($("chartQuadrantDetailChart"), items);
   }
 
   // Average seconds spent on the grid before tapping, split by quadrant —
@@ -2334,7 +2376,7 @@
     var container = $("chartDecideTime");
     var hint = document.createElement("div");
     hint.style.cssText = "font-size:10.5px;color:var(--muted);text-align:center;margin-top:4px;";
-    hint.textContent = "Click a bar to see by emotion word";
+    hint.textContent = "Click a bar to view by emotion word";
     container.appendChild(hint);
 
     var rects = container.querySelectorAll("rect");
