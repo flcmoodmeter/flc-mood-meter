@@ -717,7 +717,7 @@
           <div class="chipset" id="locationChips"></div>
         </div>
 
-        <div class="filter-group">
+        <div class="filter-group" id="languageFilterGroup">
           <span class="flabel">Language</span>
           <div class="chipset" id="languageChips"></div>
         </div>
@@ -1785,6 +1785,8 @@
       .sort();
     var langBox = $("languageChips"); langBox.innerHTML = "";
     langs.forEach(function (code) { makeChip(langBox, code, code === "(none)" ? "(none)" : languageLabel(code), filters.languages); });
+    // Hide the language filter group when there's only one option (no useful filtering possible)
+    $("languageFilterGroup").style.display = langs.length <= 1 ? "none" : "";
 
     // Semesters — chronological order (LOS_RIOS_TERMS' own order), limited
     // to terms actually present in the loaded data, not every term on file.
