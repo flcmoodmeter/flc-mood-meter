@@ -964,8 +964,24 @@
         <div class="chart-grid">
           <div class="chart-card" style="grid-column: 1 / -1;">
             <div class="chart-card-head">
+              <h3 style="display:flex; align-items:center; gap:7px;">
+                Emotional center of gravity
+                <button id="centroidHelpBtn" type="button" aria-label="What does this chart show?" style="width:18px; height:18px; border-radius:50%; border:1.5px solid var(--muted); background:transparent; color:var(--muted); font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; padding:0; flex:none; line-height:1;">?</button>
+              </h3>
+              <select id="centroidGroupBy" class="no-print" aria-label="Group by period">
+                <option value="date" selected>By day</option>
+                <option value="week">By week</option>
+                <option value="month">By month</option>
+              </select>
+            </div>
+            <p style="margin:0 0 10px; font-size:11.5px; color:var(--muted);">Each dot is one period's mean position on the mood grid. The path shows how the center has moved — first period is hollow, latest is solid.</p>
+            <div class="chart-svg-wrap" id="chartCentroid"></div>
+          </div>
+
+          <div class="chart-card" style="grid-column: 1 / -1;">
+            <div class="chart-card-head">
               <h3>Mood trajectory — is it rising or falling?</h3>
-              <select id="trajectoryGroupBy" class="no-print">
+              <select id="trajectoryGroupBy" class="no-print" aria-label="Group by period">
                 <option value="date" selected>By day</option>
                 <option value="week">By week</option>
                 <option value="month">By month</option>
@@ -973,17 +989,6 @@
             </div>
             <p style="margin:0 0 10px; font-size:11.5px; color:var(--muted);">Mean energy and pleasantness per period. Each response is scored from -1 to +1 by which emotion word was chosen (High/Pleasant positive, Low/Unpleasant negative, larger for words nearer the grid's edge), so 0 is neutral.</p>
             <div class="chart-svg-wrap" id="chartTrajectory"></div>
-          </div>
-
-          <div class="chart-card" style="grid-column: 1 / -1;">
-            <div class="chart-card-head">
-              <h3 style="display:flex; align-items:center; gap:7px;">
-                Emotional center of gravity
-                <button id="centroidHelpBtn" type="button" aria-label="What does this chart show?" style="width:18px; height:18px; border-radius:50%; border:1.5px solid var(--muted); background:transparent; color:var(--muted); font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; padding:0; flex:none; line-height:1;">?</button>
-              </h3>
-            </div>
-            <p style="margin:0 0 10px; font-size:11.5px; color:var(--muted);">Each dot is one period's mean position on the mood grid. The path shows how the center has moved — first period is hollow, latest is solid.</p>
-            <div class="chart-svg-wrap" id="chartCentroid"></div>
           </div>
 
           <div class="chart-card" style="grid-column: 1 / -1;">
@@ -3420,11 +3425,8 @@
     }
   }
 
-  $("trajectoryGroupBy").addEventListener("change", function () {
-    var rows = getFilteredRows();
-    renderTrajectoryChart(rows);
-    renderCentroidChart(rows);
-  });
+  $("trajectoryGroupBy").addEventListener("change", function () { renderTrajectoryChart(getFilteredRows()); });
+  $("centroidGroupBy").addEventListener("change", function () { renderCentroidChart(getFilteredRows()); });
 
   /* ------------------------------------------------------ emotional center of gravity */
 
@@ -3433,7 +3435,7 @@
   function renderCentroidChart(rows) {
     if (_centroidTimer) { clearInterval(_centroidTimer); _centroidTimer = null; }
 
-    var groupBy = $("trajectoryGroupBy").value;
+    var groupBy = $("centroidGroupBy").value;
     var dated = rows.filter(function (r) { return r.date; });
     var b = trendBucketKeys(groupBy === "date" ? "date" : groupBy, dated);
 
@@ -3498,7 +3500,9 @@
 
     // Readout panel that sits to the right of the grid (wraps below it on narrow screens).
     var infoPanel = document.createElement("div");
-    infoPanel.style.cssText = "flex:1 1 260px; min-width:240px; display:flex; flex-direction:column; justify-content:flex-start; gap:6px;";
+    // padding-top lines the readout up with the top edge of the quadrant grid
+    // (the SVG leaves ~56px above the grid for its "High energy" label).
+    infoPanel.style.cssText = "flex:1 1 260px; min-width:240px; display:flex; flex-direction:column; justify-content:flex-start; gap:6px; padding-top:48px;";
     var periodEl = document.createElement("div");
     periodEl.style.cssText = "font-size:13px; font-weight:600; color:var(--muted);";
     var closestCaption = document.createElement("div");
@@ -3509,7 +3513,11 @@
     var spreadEl = document.createElement("div");
     spreadEl.style.cssText = "font-size:17px; font-weight:700; color:var(--ink);";
     var topWordEl = document.createElement("div");
-    topWordEl.style.cssText = "font-size:15px; font-weight:600; color:var(--muted);";
+    // Always reserves one line, so showing/hiding "Most chosen" never shifts the layout.
+    topWordEl.style.cssText = "font-size:15px; font-weight:600; color:var(--muted); min-height:1.4em; line-height:1.4;";
+    spreadEl.style.minHeight = "1.4em";
+    periodEl.style.minHeight = "1.4em";
+    wordEl.style.minHeight = "1.1em";
     infoPanel.appendChild(periodEl);
     infoPanel.appendChild(closestCaption);
     infoPanel.appendChild(wordEl);
@@ -3522,18 +3530,16 @@
     trendBox.style.cssText = "display:flex; flex-direction:column; gap:10px; margin-top:16px; padding-top:14px; border-top:1px solid var(--line);";
     function makeTrendRow(name, color) {
       var row = document.createElement("div");
-      row.style.cssText = "display:flex; align-items:center; gap:14px;";
+      row.style.cssText = "display:flex; align-items:center; gap:18px;";
       var arrow = document.createElement("div");
-      arrow.style.cssText = "flex:none; width:48px; text-align:center; font-size:44px; font-weight:900; line-height:1;";
+      arrow.style.cssText = "flex:none; width:76px; height:76px; display:flex; align-items:center; justify-content:center;";
       var text = document.createElement("div");
       text.style.cssText = "display:flex; flex-direction:column; line-height:1.25;";
       var nameEl = document.createElement("div");
       nameEl.textContent = name;
-      nameEl.style.cssText = "font-size:17px; font-weight:800; color:var(--ink);";
-      nameEl.style.borderLeft = "5px solid " + color;
-      nameEl.style.paddingLeft = "8px";
+      nameEl.style.cssText = "font-size:22px; font-weight:800; color:var(--ink);";
       var detail = document.createElement("div");
-      detail.style.cssText = "font-size:13.5px; font-weight:600; color:var(--muted); padding-left:13px;";
+      detail.style.cssText = "font-size:14px; font-weight:600; color:var(--muted);";
       text.appendChild(nameEl);
       text.appendChild(detail);
       row.appendChild(arrow);
@@ -3550,8 +3556,13 @@
       t.row.style.visibility = "";
       var d = now - before;
       var steady = Math.abs(d) < 0.05;
-      t.arrow.textContent = steady ? "→" : (d > 0 ? "↑" : "↓");
-      t.arrow.style.color = steady ? "var(--muted)" : t.color;
+      // Drawn as an SVG so the stroke weight can match the heavy weight of the
+      // large word (about 0.14em of its font size, roughly 8-9px at full size).
+      var dir = steady ? "right" : (d > 0 ? "up" : "down");
+      var rot = dir === "up" ? 0 : (dir === "down" ? 180 : 90);
+      t.arrow.innerHTML = '<svg viewBox="0 0 64 64" width="76" height="76" aria-hidden="true" style="overflow:visible;">' +
+        '<g transform="rotate(' + rot + ' 32 32)" fill="none" stroke="' + (steady ? "var(--muted)" : t.color) + '" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">' +
+        '<path d="M32 56 V9"/><path d="M10 31 L32 9 L54 31"/></g></svg>';
       t.detail.textContent = (steady ? "Steady" : (d > 0 ? "Up " : "Down ") + Math.abs(d).toFixed(2)) + " vs. " + beforeLabel;
     }
 
@@ -3646,7 +3657,8 @@
     svg.appendChild(cursorRing);
 
     var bodyRow = document.createElement("div");
-    bodyRow.style.cssText = "display:flex; align-items:center; gap:28px; flex-wrap:wrap;";
+    // Top-aligned (not centered) so the readout never shifts when its height changes.
+    bodyRow.style.cssText = "display:flex; align-items:flex-start; gap:28px; flex-wrap:wrap;";
     var svgWrap = document.createElement("div");
     svgWrap.style.cssText = "flex:0 1 540px; min-width:0;";
     svgWrap.appendChild(svg);
@@ -7861,7 +7873,7 @@
     <p style="margin:0 0 8px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted);">How it works</p>
     <ul style="margin:0 0 14px; padding:0 0 0 18px; display:flex; flex-direction:column; gap:8px;">
       <li style="font-size:13px; color:var(--ink); line-height:1.5;">The mood grid has two axes: horizontal is pleasantness (unpleasant &larr; &rarr; pleasant), vertical is energy (low &larr; &rarr; high). Each quadrant corresponds to one of the four quadrant colors used throughout the dashboard.</li>
-      <li style="font-size:13px; color:var(--ink); line-height:1.5;">For each time period (day/week/month, based on the &ldquo;group by&rdquo; selector shared with Mood trajectory), every response in that period is scored on each axis from -1 to +1 based on exactly which emotion word was chosen: the sign says which side (Pleasant is positive, Unpleasant negative; High energy positive, Low negative), and the size says how far toward the edge of the grid the word sits. A word at the outer edge scores close to &plusmn;1, while one near the middle of the grid scores closer to 0. Those scores are then averaged, which gives one point &mdash; the &ldquo;centroid,&rdquo; or center of mass &mdash; representing where that period's responses clustered on average.</li>
+      <li style="font-size:13px; color:var(--ink); line-height:1.5;">For each time period (day/week/month, based on the selector in this card's header), every response in that period is scored on each axis from -1 to +1 based on exactly which emotion word was chosen: the sign says which side (Pleasant is positive, Unpleasant negative; High energy positive, Low negative), and the size says how far toward the edge of the grid the word sits. A word at the outer edge scores close to &plusmn;1, while one near the middle of the grid scores closer to 0. Those scores are then averaged, which gives one point &mdash; the &ldquo;centroid,&rdquo; or center of mass &mdash; representing where that period's responses clustered on average.</li>
       <li style="font-size:13px; color:var(--ink); line-height:1.5;">Each point is also matched to the <strong>closest emotion word</strong> on the grid, shown in large type beside the grid and in each dot's hover tooltip. Because an average can land between words, it is shown with how tightly that period's responses cluster (tight cluster, mixed, or widely mixed) and, when different, the word chosen most often. A &ldquo;mixed&rdquo; label means the closest word is a summary, not something many people actually picked. Below it, two bold arrows (energy and pleasantness) show whether this period is up, down or steady compared with the period before it, with the size of the change.</li>
       <li style="font-size:13px; color:var(--ink); line-height:1.5;">Those points are plotted on the grid and connected in chronological order by a line, so you can trace the path the average mood has taken over time.</li>
       <li style="font-size:13px; color:var(--ink); line-height:1.5;">The first point is hollow (outlined only) and the last point is solid and larger, so you can tell at a glance which end is the start and which is &ldquo;now,&rdquo; and see which direction the path is heading.</li>
