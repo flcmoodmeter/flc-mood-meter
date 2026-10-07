@@ -670,6 +670,7 @@
       <button class="source-btn on" id="srcSheetsBtn" type="button">📊 Google Sheets</button>
       <button class="source-btn" id="srcLocalBtn" type="button">📁 Local CSV</button>
     </div>
+    <button class="btn no-print" id="sampleBtn" type="button">Load sample data</button>
     <button class="btn" id="addFilesBtn" style="display:none;">Add data files&hellip;</button>
     <button class="btn" id="downloadCsvBtn" disabled>Download filtered CSV</button>
     <button class="btn btn-primary" id="printBtn" disabled>Export PDF report</button>
@@ -708,7 +709,6 @@
         </div>
         <div class="droparea" id="dropArea">Drop CSV files here<br>or use &ldquo;Add data files&rdquo; above</div>
         <p class="import-note">Each kiosk writes one CSV (<code>mm_data.csv</code>) per deployment. Add as many as you like &mdash; re-adding a file with the same name replaces it, and exact duplicate rows across files are skipped automatically.</p>
-        <button class="btn btn-quiet btn-sm" id="sampleBtn" type="button" style="width:100%; justify-content:center; margin-top:4px;">Load Sample Data</button>
       </div>
 
       <div class="panel" id="filterPanel" style="display:none;">
@@ -1806,6 +1806,9 @@
   // file:// page can't fetch other local files — "Add data files..." above
   // still works either way.
   $("sampleBtn").addEventListener("click", function () {
+    // The button now lives in the top bar, so it works from either source;
+    // sample data is local, so switch to the Local CSV source first.
+    if (currentSource !== "local") switchToSource("local");
     fetch("sample_data/mm_data_test.csv").then(function (resp) {
       if (!resp.ok) throw new Error("HTTP " + resp.status);
       return resp.text();
@@ -3494,7 +3497,24 @@
     slider.value = String(Math.max(0, centroids.length - 1));
     slider.style.cssText = "flex:1 1 140px; min-width:110px; accent-color:var(--accent);";
     if (centroids.length < 2) slider.disabled = true;
+    var prevBtn = document.createElement("button");
+    prevBtn.type = "button";
+    prevBtn.className = "btn btn-sm";
+    prevBtn.textContent = "‹ Back";
+    prevBtn.title = "Step back one period (Left arrow)";
+    prevBtn.setAttribute("aria-label", "Step back one period");
+    prevBtn.style.flex = "none";
+    var nextBtn = document.createElement("button");
+    nextBtn.type = "button";
+    nextBtn.className = "btn btn-sm";
+    nextBtn.textContent = "Forward ›";
+    nextBtn.title = "Step forward one period (Right arrow)";
+    nextBtn.setAttribute("aria-label", "Step forward one period");
+    nextBtn.style.flex = "none";
+    if (centroids.length < 2) { prevBtn.disabled = true; nextBtn.disabled = true; }
+    controls.appendChild(prevBtn);
     controls.appendChild(playBtn);
+    controls.appendChild(nextBtn);
     controls.appendChild(slider);
     container.appendChild(controls);
 
@@ -3694,6 +3714,10 @@
       updateTrendRow(energyTrend, c.energy, prev ? prev.energy : null, prev ? prev.label : "");
       updateTrendRow(pleasantTrend, c.pleasant, prev ? prev.pleasant : null, prev ? prev.label : "");
       slider.value = String(step);
+      if (centroids.length > 1) {
+        prevBtn.disabled = step <= 0;
+        nextBtn.disabled = step >= centroids.length - 1;
+      }
       if (showCursor) {
         cursorRing.setAttribute("cx", pointEls[step].getAttribute("cx"));
         cursorRing.setAttribute("cy", pointEls[step].getAttribute("cy"));
@@ -3729,6 +3753,29 @@
       var step = parseInt(slider.value, 10);
       setStep(step, step < centroids.length - 1);
     });
+
+    // Step one period back (-1) or forward (+1) from wherever the readout is now.
+    function stepBy(delta) {
+      if (centroids.length < 2) return;
+      stopPlay();
+      var step = Math.max(0, Math.min(centroids.length - 1, parseInt(slider.value, 10) + delta));
+      setStep(step, step < centroids.length - 1);
+    }
+    prevBtn.addEventListener("click", function () { stepBy(-1); });
+    nextBtn.addEventListener("click", function () { stepBy(1); });
+
+    // Left/Right arrow keys step too, whenever focus is on the controls or the
+    // chart area. The slider already handles arrows itself, so it is skipped.
+    function onArrowKey(e) {
+      if (e.target === slider) return;
+      if (e.key === "ArrowLeft") { e.preventDefault(); stepBy(-1); }
+      else if (e.key === "ArrowRight") { e.preventDefault(); stepBy(1); }
+    }
+    controls.addEventListener("keydown", onArrowKey);
+    bodyRow.tabIndex = 0;
+    bodyRow.setAttribute("aria-label", "Center of gravity timeline. Use the left and right arrow keys to step through periods.");
+    bodyRow.style.outlineOffset = "4px";
+    bodyRow.addEventListener("keydown", onArrowKey);
   }
 
   /* ------------------------------------------------------ scatter: energy/pleasantness over time */
