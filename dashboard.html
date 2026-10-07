@@ -3211,7 +3211,7 @@
     shown.forEach(function (r) {
       var tr = document.createElement("tr");
       tr.innerHTML = "<td></td><td></td><td></td><td></td><td></td><td></td><td></td>";
-      tr.children[0].textContent = r.timestamp;
+      tr.children[0].textContent = r.date ? r.date.toLocaleString() : (r.timestamp || "");
       tr.children[1].textContent = r.session;
       tr.children[2].textContent = r.respondent;
       tr.children[3].textContent = r.labelEn;
