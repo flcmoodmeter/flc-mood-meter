@@ -3118,7 +3118,7 @@
     else if (groupBy === "dow") { keyFn = function (r) { return DOW_NAMES[r.date.getDay()]; }; }
     else if (groupBy === "month") { keyFn = function (r) { return r.date.getFullYear() + "-" + pad2(r.date.getMonth() + 1); }; sortNumeric = true; }
     else if (groupBy === "year") { keyFn = function (r) { return String(r.date.getFullYear()); }; sortNumeric = true; }
-    else if (groupBy === "week") { keyFn = isoWeek; sortNumeric = true; }
+    else if (groupBy === "week") { keyFn = function (r) { return isoWeek(r.date); }; sortNumeric = true; }
     else { keyFn = function (r) { return isoDate(r.date); }; sortNumeric = true; }
 
     var seen = {};
