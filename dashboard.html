@@ -663,7 +663,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.1</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.2</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -3507,7 +3507,7 @@
     slider.type = "range";
     slider.min = "0";
     slider.max = String(Math.max(0, centroids.length - 1));
-    slider.value = String(Math.max(0, centroids.length - 1));
+    slider.value = "0";   // opens at the first period; Play runs forward from here
     slider.style.cssText = "flex:1 1 140px; min-width:110px; accent-color:var(--accent);";
     if (centroids.length < 2) slider.disabled = true;
     var prevBtn = document.createElement("button");
@@ -3567,7 +3567,7 @@
       // Half-size slot for the previous step's arrow. Always present (blank
       // when there is no earlier step) so the main arrow never shifts sideways.
       var priorArrow = document.createElement("div");
-      priorArrow.style.cssText = "flex:none; width:38px; height:38px; display:flex; align-items:center; justify-content:center; opacity:0.6;";
+      priorArrow.style.cssText = "flex:none; align-self:flex-end; width:38px; height:38px; display:flex; align-items:center; justify-content:center; opacity:0.6;";
       priorArrow.title = "Previous step's trend";
       var arrow = document.createElement("div");
       arrow.style.cssText = "flex:none; width:76px; height:76px; display:flex; align-items:center; justify-content:center;";
@@ -3756,7 +3756,7 @@
       }
     }
 
-    setStep(centroids.length - 1, false);
+    setStep(0, centroids.length > 1);
 
     function stopPlay() {
       if (_centroidTimer) { clearInterval(_centroidTimer); _centroidTimer = null; }
