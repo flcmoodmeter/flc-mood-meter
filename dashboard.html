@@ -1921,7 +1921,7 @@
    */
   function tagSuspicious(rows) {
     // Clear any prior tags so re-runs are idempotent
-    rows.forEach(function (r) { r._suspicious = false; });
+    rows.forEach(function (r) { r._suspicious = false; r._burstFlag = false; r._repeatFlag = false; });
 
     // Group rows by session
     var bySession = {};
@@ -1944,7 +1944,7 @@
         var j = i;
         while (j < sess.length && sess[j].date && sess[j].date.getTime() - t0 <= 60000) j++;
         if (j - i >= 5) {
-          for (var k = i; k < j; k++) sess[k]._suspicious = true;
+          for (var k = i; k < j; k++) { sess[k]._suspicious = true; sess[k]._burstFlag = true; }
         }
       }
 
@@ -1955,7 +1955,7 @@
           run++;
           if (run >= 3) {
             // Flag the whole run from where it started
-            for (var k = i - run + 1; k <= i; k++) sess[k]._suspicious = true;
+            for (var k = i - run + 1; k <= i; k++) { sess[k]._suspicious = true; sess[k]._repeatFlag = true; }
           }
         } else {
           run = 1;
@@ -6895,9 +6895,19 @@
     var suspCount = allRows.filter(function (r) { return r._suspicious; }).length;
     var suspEl = $("suspiciousCount");
     if (suspEl) {
-      suspEl.textContent = suspCount > 0
-        ? suspCount.toLocaleString() + " suspicious entr" + (suspCount === 1 ? "y" : "ies") + " detected"
-        : "No suspicious entries detected";
+      if (suspCount > 0) {
+        var linkText = suspCount.toLocaleString() + " suspicious entr" + (suspCount === 1 ? "y" : "ies") + " detected";
+        suspEl.innerHTML = '<a href="#" id="suspiciousViewLink" style="color:var(--warn-ink);font-weight:600;text-decoration:underline;cursor:pointer;">' + linkText + '</a>';
+        var viewLink = document.getElementById("suspiciousViewLink");
+        if (viewLink) {
+          viewLink.addEventListener("click", function (e) {
+            e.preventDefault();
+            openSuspiciousModal(allRows.filter(function (r) { return r._suspicious; }));
+          });
+        }
+      } else {
+        suspEl.textContent = "No suspicious entries detected";
+      }
     }
     $("matchCount").innerHTML = "Showing <b>" + rows.length.toLocaleString() + "</b> of " + allRows.length.toLocaleString() + " responses";
     $("overviewMeta").textContent = rows.length.toLocaleString() + " of " + allRows.length.toLocaleString() + " responses shown";
@@ -7143,6 +7153,134 @@
   }
 
   openBtn.addEventListener("click", function (e) { e.stopPropagation(); openModal(); });
+  closeBtn.addEventListener("click", closeModal);
+  backdrop.addEventListener("click", closeModal);
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && modal.style.display === "flex") closeModal();
+  });
+})();
+</script>
+
+<!-- Suspicious entries viewer modal -->
+<div id="suspiciousViewModal" role="dialog" aria-modal="true" aria-labelledby="suspViewTitle" style="display:none; position:fixed; inset:0; z-index:9100; align-items:flex-start; justify-content:center; padding:40px 16px 24px; overflow-y:auto;">
+  <div id="suspiciousViewBackdrop" style="position:fixed; inset:0; background:rgba(0,0,0,0.4);"></div>
+  <div style="position:relative; background:var(--panel); border:1px solid var(--line-strong); border-radius:12px; padding:20px 22px 18px; max-width:720px; width:100%; box-shadow:0 8px 40px rgba(0,0,0,0.22); z-index:1;">
+    <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:4px;">
+      <div>
+        <h3 id="suspViewTitle" style="margin:0; font-size:15px; font-weight:700; color:var(--ink);">Suspicious entries</h3>
+        <p id="suspViewSubtitle" style="margin:4px 0 0; font-size:12.5px; color:var(--muted);"></p>
+      </div>
+      <button id="suspiciousViewClose" type="button" aria-label="Close" style="border:none; background:transparent; color:var(--muted); font-size:20px; cursor:pointer; padding:0 2px; line-height:1; flex:none; margin-left:16px;">&times;</button>
+    </div>
+    <div style="margin:14px 0 4px; display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+      <span style="font-size:11.5px; color:var(--muted);">Filter by rule:</span>
+      <button class="susp-rule-btn btn btn-sm" data-rule="all" style="background:var(--accent);border-color:var(--accent);color:#fff;">All</button>
+      <button class="susp-rule-btn btn btn-sm" data-rule="speed">⚡ Speed (&lt;2s)</button>
+      <button class="susp-rule-btn btn btn-sm" data-rule="repeat">🔁 Repeat</button>
+      <button class="susp-rule-btn btn btn-sm" data-rule="burst">🚀 Burst</button>
+    </div>
+    <div style="overflow-x:auto; margin-top:12px;">
+      <table id="suspViewTable" style="width:100%; border-collapse:collapse; font-size:12.5px;">
+        <thead>
+          <tr style="border-bottom:2px solid var(--line-strong);">
+            <th style="text-align:left; padding:6px 10px 6px 0; color:var(--muted); font-weight:600; white-space:nowrap;">Timestamp</th>
+            <th style="text-align:left; padding:6px 10px 6px 0; color:var(--muted); font-weight:600; white-space:nowrap;">Location</th>
+            <th style="text-align:left; padding:6px 10px 6px 0; color:var(--muted); font-weight:600; white-space:nowrap;">Emotion</th>
+            <th style="text-align:right; padding:6px 10px 6px 0; color:var(--muted); font-weight:600; white-space:nowrap;">Seconds</th>
+            <th style="text-align:left; padding:6px 0 6px 10px; color:var(--muted); font-weight:600; white-space:nowrap;">Reason</th>
+          </tr>
+        </thead>
+        <tbody id="suspViewBody"></tbody>
+      </table>
+    </div>
+    <p style="margin:12px 0 0; font-size:11.5px; color:var(--muted); border-top:1px solid var(--line); padding-top:10px;">Flagged entries are never deleted — use "Exclude suspicious entries" to remove them from charts.</p>
+  </div>
+</div>
+
+<script>
+(function () {
+  var modal = document.getElementById("suspiciousViewModal");
+  var backdrop = document.getElementById("suspiciousViewBackdrop");
+  var closeBtn = document.getElementById("suspiciousViewClose");
+  var tbody = document.getElementById("suspViewBody");
+  var subtitle = document.getElementById("suspViewSubtitle");
+  var _allSusp = [];
+  var _activeRule = "all";
+
+  var QUAD_LABELS = { 1: "HE Pleasant", 2: "LE Unpleasant", 3: "HE Unpleasant", 4: "LE Pleasant" };
+
+  function reasonTags(r) {
+    var tags = [];
+    if (r.seconds != null && !isNaN(r.seconds) && r.seconds < 2) tags.push({ label: "⚡ Speed", rule: "speed" });
+    if (r._burstFlag) tags.push({ label: "🚀 Burst", rule: "burst" });
+    if (r._repeatFlag) tags.push({ label: "🔁 Repeat", rule: "repeat" });
+    if (!tags.length) tags.push({ label: "⚠ Unknown", rule: "other" });
+    return tags;
+  }
+
+  function renderTable(rows) {
+    var filtered = _activeRule === "all" ? rows : rows.filter(function (r) {
+      return reasonTags(r).some(function (t) { return t.rule === _activeRule; });
+    });
+    subtitle.textContent = filtered.length.toLocaleString() + " entr" + (filtered.length === 1 ? "y" : "ies") + (_activeRule !== "all" ? " matching filter" : " total");
+    tbody.innerHTML = "";
+    if (!filtered.length) {
+      var tr = document.createElement("tr");
+      tr.innerHTML = '<td colspan="5" style="padding:20px 0; text-align:center; color:var(--muted);">No entries match this filter.</td>';
+      tbody.appendChild(tr);
+      return;
+    }
+    filtered.forEach(function (r) {
+      var tr = document.createElement("tr");
+      tr.style.borderBottom = "1px solid var(--line)";
+      var ts = r.date ? r.date.toLocaleString() : (r.timestamp || "—");
+      var loc = r.session || "(none)";
+      var emotion = r.labelEn || r.label || "—";
+      var secs = (r.seconds != null && !isNaN(r.seconds)) ? (+r.seconds).toFixed(1) + "s" : "—";
+      var tags = reasonTags(r);
+      var tagHTML = tags.map(function (t) {
+        var bg = t.rule === "speed" ? "#fef3c7" : t.rule === "burst" ? "#fee2e2" : t.rule === "repeat" ? "#dbeafe" : "#f3f4f6";
+        var col = t.rule === "speed" ? "#92400e" : t.rule === "burst" ? "#991b1b" : t.rule === "repeat" ? "#1e40af" : "#374151";
+        return '<span style="display:inline-block;padding:1px 7px;border-radius:20px;font-size:11px;font-weight:600;background:' + bg + ';color:' + col + ';margin:1px 2px 1px 0;">' + t.label + '</span>';
+      }).join("");
+      tr.innerHTML =
+        '<td style="padding:7px 10px 7px 0; white-space:nowrap; color:var(--ink);">' + ts + '</td>' +
+        '<td style="padding:7px 10px 7px 0; white-space:nowrap; color:var(--ink);">' + loc + '</td>' +
+        '<td style="padding:7px 10px 7px 0; color:var(--ink);">' + emotion + '</td>' +
+        '<td style="padding:7px 10px 7px 0; text-align:right; font-family:var(--mono); color:var(--ink);">' + secs + '</td>' +
+        '<td style="padding:7px 0 7px 10px;">' + tagHTML + '</td>';
+      tbody.appendChild(tr);
+    });
+  }
+
+  window.openSuspiciousModal = function (rows) {
+    _allSusp = rows;
+    _activeRule = "all";
+    document.querySelectorAll(".susp-rule-btn").forEach(function (btn) {
+      var on = btn.dataset.rule === "all";
+      btn.style.background = on ? "var(--accent)" : "";
+      btn.style.borderColor = on ? "var(--accent)" : "";
+      btn.style.color = on ? "#fff" : "";
+    });
+    renderTable(_allSusp);
+    modal.style.display = "flex";
+    closeBtn.focus();
+  };
+
+  document.querySelectorAll(".susp-rule-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      _activeRule = btn.dataset.rule;
+      document.querySelectorAll(".susp-rule-btn").forEach(function (b) {
+        var on = b === btn;
+        b.style.background = on ? "var(--accent)" : "";
+        b.style.borderColor = on ? "var(--accent)" : "";
+        b.style.color = on ? "#fff" : "";
+      });
+      renderTable(_allSusp);
+    });
+  });
+
+  function closeModal() { modal.style.display = "none"; }
   closeBtn.addEventListener("click", closeModal);
   backdrop.addEventListener("click", closeModal);
   document.addEventListener("keydown", function (e) {
