@@ -701,7 +701,7 @@
       </div>
 
       <!-- Local CSV panel -->
-      <div class="panel" id="localPanelEl" style="display:none;">
+      <div class="panel" id="localPanelEl" style="display:none !important;" hidden>
         <h2>Data files</h2>
         <div class="filelist" id="fileList">
           <div class="empty">No files loaded yet.</div>
@@ -7820,7 +7820,7 @@
     $("sampleBtn").classList.toggle("on", !isSheets && localKind === "sample");
     $("addFilesBtn").classList.toggle("on", !isSheets && localKind === "files");
     $("sheetsPanelEl").style.display = isSheets ? "" : "none";
-    $("localPanelEl").style.display = isSheets ? "none" : "";
+    // Data-files panel is retired; the top-bar buttons are the only local controls.
 
     // Clear every filter on a source switch, not just "exclude suspicious".
     // Chips (location, semester, ...) and date ranges from the old dataset
