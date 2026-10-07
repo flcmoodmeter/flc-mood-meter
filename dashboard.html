@@ -971,7 +971,7 @@
                 <option value="month">By month</option>
               </select>
             </div>
-            <p style="margin:0 0 10px; font-size:11.5px; color:var(--muted);">Mean energy and pleasantness per period, scored High/Pleasant = +1, Low/Unpleasant = -1, so 0 is neutral.</p>
+            <p style="margin:0 0 10px; font-size:11.5px; color:var(--muted);">Mean energy and pleasantness per period. Each response is scored from -1 to +1 by which emotion word was chosen (High/Pleasant positive, Low/Unpleasant negative, larger for words nearer the grid's edge), so 0 is neutral.</p>
             <div class="chart-svg-wrap" id="chartTrajectory"></div>
           </div>
 
@@ -7730,7 +7730,7 @@
     <p style="margin:0 0 8px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted);">How it works</p>
     <ul style="margin:0 0 14px; padding:0 0 0 18px; display:flex; flex-direction:column; gap:8px;">
       <li style="font-size:13px; color:var(--ink); line-height:1.5;">The mood grid has two axes: horizontal is pleasantness (unpleasant &larr; &rarr; pleasant), vertical is energy (low &larr; &rarr; high). Each quadrant corresponds to one of the four quadrant colors used throughout the dashboard.</li>
-      <li style="font-size:13px; color:var(--ink); line-height:1.5;">For each time period (day/week/month, based on the &ldquo;group by&rdquo; selector shared with Mood trajectory), every response in that period is scored +1 or -1 on each axis (Pleasant=+1/Unpleasant=-1, High=+1/Low=-1), then averaged. That gives one point &mdash; the &ldquo;centroid,&rdquo; or center of mass &mdash; representing where that period's responses clustered on average.</li>
+      <li style="font-size:13px; color:var(--ink); line-height:1.5;">For each time period (day/week/month, based on the &ldquo;group by&rdquo; selector shared with Mood trajectory), every response in that period is scored on each axis from -1 to +1 based on exactly which emotion word was chosen: the sign says which side (Pleasant is positive, Unpleasant negative; High energy positive, Low negative), and the size says how far toward the edge of the grid the word sits. A word at the outer edge scores close to &plusmn;1, while one near the middle of the grid scores closer to 0. Those scores are then averaged, which gives one point &mdash; the &ldquo;centroid,&rdquo; or center of mass &mdash; representing where that period's responses clustered on average.</li>
       <li style="font-size:13px; color:var(--ink); line-height:1.5;">Those points are plotted on the grid and connected in chronological order by a line, so you can trace the path the average mood has taken over time.</li>
       <li style="font-size:13px; color:var(--ink); line-height:1.5;">The first point is hollow (outlined only) and the last point is solid and larger, so you can tell at a glance which end is the start and which is &ldquo;now,&rdquo; and see which direction the path is heading.</li>
     </ul>
