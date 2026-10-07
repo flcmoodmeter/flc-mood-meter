@@ -2311,7 +2311,7 @@
     opts = opts || {};
     var W = opts.width || 640;
     var H = opts.height || 280;
-    var padL = opts.padL || 44, padR = 14, padT = 14, padB = 34;
+    var padL = opts.padL || 44, padR = 14, padT = 14, padB = opts.xAxisTitle ? 44 : 36;
     var plotW = W - padL - padR, plotH = H - padT - padB;
 
     var xs = points.map(function (p) { return p.x; });
@@ -2337,7 +2337,7 @@
 
     (opts.yTicks || []).forEach(function (t) {
       var y = sy(t.v);
-      var lbl = svgEl("text", { x: padL - 7, y: y + 3.5, "text-anchor": "end", class: "bar-label", style: "font-size:10px;" });
+      var lbl = svgEl("text", { x: padL - 9, y: y + 4, "text-anchor": "end", class: "bar-label", style: "font-size:12px;font-weight:600;" });
       lbl.textContent = t.label;
       svg.appendChild(lbl);
       svg.appendChild(svgEl("line", { x1: padL - 3, y1: y, x2: padL, y2: y, class: "axis-line-svg" }));
@@ -2345,13 +2345,13 @@
 
     (opts.xTicks || []).forEach(function (t) {
       var x = sx(t.v);
-      var lbl = svgEl("text", { x: x, y: padT + plotH + 16, "text-anchor": "middle", class: "bar-label", style: "font-size:10px;" });
+      var lbl = svgEl("text", { x: x, y: padT + plotH + 18, "text-anchor": "middle", class: "bar-label", style: "font-size:12px;font-weight:600;" });
       lbl.textContent = t.label;
       svg.appendChild(lbl);
     });
 
     if (opts.xAxisTitle) {
-      var xt = svgEl("text", { x: padL + plotW / 2, y: H - 4, "text-anchor": "middle", style: "font-size:10px;fill:var(--muted);" });
+      var xt = svgEl("text", { x: padL + plotW / 2, y: H - 4, "text-anchor": "middle", style: "font-size:11.5px;font-weight:600;fill:var(--muted);" });
       xt.textContent = opts.xAxisTitle;
       svg.appendChild(xt);
     }
@@ -3383,12 +3383,12 @@
       return;
     }
 
-    var W = 320, H = 320, pad = 40;
+    var W = 480, H = 480, pad = 56;
     var plotW = W - pad * 2, plotH = H - pad * 2;
     function gx(v) { return pad + ((v + 1) / 2) * plotW; }
     function gy(v) { return pad + plotH - ((v + 1) / 2) * plotH; }
 
-    var svg = svgEl("svg", { viewBox: "0 0 " + W + " " + H, width: "100%", height: H, style: "min-width:260px;max-width:360px;" });
+    var svg = svgEl("svg", { viewBox: "0 0 " + W + " " + H, width: "100%", height: H, style: "min-width:340px;max-width:540px;" });
 
     // quadrant background fills (very light) + axes
     var quadFills = [
@@ -3411,23 +3411,23 @@
       { x: pad + plotW / 2, y: pad + plotH + 14, t: "Low energy", anchor: "middle" }
     ];
     axLabels.forEach(function (l) {
-      var t = svgEl("text", { x: l.x, y: l.y, "text-anchor": l.anchor, style: "font-size:9.5px;fill:var(--muted);" });
+      var t = svgEl("text", { x: l.x, y: l.y, "text-anchor": l.anchor, style: "font-size:12px;font-weight:600;fill:var(--muted);" });
       t.textContent = l.t;
       svg.appendChild(t);
     });
 
     if (centroids.length > 1) {
       var d = centroids.map(function (c, i) { return (i === 0 ? "M" : "L") + gx(c.pleasant).toFixed(1) + " " + gy(c.energy).toFixed(1); }).join(" ");
-      svg.appendChild(svgEl("path", { d: d, fill: "none", stroke: "var(--ink)", "stroke-width": 1.5, opacity: 0.55 }));
+      svg.appendChild(svgEl("path", { d: d, fill: "none", stroke: "var(--ink)", "stroke-width": 2, opacity: 0.55 }));
     }
 
     centroids.forEach(function (c, i) {
       var isLast = i === centroids.length - 1;
       var isFirst = i === 0;
       var circle = svgEl("circle", {
-        cx: gx(c.pleasant), cy: gy(c.energy), r: isLast ? 6 : 4.5,
+        cx: gx(c.pleasant), cy: gy(c.energy), r: isLast ? 8.5 : 6.5,
         fill: isFirst && centroids.length > 1 ? "#fff" : "var(--accent)",
-        stroke: "var(--accent)", "stroke-width": isFirst ? 2 : 1
+        stroke: "var(--accent)", "stroke-width": isFirst ? 2.5 : 1.5
       });
       var title = svgEl("title", {});
       title.textContent = c.label + " — n=" + c.n + (isFirst ? " (earliest)" : isLast ? " (latest)" : "");
@@ -3459,13 +3459,13 @@
         x: r.date.getTime(),
         y: pleasantScore(r) + jitter(),
         color: q.color,
-        r: 2.6,
-        opacity: 0.55,
+        r: 3.4,
+        opacity: 0.6,
         title: r.date.toLocaleString() + " — " + (r.labelEn || r.label || q.name) + " (" + q.name + ")"
       };
     });
 
-    var xTickCount = 5;
+    var xTickCount = 7;
     var xTicks = [];
     for (var i = 0; i < xTickCount; i++) {
       var t = minT + (maxT - minT) * (i / (xTickCount - 1 || 1));
@@ -3478,7 +3478,7 @@
     ];
 
     drawScatterChart(container, points, {
-      width: Math.max(420, Math.min(900, dated.length / 2)), height: 260, padL: 70,
+      width: Math.max(900, Math.min(1400, dated.length)), height: 360, padL: 84,
       xDomain: [minT, maxT], yDomain: [-1.3, 1.3],
       xTicks: xTicks, yTicks: yTicks, yZeroLine: true,
       legend: [1, 3, 4, 2].map(function (q) { return { name: QUAD_INFO[q].name, color: QUAD_INFO[q].color }; })
@@ -3513,8 +3513,8 @@
         x: Math.min(r.seconds, capSeconds),
         y: quadY[r.quad] + (Math.random() - 0.5) * 0.55,
         color: locColor[loc],
-        r: 2.6,
-        opacity: 0.6,
+        r: 3.4,
+        opacity: 0.65,
         title: loc + " — " + (r.labelEn || r.label || "") + " — " + (+r.seconds).toFixed(1) + "s"
       };
     });
@@ -3525,7 +3525,7 @@
     });
 
     drawScatterChart(container, points, {
-      width: Math.max(420, Math.min(900, timed.length / 2)), height: 260, padL: 150,
+      width: Math.max(900, Math.min(1400, timed.length)), height: 360, padL: 160,
       xDomain: [0, capSeconds], yDomain: [-0.6, quadOrder.length - 0.4],
       xTicks: xTicks, yTicks: yTicks,
       xAxisTitle: "Seconds on grid before tapping",
