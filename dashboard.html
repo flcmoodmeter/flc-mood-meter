@@ -667,7 +667,7 @@
     </div>
     <div class="topbar-spacer"></div>
     <div class="source-selector no-print" id="sourceSelector">
-      <button class="source-btn on" id="srcSheetsBtn" type="button">📊 Google Sheets</button>
+      <button class="source-btn on" id="srcSheetsBtn" type="button">📊 Kiosk Data</button>
       <button class="source-btn" id="sampleBtn" type="button">🧪 Load sample data</button>
       <button class="source-btn" id="addFilesBtn" type="button">📁 Add data files&hellip;</button>
     </div>
@@ -686,10 +686,10 @@
     <aside class="no-print">
       <!-- Google Sheets panel -->
       <div class="panel" id="sheetsPanelEl">
-        <h2>Google Sheets</h2>
+        <h2>Kiosk Data</h2>
         <div class="sheets-panel">
           <div class="sheets-url-row">
-            <input type="text" id="sheetsUrlInput" placeholder="Published CSV URL" spellcheck="false">
+            <input type="text" id="sheetsUrlInput" placeholder="Kiosk data link (CSV URL)" spellcheck="false">
             <button class="btn btn-primary btn-sm" id="sheetsLoadBtn" type="button">Load</button>
           </div>
           <div class="sheets-status" id="sheetsStatus"></div>
@@ -7794,7 +7794,7 @@
 
   function loadFromSheets(showLoading) {
     var url = $("sheetsUrlInput").value.trim();
-    if (!url) { setSheetStatus("Please enter a Sheets CSV URL.", "err"); return; }
+    if (!url) { setSheetStatus("Please enter the kiosk data link.", "err"); return; }
     setSheetsUrl(url);
     if (showLoading !== false) setSheetStatus("Loading…");
     var gen = sourceGen;
