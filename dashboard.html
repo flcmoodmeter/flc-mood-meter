@@ -676,7 +676,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.9</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.11</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -1407,9 +1407,6 @@
         </div>
 
         <div id="tabSpurious" class="hidden">
-          <div class="spurious-banner">
-            <strong>For entertainment purposes only.</strong> These correlations are deliberately absurd — global earthquakes and moon phases have no plausible causal link to one campus kiosk's mood data. Don't cite this in your thesis.
-          </div>
 
           <div class="chart-grid">
             <div class="chart-card spurious-card">
@@ -1453,7 +1450,77 @@
             <p class="table-note" id="quakeCoverageNote"></p>
           </div>
 
-          <p class="table-note" style="margin-top:14px;">Real data, played completely straight, entirely coincidental. See <em>Spurious Correlations</em> by Tyler Vigen for the genre at its finest.</p>
+          <div class="panel spurious-panel" style="margin: 4px 0 18px;">
+            <h2 style="text-transform:none; font-size:14.5px; letter-spacing:0; color:var(--ink); font-weight:700;">&#127756; Geomagnetic storms (Kp index)</h2>
+            <p class="import-note" style="margin:6px 0 12px;">
+              Fetched live from NOAA&rsquo;s Space Weather Prediction Center (free, public, no API key). Kp measures disturbance of Earth&rsquo;s magnetic field from 0 (quiet) to 9 (severe storm), every 3 hours; each day is rated by its highest Kp. NOAA&rsquo;s feed only holds about the last week, so this covers recent responses only. Needs an internet connection when you click Fetch.
+            </p>
+            <div class="row" style="margin-top:0; align-items:center;">
+              <button class="btn spurious-btn" id="fetchKpBtn">Fetch recent Kp data</button>
+              <span class="table-note" id="kpStatus" style="margin:0;"></span>
+            </div>
+          </div>
+          <div id="kpResults" class="hidden">
+            <div class="chart-card spurious-card">
+              <div class="chart-card-head"><h3>Geomagnetic activity vs. % Unpleasant</h3></div>
+              <div class="chart-svg-wrap" id="chartKp"></div>
+            </div>
+            <p class="table-note" id="kpCoverageNote"></p>
+          </div>
+
+          <div class="panel spurious-panel" style="margin: 18px 0;">
+            <h2 style="text-transform:none; font-size:14.5px; letter-spacing:0; color:var(--ink); font-weight:700;">&#128214; Wikipedia attention</h2>
+            <p class="import-note" style="margin:6px 0 12px;">
+              Fetched live from Wikimedia (free, public, no API key): how many people viewed an English Wikipedia article each day, a rough measure of public attention to a topic. Pick a topic or type an exact article title. Needs an internet connection when you click Fetch.
+            </p>
+            <div class="row" style="margin:0 0 10px; align-items:center; gap:8px; flex-wrap:wrap;">
+              <label class="flabel" for="wikiArticle" style="margin:0;">Article</label>
+              <select id="wikiArticle" class="no-print">
+                <option value="Stock_market" selected>Stock market</option>
+                <option value="Recession">Recession</option>
+                <option value="Ukraine">Ukraine</option>
+                <option value="Climate_change">Climate change</option>
+                <option value="Artificial_intelligence">Artificial intelligence</option>
+                <option value="__custom">Other (type below)&hellip;</option>
+              </select>
+              <input type="text" id="wikiCustom" placeholder="Exact article title, e.g. Solar_eclipse" spellcheck="false" style="display:none; min-width:220px;">
+            </div>
+            <div class="daterow" style="max-width:420px; margin-bottom:10px;">
+              <input type="date" id="wikiStart">
+              <span style="color:var(--muted); font-size:12px;">&ndash;</span>
+              <input type="date" id="wikiEnd">
+            </div>
+            <div class="row" style="margin-top:0; align-items:center;">
+              <button class="btn spurious-btn" id="fetchWikiBtn">Fetch page views</button>
+              <span class="table-note" id="wikiStatus" style="margin:0;"></span>
+            </div>
+          </div>
+          <div id="wikiResults" class="hidden">
+            <div class="chart-card spurious-card">
+              <div class="chart-card-head"><h3 id="wikiChartTitle">Wikipedia attention vs. % Unpleasant</h3></div>
+              <div class="chart-svg-wrap" id="chartWiki"></div>
+            </div>
+            <p class="table-note" id="wikiCoverageNote"></p>
+          </div>
+
+          <div class="panel spurious-panel" style="margin: 18px 0;">
+            <h2 style="text-transform:none; font-size:14.5px; letter-spacing:0; color:var(--ink); font-weight:700;">&#127881; US public holidays</h2>
+            <p class="import-note" style="margin:6px 0 12px;">
+              Fetched live from Nager.Date (free, public, no API key) for every year in your loaded data. Compares holidays, the days right before or after one, and ordinary days. Needs an internet connection when you click Fetch.
+            </p>
+            <div class="row" style="margin-top:0; align-items:center;">
+              <button class="btn spurious-btn" id="fetchHolidayBtn">Fetch holidays</button>
+              <span class="table-note" id="holidayStatus" style="margin:0;"></span>
+            </div>
+          </div>
+          <div id="holidayResults" class="hidden">
+            <div class="chart-card spurious-card">
+              <div class="chart-card-head"><h3>Holidays vs. % Unpleasant</h3></div>
+              <div class="chart-svg-wrap" id="chartHoliday"></div>
+            </div>
+            <p class="table-note" id="holidayCoverageNote"></p>
+          </div>
+
         </div>
       </div>
     </main>
@@ -7227,7 +7294,7 @@
       // The trajectory chart sizes itself from its card, which has no width while this tab is hidden.
       if (tab === "trends") renderTrajectoryChart(getFilteredRows());
       if (tab === "weather") ensureWeatherDateDefaults();
-      if (tab === "spurious") { ensureQuakeDateDefaults(); renderSpuriousTab(); }
+      if (tab === "spurious") { ensureQuakeDateDefaults(); ensureSpuriousDefaults(); renderSpuriousTab(); }
       if (tab === "sonification") {
         var didSemesterSync = syncSonifyToSemesterWeekFilters();
         if (!didSemesterSync) ensureSonifyDateDefaults();
@@ -7740,6 +7807,9 @@
     renderMoonChart(rows);
     renderMercuryChart(rows);
     if (quakeFetched) renderQuakeChart(rows);
+    if (kpFetched) renderKpChart(rows);
+    if (wikiFetched) renderWikiChart(rows);
+    if (holidaysFetched) renderHolidayChart(rows);
   }
 
   /* ---------------------------------------------------------- earthquakes */
@@ -7808,6 +7878,196 @@
     drawBarChart($("chartQuake"), items, { rotateLabels: true, height: 240 });
 
     $("quakeCoverageNote").textContent = joined.length.toLocaleString() + " filtered responses checked against " + Object.keys(quakesByDate).length + " days of earthquake data.";
+  }
+
+
+  /* ---------------------------------------------------------- geomagnetic Kp (NOAA SWPC) */
+
+  var kpByDate = {};       // 'YYYY-MM-DD' (UTC day) -> { max, mean, n }
+  var kpFetched = false;
+
+  async function fetchKp() {
+    $("fetchKpBtn").disabled = true;
+    $("kpStatus").textContent = "Fetching\u2026";
+    try {
+      var res = await fetch("https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json");
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      var arr = await res.json();
+      var tmp = {};
+      (Array.isArray(arr) ? arr : []).forEach(function (x) {
+        if (!x || !x.time_tag || x.Kp == null || isNaN(Number(x.Kp))) return;
+        var d = String(x.time_tag).slice(0, 10);
+        (tmp[d] || (tmp[d] = [])).push(Number(x.Kp));
+      });
+      kpByDate = {};
+      Object.keys(tmp).forEach(function (d) {
+        var a = tmp[d];
+        kpByDate[d] = { max: Math.max.apply(null, a), mean: a.reduce(function (s, v) { return s + v; }, 0) / a.length, n: a.length };
+      });
+      if (!Object.keys(kpByDate).length) throw new Error("no Kp values came back");
+      kpFetched = true;
+      var days = Object.keys(kpByDate).sort();
+      $("kpStatus").textContent = "Fetched Kp for " + days.length + " days (" + days[0] + " to " + days[days.length - 1] + ").";
+    } catch (err) {
+      kpFetched = false;
+      $("kpStatus").textContent = "Couldn't fetch: " + (err && err.message ? err.message : "network error") + ".";
+    } finally {
+      $("fetchKpBtn").disabled = false;
+    }
+    renderSpuriousTab();
+  }
+  $("fetchKpBtn").addEventListener("click", fetchKp);
+
+  function renderKpChart(rows) {
+    var hasData = kpFetched && Object.keys(kpByDate).length > 0;
+    $("kpResults").classList.toggle("hidden", !hasData);
+    if (!hasData) return;
+    var joined = [];
+    rows.forEach(function (r) {
+      if (!r.date) return;
+      var k = kpByDate[isoDate(r.date)];
+      if (k) joined.push({ row: r, kp: k });
+    });
+    var order = ["Quiet (max Kp below 4)", "Unsettled (Kp 4\u20134.9)", "Storm (Kp 5+)"];
+    var items = bucketPercent(joined, order, function (j) {
+      return j.kp.max < 4 ? order[0] : (j.kp.max < 5 ? order[1] : order[2]);
+    }, function (j) { return j.row.pleasant === "Unpleasant"; });
+    items.forEach(function (it, i) { it.color = ["#a78bfa", "#f97316", "#dc2626"][i]; });
+    drawBarChart($("chartKp"), items, { rotateLabels: true, height: 240 });
+    $("kpCoverageNote").textContent = joined.length.toLocaleString() + " filtered responses fall within the " + Object.keys(kpByDate).length + " days NOAA provides (days are UTC days; Kp 5+ is a minor-or-greater storm).";
+  }
+
+  /* ---------------------------------------------------------- Wikipedia attention (Wikimedia pageviews) */
+
+  var wikiByDate = {};     // 'YYYY-MM-DD' -> views
+  var wikiFetched = false;
+  var wikiTitle = "";
+
+  $("wikiArticle").addEventListener("change", function () {
+    $("wikiCustom").style.display = this.value === "__custom" ? "" : "none";
+  });
+
+  async function fetchWiki() {
+    var startDate = $("wikiStart").value, endDate = $("wikiEnd").value;
+    if (!startDate || !endDate) { toast("Pick a start and end date first."); return; }
+    var sel = $("wikiArticle");
+    var article = sel.value === "__custom" ? $("wikiCustom").value.trim().replace(/ /g, "_") : sel.value;
+    if (!article) { toast("Type an article title first."); return; }
+    // The API only has data up to yesterday.
+    var y = new Date(); y.setDate(y.getDate() - 1);
+    var yStr = isoDate(y);
+    if (endDate > yStr) endDate = yStr;
+    if (startDate > endDate) { $("wikiStatus").textContent = "Pick dates up to yesterday."; return; }
+    $("wikiEnd").value = endDate;
+
+    $("fetchWikiBtn").disabled = true;
+    $("wikiStatus").textContent = "Fetching\u2026";
+    try {
+      var url = "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/user/"
+        + encodeURIComponent(article) + "/daily/" + startDate.replace(/-/g, "") + "00/" + endDate.replace(/-/g, "") + "00";
+      var res = await fetch(url);
+      if (res.status === 404) throw new Error("no article with that exact title (or no views in that range)");
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      var json = await res.json();
+      wikiByDate = {};
+      (json.items || []).forEach(function (it) {
+        var t = String(it.timestamp);
+        wikiByDate[t.slice(0, 4) + "-" + t.slice(4, 6) + "-" + t.slice(6, 8)] = Number(it.views);
+      });
+      if (!Object.keys(wikiByDate).length) throw new Error("no page-view data came back");
+      wikiTitle = sel.value === "__custom" ? article.replace(/_/g, " ") : sel.options[sel.selectedIndex].textContent;
+      wikiFetched = true;
+      $("wikiStatus").textContent = "Fetched page views for " + Object.keys(wikiByDate).length + " days.";
+    } catch (err) {
+      wikiFetched = false;
+      $("wikiStatus").textContent = "Couldn't fetch: " + (err && err.message ? err.message : "network error") + ".";
+    } finally {
+      $("fetchWikiBtn").disabled = false;
+    }
+    renderSpuriousTab();
+  }
+  $("fetchWikiBtn").addEventListener("click", fetchWiki);
+
+  function renderWikiChart(rows) {
+    var hasData = wikiFetched && Object.keys(wikiByDate).length > 0;
+    $("wikiResults").classList.toggle("hidden", !hasData);
+    if (!hasData) return;
+    $("wikiChartTitle").textContent = "\u201c" + wikiTitle + "\u201d Wikipedia attention vs. % Unpleasant";
+    // Split days into thirds by views, relative to this article and period.
+    var vals = Object.keys(wikiByDate).map(function (k) { return wikiByDate[k]; }).sort(function (a, b) { return a - b; });
+    var lo = vals[Math.floor(vals.length / 3)], hi = vals[Math.floor((vals.length * 2) / 3)];
+    var joined = [];
+    rows.forEach(function (r) {
+      if (!r.date) return;
+      var v = wikiByDate[isoDate(r.date)];
+      if (v != null) joined.push({ row: r, views: v });
+    });
+    var order = ["Least-viewed third of days", "Middle third", "Most-viewed third"];
+    var items = bucketPercent(joined, order, function (j) {
+      return j.views < lo ? order[0] : (j.views < hi ? order[1] : order[2]);
+    }, function (j) { return j.row.pleasant === "Unpleasant"; });
+    items.forEach(function (it, i) { it.color = ["#a78bfa", "#f97316", "#dc2626"][i]; });
+    drawBarChart($("chartWiki"), items, { rotateLabels: true, height: 240 });
+    $("wikiCoverageNote").textContent = joined.length.toLocaleString() + " filtered responses matched to " + Object.keys(wikiByDate).length + " days of page views (" + vals[0].toLocaleString() + " to " + vals[vals.length - 1].toLocaleString() + " views per day). Days are split into thirds relative to this article and period.";
+  }
+
+  /* ---------------------------------------------------------- US public holidays (Nager.Date) */
+
+  var holidaysByDate = {};  // 'YYYY-MM-DD' -> holiday name
+  var holidaysFetched = false;
+
+  async function fetchHolidays() {
+    var dated = allRows.filter(function (r) { return r.date; });
+    if (!dated.length) { toast("Load some data first."); return; }
+    var years = Array.from(new Set(dated.map(function (r) { return r.date.getFullYear(); }))).sort();
+    $("fetchHolidayBtn").disabled = true;
+    $("holidayStatus").textContent = "Fetching\u2026";
+    try {
+      var all = {};
+      for (var i = 0; i < years.length; i++) {
+        var res = await fetch("https://date.nager.at/api/v3/PublicHolidays/" + years[i] + "/US");
+        if (!res.ok) throw new Error("HTTP " + res.status + " for " + years[i]);
+        (await res.json()).forEach(function (h) { if (h.date) all[h.date] = h.localName || h.name; });
+      }
+      holidaysByDate = all;
+      holidaysFetched = true;
+      $("holidayStatus").textContent = "Fetched " + Object.keys(all).length + " holidays for " + years.join(", ") + ".";
+    } catch (err) {
+      holidaysFetched = false;
+      $("holidayStatus").textContent = "Couldn't fetch: " + (err && err.message ? err.message : "network error") + ".";
+    } finally {
+      $("fetchHolidayBtn").disabled = false;
+    }
+    renderSpuriousTab();
+  }
+  $("fetchHolidayBtn").addEventListener("click", fetchHolidays);
+
+  function renderHolidayChart(rows) {
+    var hasData = holidaysFetched;
+    $("holidayResults").classList.toggle("hidden", !hasData);
+    if (!hasData) return;
+    function shift(d, n) { var x = new Date(d.getFullYear(), d.getMonth(), d.getDate() + n); return isoDate(x); }
+    var order = ["Public holiday", "Day before or after a holiday", "Ordinary day"];
+    var joined = rows.filter(function (r) { return r.date; }).map(function (r) { return { row: r }; });
+    var items = bucketPercent(joined, order, function (j) {
+      var d = j.row.date;
+      if (holidaysByDate[isoDate(d)]) return order[0];
+      if (holidaysByDate[shift(d, -1)] || holidaysByDate[shift(d, 1)]) return order[1];
+      return order[2];
+    }, function (j) { return j.row.pleasant === "Unpleasant"; });
+    items.forEach(function (it, i) { it.color = ["#dc2626", "#f97316", "#a78bfa"][i]; });
+    drawBarChart($("chartHoliday"), items, { rotateLabels: true, height: 240 });
+    $("holidayCoverageNote").textContent = joined.length.toLocaleString() + " filtered responses; " + Object.keys(holidaysByDate).length + " holidays loaded. The kiosk is probably closed on many holidays, so check the n= counts.";
+  }
+
+  function ensureSpuriousDefaults() {
+    if ($("wikiStart").value || $("wikiEnd").value) return;
+    var dated = allRows.filter(function (r) { return r.date; });
+    if (!dated.length) return;
+    var minD = new Date(Math.min.apply(null, dated.map(function (r) { return r.date.getTime(); })));
+    var maxD = new Date(Math.max.apply(null, dated.map(function (r) { return r.date.getTime(); })));
+    $("wikiStart").value = isoDate(minD);
+    $("wikiEnd").value = isoDate(maxD);
   }
 
   function onDataChanged() {
