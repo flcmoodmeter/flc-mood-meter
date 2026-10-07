@@ -670,7 +670,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.4</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.5</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -3468,6 +3468,8 @@
     var byKey = {};
     b.keys.forEach(function (k) { byKey[k] = []; });
     dated.forEach(function (r) { var k = b.keyFn(r); if (byKey[k]) byKey[k].push(r); });
+    // Change needed for a full vertical arrow, per period length (see trendArrowRotation).
+    var trendStrong = groupBy === "month" ? 0.1 : (groupBy === "week" ? 0.15 : 0.3);
 
     var centroids = b.keys.map(function (k) {
       var group = byKey[k];
@@ -3602,9 +3604,21 @@
 
     // Arrow drawn as an SVG so the stroke weight can match the heavy weight of
     // the large word. `size` is 76 for the current arrow, 38 for the prior one.
+    // Angle follows the size of the change, in 45-degree steps: flat (right)
+    // when basically unchanged, diagonal for a modest move, straight up/down
+    // for a big one. What counts as "big" depends on the period length,
+    // because day-to-day averages swing much more than month-to-month ones.
+    // (trendStrong is set near the top of renderCentroidChart, from the period selector.)
+    function trendArrowRotation(d) {
+      var m = Math.abs(d);
+      if (m < 0.05) return 90;                       // steady: pointing right
+      var strong = m >= trendStrong;
+      if (d > 0) return strong ? 0 : 45;             // up / up-right
+      return strong ? 180 : 135;                     // down / down-right
+    }
     function trendArrowSvg(size, d, color) {
       var steady = Math.abs(d) < 0.05;
-      var rot = steady ? 90 : (d > 0 ? 0 : 180);
+      var rot = trendArrowRotation(d);
       return '<svg viewBox="0 0 64 64" width="' + size + '" height="' + size + '" aria-hidden="true" style="overflow:visible;">' +
         '<g transform="rotate(' + rot + ' 32 32)" fill="none" stroke="' + (steady ? "var(--muted)" : color) + '" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">' +
         '<path d="M32 56 V9"/><path d="M10 31 L32 9 L54 31"/></g></svg>';
@@ -8039,7 +8053,7 @@
     <ul style="margin:0 0 14px; padding:0 0 0 18px; display:flex; flex-direction:column; gap:8px;">
       <li style="font-size:13px; color:var(--ink); line-height:1.5;">The mood grid has two axes: horizontal is pleasantness (unpleasant &larr; &rarr; pleasant), vertical is energy (low &larr; &rarr; high). Each quadrant corresponds to one of the four quadrant colors used throughout the dashboard.</li>
       <li style="font-size:13px; color:var(--ink); line-height:1.5;">For each time period (day/week/month, based on the selector in this card's header), every response in that period is scored on each axis from -1 to +1 based on exactly which emotion word was chosen: the sign says which side (Pleasant is positive, Unpleasant negative; High energy positive, Low negative), and the size says how far toward the edge of the grid the word sits. A word at the outer edge scores close to &plusmn;1, while one near the middle of the grid scores closer to 0. Those scores are then averaged, which gives one point &mdash; the &ldquo;centroid,&rdquo; or center of mass &mdash; representing where that period's responses clustered on average.</li>
-      <li style="font-size:13px; color:var(--ink); line-height:1.5;">Each point is also matched to the <strong>closest emotion word</strong> on the grid, shown in large type beside the grid and in each dot's hover tooltip. Because an average can land between words, it is shown with how tightly that period's responses cluster (tight cluster, mixed, or widely mixed) and, when different, the word chosen most often. A &ldquo;mixed&rdquo; label means the closest word is a summary, not something many people actually picked. Below it, two bold arrows (energy and pleasantness) show whether this period is up, down or steady compared with the period before it, with the size of the change.</li>
+      <li style="font-size:13px; color:var(--ink); line-height:1.5;">Each point is also matched to the <strong>closest emotion word</strong> on the grid, shown in large type beside the grid and in each dot's hover tooltip. Because an average can land between words, it is shown with how tightly that period's responses cluster (tight cluster, mixed, or widely mixed) and, when different, the word chosen most often. A &ldquo;mixed&rdquo; label means the closest word is a summary, not something many people actually picked. Below it, two bold arrows (energy and pleasantness) show whether this period is up, down or steady compared with the period before it, with the size of the change. The arrow tilts to match: pointing right when steady, angled up-right or down-right for a modest change, and straight up or down for a large one. A small, fainter copy to its left shows the previous step&rsquo;s arrow.</li>
       <li style="font-size:13px; color:var(--ink); line-height:1.5;">Those points are plotted on the grid and connected in chronological order by a line, so you can trace the path the average mood has taken over time.</li>
       <li style="font-size:13px; color:var(--ink); line-height:1.5;">The first point is hollow (outlined only) and the last point is solid and larger, so you can tell at a glance which end is the start and which is &ldquo;now,&rdquo; and see which direction the path is heading.</li>
     </ul>
