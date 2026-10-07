@@ -676,7 +676,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.8</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.9</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -1007,8 +1007,13 @@
           <div class="chart-card" style="grid-column: 1 / -1;">
             <div class="chart-card-head">
               <h3>Energy &amp; pleasantness over time</h3>
+              <select id="energyScatterGroupBy" class="no-print" aria-label="Group averages by period">
+                <option value="date" selected>By day</option>
+                <option value="week">By week</option>
+                <option value="month">By month</option>
+              </select>
             </div>
-            <p style="margin:0 0 10px; font-size:11.5px; color:var(--muted);">Every response plotted by when it happened and how pleasant/energetic it was, colored by quadrant.</p>
+            <p style="margin:0 0 10px; font-size:11.5px; color:var(--muted);">Each faint dot is one response, placed by when it happened and how pleasant it was (colored by quadrant). The two lines are the average pleasantness and average energy for each period, so you can see the trend through the scatter.</p>
             <div class="chart-svg-wrap" id="chartEnergyScatter"></div>
           </div>
 
@@ -2400,7 +2405,7 @@
 
     (opts.xTicks || []).forEach(function (t) {
       var x = sx(t.v);
-      var lbl = svgEl("text", { x: x, y: padT + plotH + 18, "text-anchor": "middle", class: "bar-label", style: "font-size:12px;font-weight:600;" });
+      var lbl = svgEl("text", { x: x, y: padT + plotH + 18, "text-anchor": t.anchor || "middle", class: "bar-label", style: "font-size:12px;font-weight:600;" });
       lbl.textContent = t.label;
       svg.appendChild(lbl);
     });
@@ -2425,6 +2430,20 @@
         c.appendChild(title);
       }
       svg.appendChild(c);
+    });
+
+    // optional extra lines (each with its own markers), drawn over the dots
+    (opts.lines || []).forEach(function (ln) {
+      if (!ln.pts || !ln.pts.length) return;
+      if (ln.pts.length > 1) {
+        var ld = ln.pts.map(function (p, i) { return (i === 0 ? "M" : "L") + sx(p.x).toFixed(1) + " " + sy(p.y).toFixed(1); }).join(" ");
+        svg.appendChild(svgEl("path", { d: ld, fill: "none", stroke: ln.color, "stroke-width": 2.5, "stroke-linejoin": "round", "stroke-linecap": "round" }));
+      }
+      ln.pts.forEach(function (p) {
+        var mc = svgEl("circle", { cx: sx(p.x), cy: sy(p.y), r: 4.5, fill: ln.color, stroke: "#fff", "stroke-width": 1.5 });
+        if (p.title) { var mt = svgEl("title", {}); mt.textContent = p.title; mc.appendChild(mt); }
+        svg.appendChild(mc);
+      });
     });
 
     if (opts.fixedWidth) {
@@ -3475,6 +3494,7 @@
   }
 
   $("trajectoryGroupBy").addEventListener("change", function () { renderTrajectoryChart(getFilteredRows()); });
+  $("energyScatterGroupBy").addEventListener("change", function () { renderEnergyScatterChart(getFilteredRows()); });
   $("centroidGroupBy").addEventListener("change", function () { renderCentroidChart(getFilteredRows()); });
 
   /* ------------------------------------------------------ emotional center of gravity */
@@ -3904,9 +3924,13 @@
       }
       tickDayKeys = Object.keys(picked).sort();
     }
-    var xTicks = tickDayKeys.map(function (dk) {
+    // Include the year when the data spans more than ~10 months, so "Jun 6" isn't ambiguous.
+    var withYear = (maxT - minT) > 300 * 86400000;
+    var xTicks = tickDayKeys.map(function (dk, i) {
       var t = dayFirstTs[dk];
-      return { v: t, label: new Date(t).toLocaleDateString(undefined, { month: "short", day: "numeric" }) };
+      var opts = withYear ? { month: "short", day: "numeric", year: "2-digit" } : { month: "short", day: "numeric" };
+      // the last label is right-aligned so it isn't clipped by the chart edge
+      return { v: t, label: new Date(t).toLocaleDateString(undefined, opts), anchor: i === tickDayKeys.length - 1 && tickDayKeys.length > 1 ? "end" : "middle" };
     });
     var yTicks = [
       { v: -1, label: "Unpleasant" },
@@ -3914,11 +3938,32 @@
       { v: 1, label: "Pleasant" }
     ];
 
+    // Per-period averages (same buckets and scoring as Mood trajectory): one
+    // marker per period, placed at the average time of that period's responses.
+    var groupBy = $("energyScatterGroupBy").value;
+    var bk = trendBucketKeys(groupBy === "date" ? "date" : groupBy, dated);
+    var byKey = {};
+    bk.keys.forEach(function (k) { byKey[k] = []; });
+    dated.forEach(function (r) { var k = bk.keyFn(r); if (byKey[k]) byKey[k].push(r); });
+    var pleasantAvg = [], energyAvg = [];
+    bk.keys.forEach(function (k) {
+      var g = byKey[k];
+      if (!g.length) return;
+      var t = 0, pl = 0, en = 0;
+      g.forEach(function (r) { t += r.date.getTime(); pl += pleasantScore(r); en += energyScore(r); });
+      t /= g.length; pl /= g.length; en /= g.length;
+      var label = trajectoryLabel(groupBy, k);
+      pleasantAvg.push({ x: t, y: pl, title: label + " — average pleasantness " + pl.toFixed(2) + " (n=" + g.length + ")" });
+      energyAvg.push({ x: t, y: en, title: label + " — average energy " + en.toFixed(2) + " (n=" + g.length + ")" });
+    });
+
     drawScatterChart(container, points, {
       width: Math.max(900, Math.min(1400, dated.length)), height: 360, padL: 84,
       xDomain: [minT, maxT], yDomain: [-1.3, 1.3],
       xTicks: xTicks, yTicks: yTicks, yZeroLine: true,
-      legend: [1, 3, 4, 2].map(function (q) { return { name: QUAD_INFO[q].name, color: QUAD_INFO[q].color }; })
+      lines: [{ pts: pleasantAvg, color: "#0a7a5c" }, { pts: energyAvg, color: "#c2410c" }],
+      legend: [{ name: "Average pleasantness (line)", color: "#0a7a5c" }, { name: "Average energy (line)", color: "#c2410c" }]
+        .concat([1, 3, 4, 2].map(function (q) { return { name: QUAD_INFO[q].name + " (dots)", color: QUAD_INFO[q].color }; }))
     });
   }
 
