@@ -3303,8 +3303,16 @@
 
   /* ------------------------------------------------------ mood trajectory (rising/falling) */
 
-  function pleasantScore(r) { return r.pleasant === "Pleasant" ? 1 : -1; }
-  function energyScore(r) { return r.energy === "High" ? 1 : -1; }
+  // Graded score in [-1, 1], not a flat ±1 — uses the same per-word grid
+  // intensity the sonification feature uses (energyIntensity01 /
+  // pleasantIntensity01, defined below), so "Ecstatic" (grid edge) scores
+  // closer to +1 while "Calm" (near the grid's center column) scores closer
+  // to +0.3. Without this, a handful of responses per period averages to
+  // exactly +1/-1/0 almost every time, since every word counted the same —
+  // which is why the trajectory and center-of-gravity charts kept landing
+  // exactly on the corners or dead center with small per-period samples.
+  function pleasantScore(r) { var v = pleasantIntensity01(r); return r.pleasant === "Pleasant" ? v : -v; }
+  function energyScore(r) { var v = energyIntensity01(r); return r.energy === "High" ? v : -v; }
 
   function trajectoryLabel(groupBy, key) {
     if (groupBy === "week") {
