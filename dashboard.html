@@ -3416,26 +3416,73 @@
       svg.appendChild(t);
     });
 
-    if (centroids.length > 1) {
-      var d = centroids.map(function (c, i) { return (i === 0 ? "M" : "L") + gx(c.pleasant).toFixed(1) + " " + gy(c.energy).toFixed(1); }).join(" ");
-      svg.appendChild(svgEl("path", { d: d, fill: "none", stroke: "var(--ink)", "stroke-width": 2, opacity: 0.55 }));
+    // Arrowhead marker, reused by every path segment so direction reads even
+    // where the path crosses or doubles back on itself.
+    var defs = svgEl("defs", {});
+    var marker = svgEl("marker", { id: "centroidArrow", viewBox: "0 0 10 10", refX: "6", refY: "5", markerWidth: "6", markerHeight: "6", orient: "auto-start-reverse" });
+    var arrowPath = svgEl("path", { d: "M 0 0 L 10 5 L 0 10 z", fill: "var(--accent)" });
+    marker.appendChild(arrowPath);
+    defs.appendChild(marker);
+    svg.appendChild(defs);
+
+    // Draw each segment separately (rather than one multi-point path) so each
+    // can carry its own arrowhead and a color that darkens from earliest
+    // (light) to latest (full accent) — that gradient reads as direction even
+    // when the path crosses or nearly retraces itself.
+    for (var i = 0; i < centroids.length - 1; i++) {
+      var c0 = centroids[i], c1 = centroids[i + 1];
+      var progress = centroids.length > 1 ? (i + 1) / (centroids.length - 1) : 1;
+      var segColor = mixWithWhite("#2c4238", 0.35 + 0.55 * progress);
+      svg.appendChild(svgEl("line", {
+        x1: gx(c0.pleasant).toFixed(1), y1: gy(c0.energy).toFixed(1),
+        x2: gx(c1.pleasant).toFixed(1), y2: gy(c1.energy).toFixed(1),
+        stroke: segColor, "stroke-width": 2, opacity: 0.8,
+        "marker-end": "url(#centroidArrow)"
+      }));
     }
 
+    // Middle points first (small, muted) so the two endpoints can be drawn
+    // last and always stay on top, even if a later period lands right on top
+    // of an earlier one.
     centroids.forEach(function (c, i) {
-      var isLast = i === centroids.length - 1;
-      var isFirst = i === 0;
-      var circle = svgEl("circle", {
-        cx: gx(c.pleasant), cy: gy(c.energy), r: isLast ? 8.5 : 6.5,
-        fill: isFirst && centroids.length > 1 ? "#fff" : "var(--accent)",
-        stroke: "var(--accent)", "stroke-width": isFirst ? 2.5 : 1.5
-      });
+      if (i === 0 || i === centroids.length - 1) return;
+      var circle = svgEl("circle", { cx: gx(c.pleasant), cy: gy(c.energy), r: 5, fill: "var(--accent)", opacity: 0.55 });
       var title = svgEl("title", {});
-      title.textContent = c.label + " — n=" + c.n + (isFirst ? " (earliest)" : isLast ? " (latest)" : "");
+      title.textContent = c.label + " — n=" + c.n;
       circle.appendChild(title);
       svg.appendChild(circle);
     });
 
+    if (centroids.length > 1) {
+      var first = centroids[0];
+      var firstCircle = svgEl("circle", {
+        cx: gx(first.pleasant), cy: gy(first.energy), r: 7,
+        fill: "#fff", stroke: "var(--accent)", "stroke-width": 2.5
+      });
+      var firstTitle = svgEl("title", {});
+      firstTitle.textContent = first.label + " — n=" + first.n + " (earliest)";
+      firstCircle.appendChild(firstTitle);
+      svg.appendChild(firstCircle);
+    }
+
+    var last = centroids[centroids.length - 1];
+    if (last) {
+      var lastCircle = svgEl("circle", {
+        cx: gx(last.pleasant), cy: gy(last.energy), r: 8.5,
+        fill: "var(--accent)", stroke: "#fff", "stroke-width": 1.5
+      });
+      var lastTitle = svgEl("title", {});
+      lastTitle.textContent = last.label + " — n=" + last.n + (centroids.length > 1 ? " (latest)" : "");
+      lastCircle.appendChild(lastTitle);
+      svg.appendChild(lastCircle);
+    }
+
     container.appendChild(svg);
+
+    var legendNote = document.createElement("div");
+    legendNote.style.cssText = "font-size:10.5px;color:var(--muted);text-align:center;margin-top:4px;";
+    legendNote.innerHTML = '<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#fff;border:2px solid var(--accent);vertical-align:middle;"></span> Earliest &nbsp; → &nbsp; arrows show direction &nbsp; → &nbsp; <span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--accent);border:1.5px solid #fff;vertical-align:middle;"></span> Latest';
+    container.appendChild(legendNote);
   }
 
   /* ------------------------------------------------------ scatter: energy/pleasantness over time */
