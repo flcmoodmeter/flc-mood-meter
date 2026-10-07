@@ -654,6 +654,7 @@
   .print-title { display: none; }
   .print-title h1 { font-size: 20px; margin-bottom: 4px; }
   .print-title .meta { font-size: 11.5px; color: #555; }
+.app-version{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.02em;margin-left:6px;vertical-align:middle;font-variant-numeric:tabular-nums;}
 </style>
 </head>
 <body>
@@ -662,7 +663,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard</h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.0</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
