@@ -670,7 +670,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.3</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.4</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -1053,7 +1053,9 @@
               "Quadrant grid" to instead follow a single quadrant's own 25 buttons: each step's pitch is set by
               exactly where its responses sit on that quadrant's own 5&times;5 grid (row = how intense the energy,
               column = how intense the pleasantness/unpleasantness), spanning two octaves plus one note, and
-              note length shortens as intensity rises for an audible tempo cue. Collapse this section with its
+              note length shortens as intensity rises for an audible tempo cue. Choose "Mood (major &rarr; minor)" to hear
+              pleasantness directly: pleasant steps stay major, unpleasant ones pick up minor and clashing notes.
+              Collapse this section with its
               triangle once it's set up, to keep it out of the way of the tracks below.
             </p>
 
@@ -1093,6 +1095,7 @@
                 <select id="sonifyPalette">
                   <option value="western">Western</option>
                   <option value="pentatonic" selected>Pentatonic (all-consonant)</option>
+                  <option value="mood">Mood (major &rarr; minor)</option>
                   <option value="japanese">Japanese-inspired</option>
                   <option value="maqam">Maqam-inspired</option>
                   <option value="gamelan">Gamelan-inspired</option>
@@ -4105,6 +4108,7 @@
   // gesture toward each tradition's character, not a faithful tuning —
   // said plainly in the UI, not just here.
   var SCALES = {
+    major:           [0, 2, 4, 5, 7, 9, 11],
     majorPentatonic: [0, 2, 4, 7, 9],
     minorPentatonic: [0, 3, 5, 7, 10],         // relative minor mode of major pentatonic
     manGongPentatonic: [0, 3, 5, 8, 10],       // another mode of the same 5-note collection
@@ -4143,6 +4147,14 @@
                   4: { scale: "yo",                label: "Major pentatonic (calm mode)",  rootOffset: 7, snapSet: [0, 2, 4, 7, 9] },
                   3: { scale: "manGongPentatonic",  label: "Minor pentatonic (tense mode)", rootOffset: 4, snapSet: [0, 2, 4, 7, 9] },
                   2: { scale: "minorPentatonic",    label: "Minor pentatonic",              rootOffset: 9, snapSet: [0, 2, 4, 7, 9] } },
+    // "Mood": the same entry for every quadrant on purpose. The mode isn't
+    // chosen by quadrant but by the average pleasantness of the whole step
+    // (see noteSpecForMood), so a pleasant step sounds major and an
+    // unpleasant one drifts into minor tones, then b2 / b5.
+    mood:     { 1: { scale: "major", label: "Major \u2192 minor by pleasantness", mood: true },
+                3: { scale: "major", label: "Major \u2192 minor by pleasantness", mood: true },
+                2: { scale: "major", label: "Major \u2192 minor by pleasantness", mood: true },
+                4: { scale: "major", label: "Major \u2192 minor by pleasantness", mood: true } },
     japanese: { 1: { scale: "yo",        label: "Yo scale" },
                 3: { scale: "iwato",     label: "Iwato scale" },
                 2: { scale: "hirajoshi", label: "Hirajoshi scale" },
@@ -4275,8 +4287,60 @@
     return midi + delta;
   }
 
-  function noteSpecForRows(rows, quad, palette, rootMidi) {
+  // ---- "Mood" palette: pleasantness drives major vs. minor colour --------
+  // Signed pleasantness of a whole step, -1 (very unpleasant) .. +1, from the
+  // same cell-centre scoring the centre-of-gravity chart uses.
+  function moodScoreForRows(rows) {
+    return rows.length ? avgNum(rows.map(pleasantScore)) : 0;
+  }
+  // Tiny deterministic pseudo-random number in [0,1) from the step's own data,
+  // so the same step always sounds the same (replays and exports match).
+  function moodRand01(rows, salt) {
+    var h = 2166136261 ^ (salt || 0);
+    var str = String(rows.length) + (rows[0] ? rows[0].timestamp : "") + (rows[rows.length - 1] ? rows[rows.length - 1].timestamp : "");
+    for (var i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
+    h ^= h >>> 13; h = Math.imul(h, 0x5bd1e995); h ^= h >>> 15;
+    return (h >>> 0) / 4294967296;
+  }
+  // Dark twin of each major-scale degree (semitones above the root). The
+  // root, 4th and 5th stay put as anchors; 2nd, 3rd and 6th flatten, and the
+  // leading tone (11) becomes a flat 2nd, the most clashing note against the root.
+  var MOOD_DARK = { 0: 0, 2: 1, 4: 3, 5: 5, 7: 7, 9: 8, 11: 1 };
+  function noteSpecForMood(rows, quad, rootMidi, bucketRows) {
+    var s = moodScoreForRows(bucketRows || rows);          // -1 .. +1
+    var pleasantT = (s + 1) / 2;                            // 0 .. 1
+    var registerOffset = Math.round(avgNum(rows.map(registerSemitoneOffset)));
+    // Pick a degree of the major scale: pleasant -> consonant (root, 5th),
+    // unpleasant -> tense (2nd, 7th), same idea as the other palettes.
+    var order = SCALES.major.map(function (semi) { return { semi: semi, score: CONSONANCE[semi] || 0 }; })
+      .sort(function (a, b) { return b.score - a.score; });
+    var idx = Math.max(0, Math.min(order.length - 1, Math.round((1 - pleasantT) * (order.length - 1))));
+    var semi = order[idx].semi;
+    // Below a mild-unpleasant threshold, the degree may swap for its dark twin.
+    // The chance rises as pleasantness falls: 0 at s >= -0.1, certain at s <= -0.7.
+    var darkChance = Math.max(0, Math.min(1, (-s - 0.1) / 0.6));
+    if (moodRand01(bucketRows || rows, 1) < darkChance) {
+      semi = MOOD_DARK[semi];
+      // Strongly unpleasant: the 5th itself can drop to a tritone (b5).
+      if (semi === 7 && s < -0.55 && moodRand01(bucketRows || rows, 2) < (-s - 0.55) / 0.45) semi = 6;
+    }
+    // Keep the chosen pitch class, but place it in the octave nearest the
+    // register that energy asks for.
+    var pc = ((semi % 12) + 12) % 12;
+    var midi = nearestScaleTone([pc], rootMidi + registerOffset, null);
+    return { freq: midiToFreq(midi), quad: quad, count: rows.length };
+  }
+  // Scale pitch classes for a mood step (used for Chords-mode upper voices).
+  function moodScalePCs(s, rootMidi) {
+    var semis = s >= -0.1 ? [0, 2, 4, 5, 7, 9, 11]
+              : s >= -0.5 ? [0, 2, 3, 5, 7, 8, 10]     // natural minor
+              :             [0, 1, 3, 5, 7, 8, 10];    // Phrygian
+    return semis.map(function (x) { return ((rootMidi + x) % 12 + 12) % 12; });
+  }
+
+  function noteSpecForRows(rows, quad, palette, rootMidi, bucketRows) {
     var scaleInfo = palette[quad];
+    if (scaleInfo.mood) return noteSpecForMood(rows, quad, rootMidi, bucketRows);
     var scaleArr = SCALES[scaleInfo.scale];
     var pleasantT = avgNum(rows.map(pleasantIntensity01));
     var registerOffset = Math.round(avgNum(rows.map(registerSemitoneOffset)));
@@ -4348,14 +4412,16 @@
   // tracks each upper voice's last MIDI note across buckets so it can
   // prefer the octave closest to where it just was — light voice-leading,
   // so the upper lines move in steps rather than leaping registers.
-  function buildChordSpecs(byQuad, picks, palette, rootMidi, voiceMemory) {
+  function buildChordSpecs(byQuad, picks, palette, rootMidi, voiceMemory, bucketRows) {
     var primaryQuad = picks[0].q;
-    var rootSpec = noteSpecForRows(byQuad[primaryQuad], primaryQuad, palette, rootMidi);
+    var rootSpec = noteSpecForRows(byQuad[primaryQuad], primaryQuad, palette, rootMidi, bucketRows);
     var rootMidiActual = freqToMidiNote(rootSpec.freq);
     var rootPC = ((rootMidiActual % 12) + 12) % 12;
     var scaleInfo = palette[primaryQuad];
     var scaleTonicMidi = rootMidi + (scaleInfo.rootOffset || 0);
-    var scalePCs = SCALES[scaleInfo.scale].map(function (s) { return ((scaleTonicMidi + s) % 12 + 12) % 12; });
+    var scalePCs = scaleInfo.mood
+      ? moodScalePCs(moodScoreForRows(bucketRows), rootMidi)
+      : SCALES[scaleInfo.scale].map(function (s) { return ((scaleTonicMidi + s) % 12 + 12) % 12; });
 
     var usedPCs = [rootPC];
     var upperIntervals = picks.length > 2 ? [4, 7] : [4];   // a 3rd (, and a 5th)
@@ -4410,8 +4476,8 @@
       if (!sorted.length) return;
       var picks = opts.mode === "chords" ? sorted.slice(0, 3) : sorted.slice(0, 1);
       var specs = picks.length > 1
-        ? buildChordSpecs(byQuad, picks, opts.palette, opts.rootMidi, chordVoiceMemory)
-        : picks.map(function (p) { return noteSpecForRows(byQuad[p.q], p.q, opts.palette, opts.rootMidi); });
+        ? buildChordSpecs(byQuad, picks, opts.palette, opts.rootMidi, chordVoiceMemory, rows)
+        : picks.map(function (p) { return noteSpecForRows(byQuad[p.q], p.q, opts.palette, opts.rootMidi, rows); });
       var equalPower = specs.length > 1 ? 1 / Math.sqrt(specs.length) : 1;
       specs.forEach(function (spec) {
         var energyHigh = QUAD_INFO[spec.quad].energy === "High";
@@ -6602,6 +6668,8 @@
     });
     $("sonifyPaletteNote").textContent = (paletteKey === "maqam" || paletteKey === "gamelan")
       ? "Approximated to the nearest 12-tone equal-tempered pitches — not the real (non-equal-tempered) tuning of this tradition."
+      : (paletteKey === "mood")
+      ? "Pleasantness sets the colour: pleasant steps stay in a clean major scale; as a step turns unpleasant, minor-flavoured notes (flat 3rd and 6th, then a clashing flat 2nd, and rarely a flat 5th) creep in, more often the more unpleasant it is. Energy still sets the register, response count the loudness."
       : (paletteKey === "pentatonic")
       ? "All four quadrants draw from the same five notes (relative major/minor pentatonic, just rooted differently per quadrant), so any combination stays consonant — even with several quadrants sounding at once in Chords mode."
       : "";
