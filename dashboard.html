@@ -668,10 +668,9 @@
     <div class="topbar-spacer"></div>
     <div class="source-selector no-print" id="sourceSelector">
       <button class="source-btn on" id="srcSheetsBtn" type="button">📊 Google Sheets</button>
-      <button class="source-btn" id="srcLocalBtn" type="button">📁 Local CSV</button>
+      <button class="source-btn" id="sampleBtn" type="button">🧪 Load sample data</button>
+      <button class="source-btn" id="addFilesBtn" type="button">📁 Add data files&hellip;</button>
     </div>
-    <button class="btn no-print" id="sampleBtn" type="button">Load sample data</button>
-    <button class="btn" id="addFilesBtn" style="display:none;">Add data files&hellip;</button>
     <button class="btn" id="downloadCsvBtn" disabled>Download filtered CSV</button>
     <button class="btn btn-primary" id="printBtn" disabled>Export PDF report</button>
     <input type="file" id="fileInput" accept=".csv,text/csv" multiple>
@@ -707,7 +706,7 @@
         <div class="filelist" id="fileList">
           <div class="empty">No files loaded yet.</div>
         </div>
-        <div class="droparea" id="dropArea">Drop CSV files here<br>or use &ldquo;Add data files&rdquo; above</div>
+        <div class="droparea" id="dropArea">Drop CSV files here<br>or use or use &ldquo;Add data files&rdquo; aboveldquo;Add data files&hellip;&rdquo; at the top</div>
         <p class="import-note">Each kiosk writes one CSV (<code>mm_data.csv</code>) per deployment. Add as many as you like &mdash; re-adding a file with the same name replaces it, and exact duplicate rows across files are skipped automatically.</p>
       </div>
 
@@ -1689,7 +1688,9 @@
   }
 
   async function ingestFile(file) {
+    var genAtStart = sourceGen;
     var text = await file.text();
+    if (genAtStart !== sourceGen) return;   // source changed while reading — discard
     text = text.replace(/^\uFEFF/, "");   // strip a UTF-8 BOM, e.g. from a file resaved by Excel
     var rows = parseCsv(text);
     if (!rows.length) { toast(file.name + " looks empty — skipped."); return; }
@@ -1784,18 +1785,25 @@
     });
   }
 
-  async function handleFiles(fileListObj) {
+  async function handleFiles(fileListObj, kind) {
     var arr = Array.prototype.slice.call(fileListObj).filter(function (f) {
       return /\.csv$/i.test(f.name) || f.type === "text/csv";
     });
     if (!arr.length) { toast("No CSV files found in that selection."); return; }
-    for (var i = 0; i < arr.length; i++) { await ingestFile(arr[i]); }
+    // Loading any local file moves the dashboard to local mode (dropping Sheets rows).
+    if (currentSource !== "local" || (kind && localKind !== kind)) switchToSource("local", kind || "files");
+    var gen = sourceGen;
+    for (var i = 0; i < arr.length; i++) {
+      await ingestFile(arr[i]);
+      if (gen !== sourceGen) return;   // user switched source mid-load: drop the stale result
+    }
     onDataChanged();
   }
 
   $("addFilesBtn").addEventListener("click", function () { $("fileInput").click(); });
   $("fileInput").addEventListener("change", function (e) {
-    handleFiles(e.target.files);
+    // Picking files is what switches to local mode (cancelling the dialog changes nothing).
+    if (e.target.files && e.target.files.length) handleFiles(e.target.files, "files");
     e.target.value = "";
   });
 
@@ -1806,15 +1814,17 @@
   // file:// page can't fetch other local files — "Add data files..." above
   // still works either way.
   $("sampleBtn").addEventListener("click", function () {
-    // The button now lives in the top bar, so it works from either source;
-    // sample data is local, so switch to the Local CSV source first.
-    if (currentSource !== "local") switchToSource("local");
+    // Sample data is one of the three sources: switch to it first (clears
+    // Sheets rows / old filters), then load the sample file.
+    switchToSource("local", "sample");
+    var gen = sourceGen;
     fetch("sample_data/mm_data_test.csv").then(function (resp) {
       if (!resp.ok) throw new Error("HTTP " + resp.status);
       return resp.text();
     }).then(function (text) {
+      if (gen !== sourceGen) return;   // user switched away while fetching
       var file = new File([text], "mm_data_test.csv", { type: "text/csv" });
-      handleFiles([file]);
+      handleFiles([file], "sample");
     }).catch(function () {
       toast("Couldn't fetch sample_data/mm_data_test.csv — run \"Mood Meter Dashboard.py\" (not file://) and make sure the file exists.");
     });
@@ -1956,7 +1966,9 @@
   $("labelSearch").addEventListener("input", function () { filters.labelSearch = this.value.trim().toLowerCase(); onFiltersChanged(); });
   $("excludeSuspiciousToggle").addEventListener("change", function () { filters.excludeSuspicious = this.checked; onFiltersChanged(); });
 
-  $("resetFiltersBtn").addEventListener("click", function () {
+  $("resetFiltersBtn").addEventListener("click", resetAllFilters);
+
+  function resetAllFilters() {
     filters.locations.clear(); filters.languages.clear(); filters.semesters.clear(); filters.weeks.clear();
     filters.years.clear(); filters.months.clear(); filters.dows.clear();
     filters.energy.clear(); filters.pleasant.clear();
@@ -1970,7 +1982,7 @@
     $("excludeSuspiciousToggle").checked = false;
     Array.prototype.forEach.call(document.querySelectorAll(".chip"), function (b) { b.classList.remove("on"); });
     onFiltersChanged();
-  });
+  }
 
   /* ------------------------------------------------------ suspicious-entry detection */
 
@@ -7684,6 +7696,11 @@
   var SHEETS_AUTOREFRESH_KEY = "mm_sheets_autorefresh";
   var sheetsAutoRefreshInterval = null;
   var currentSource = "sheets"; // "sheets" | "local"
+  var localKind = "files";      // when local: "sample" | "files" (which button is highlighted)
+  // Bumped on every source switch. Any async load (Sheets fetch, sample fetch,
+  // file read) remembers the value it started with and discards its result if
+  // it changed, so a slow load from the old source can't overwrite the new one.
+  var sourceGen = 0;
 
   function getSheetsUrl() {
     try { return localStorage.getItem(SHEETS_SOURCE_KEY) || DEFAULT_SHEETS_URL; } catch(e) { return DEFAULT_SHEETS_URL; }
@@ -7780,28 +7797,36 @@
     if (!url) { setSheetStatus("Please enter a Sheets CSV URL.", "err"); return; }
     setSheetsUrl(url);
     if (showLoading !== false) setSheetStatus("Loading…");
+    var gen = sourceGen;
     fetch(url).then(function (resp) {
       if (!resp.ok) throw new Error("HTTP " + resp.status);
       return resp.text();
     }).then(function (text) {
+      if (gen !== sourceGen || currentSource !== "sheets") return;   // stale: source changed
       ingestSheetsText(text, url);
     }).catch(function (err) {
+      if (gen !== sourceGen) return;
       setSheetStatus("Fetch failed: " + err.message, "err");
     });
   }
 
-  function switchToSource(src) {
+  function switchToSource(src, kind) {
+    var wasSource = currentSource;
     currentSource = src;
+    sourceGen++;                       // invalidate any in-flight loads
     var isSheets = src === "sheets";
+    if (!isSheets) localKind = kind || localKind;
     $("srcSheetsBtn").classList.toggle("on", isSheets);
-    $("srcLocalBtn").classList.toggle("on", !isSheets);
+    $("sampleBtn").classList.toggle("on", !isSheets && localKind === "sample");
+    $("addFilesBtn").classList.toggle("on", !isSheets && localKind === "files");
     $("sheetsPanelEl").style.display = isSheets ? "" : "none";
     $("localPanelEl").style.display = isSheets ? "none" : "";
-    $("addFilesBtn").style.display = isSheets ? "none" : "";
 
-    // Reset the suspicious filter on every source switch — the new dataset
-    // gets re-tagged by onDataChanged, but the checkbox would otherwise carry
-    // over silently and filter against data the user hasn't reviewed.
+    // Clear every filter on a source switch, not just "exclude suspicious".
+    // Chips (location, semester, ...) and date ranges from the old dataset
+    // would otherwise silently hide all of the new dataset's rows, which
+    // looked like "the data didn't refresh".
+    if (wasSource !== src) resetAllFilters();
     filters.excludeSuspicious = false;
     $("excludeSuspiciousToggle").checked = false;
 
@@ -7828,7 +7853,6 @@
   }
 
   $("srcSheetsBtn").addEventListener("click", function () { switchToSource("sheets"); });
-  $("srcLocalBtn").addEventListener("click", function () { switchToSource("local"); });
 
   $("sheetsLoadBtn").addEventListener("click", function () { loadFromSheets(true); });
   $("sheetsUrlInput").addEventListener("keydown", function (e) {
@@ -7849,13 +7873,16 @@
     $("sheetsAutoRefresh").checked = ar;
     // Auto-load on startup
     setSheetStatus("Loading…");
+    var gen = sourceGen;
     fetch(url).then(function (resp) {
       if (!resp.ok) throw new Error("HTTP " + resp.status);
       return resp.text();
     }).then(function (text) {
+      if (gen !== sourceGen || currentSource !== "sheets") return;
       ingestSheetsText(text, url);
       if (ar) startSheetsAutoRefresh();
     }).catch(function (err) {
+      if (gen !== sourceGen) return;
       setSheetStatus("Auto-load failed: " + err.message, "err");
     });
   })();
