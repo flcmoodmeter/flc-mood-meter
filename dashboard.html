@@ -3498,7 +3498,7 @@
 
     // Readout panel that sits to the right of the grid (wraps below it on narrow screens).
     var infoPanel = document.createElement("div");
-    infoPanel.style.cssText = "flex:1 1 260px; min-width:240px; display:flex; flex-direction:column; justify-content:center; gap:6px;";
+    infoPanel.style.cssText = "flex:1 1 260px; min-width:240px; display:flex; flex-direction:column; justify-content:flex-start; gap:6px;";
     var periodEl = document.createElement("div");
     periodEl.style.cssText = "font-size:13px; font-weight:600; color:var(--muted);";
     var closestCaption = document.createElement("div");
@@ -3515,6 +3515,45 @@
     infoPanel.appendChild(wordEl);
     infoPanel.appendChild(spreadEl);
     infoPanel.appendChild(topWordEl);
+
+    // Trend readout: how this period compares with the one before it, one
+    // bold arrow each for energy and pleasantness. Sits below the word block.
+    var trendBox = document.createElement("div");
+    trendBox.style.cssText = "display:flex; flex-direction:column; gap:10px; margin-top:16px; padding-top:14px; border-top:1px solid var(--line);";
+    function makeTrendRow(name, color) {
+      var row = document.createElement("div");
+      row.style.cssText = "display:flex; align-items:center; gap:14px;";
+      var arrow = document.createElement("div");
+      arrow.style.cssText = "flex:none; width:48px; text-align:center; font-size:44px; font-weight:900; line-height:1;";
+      var text = document.createElement("div");
+      text.style.cssText = "display:flex; flex-direction:column; line-height:1.25;";
+      var nameEl = document.createElement("div");
+      nameEl.textContent = name;
+      nameEl.style.cssText = "font-size:17px; font-weight:800; color:var(--ink);";
+      nameEl.style.borderLeft = "5px solid " + color;
+      nameEl.style.paddingLeft = "8px";
+      var detail = document.createElement("div");
+      detail.style.cssText = "font-size:13.5px; font-weight:600; color:var(--muted); padding-left:13px;";
+      text.appendChild(nameEl);
+      text.appendChild(detail);
+      row.appendChild(arrow);
+      row.appendChild(text);
+      trendBox.appendChild(row);
+      return { row: row, arrow: arrow, detail: detail, color: color };
+    }
+    var energyTrend = makeTrendRow("Energy", "#f97316");
+    var pleasantTrend = makeTrendRow("Pleasantness", "#12d9a0");
+    infoPanel.appendChild(trendBox);
+
+    function updateTrendRow(t, now, before, beforeLabel) {
+      if (before == null) { t.row.style.visibility = "hidden"; return; }
+      t.row.style.visibility = "";
+      var d = now - before;
+      var steady = Math.abs(d) < 0.05;
+      t.arrow.textContent = steady ? "→" : (d > 0 ? "↑" : "↓");
+      t.arrow.style.color = steady ? "var(--muted)" : t.color;
+      t.detail.textContent = (steady ? "Steady" : (d > 0 ? "Up " : "Down ") + Math.abs(d).toFixed(2)) + " vs. " + beforeLabel;
+    }
 
     var W = 480, H = 480, pad = 56;
     var plotW = W - pad * 2, plotH = H - pad * 2;
@@ -3639,6 +3678,9 @@
       wordEl.textContent = c.closest || "—";
       spreadEl.textContent = spreadLabel(c.spread).charAt(0).toUpperCase() + spreadLabel(c.spread).slice(1);
       topWordEl.textContent = c.topWord && c.topWord !== c.closest ? "Most chosen: " + c.topWord : "";
+      var prev = step > 0 ? centroids[step - 1] : null;
+      updateTrendRow(energyTrend, c.energy, prev ? prev.energy : null, prev ? prev.label : "");
+      updateTrendRow(pleasantTrend, c.pleasant, prev ? prev.pleasant : null, prev ? prev.label : "");
       slider.value = String(step);
       if (showCursor) {
         cursorRing.setAttribute("cx", pointEls[step].getAttribute("cx"));
@@ -7820,7 +7862,7 @@
     <ul style="margin:0 0 14px; padding:0 0 0 18px; display:flex; flex-direction:column; gap:8px;">
       <li style="font-size:13px; color:var(--ink); line-height:1.5;">The mood grid has two axes: horizontal is pleasantness (unpleasant &larr; &rarr; pleasant), vertical is energy (low &larr; &rarr; high). Each quadrant corresponds to one of the four quadrant colors used throughout the dashboard.</li>
       <li style="font-size:13px; color:var(--ink); line-height:1.5;">For each time period (day/week/month, based on the &ldquo;group by&rdquo; selector shared with Mood trajectory), every response in that period is scored on each axis from -1 to +1 based on exactly which emotion word was chosen: the sign says which side (Pleasant is positive, Unpleasant negative; High energy positive, Low negative), and the size says how far toward the edge of the grid the word sits. A word at the outer edge scores close to &plusmn;1, while one near the middle of the grid scores closer to 0. Those scores are then averaged, which gives one point &mdash; the &ldquo;centroid,&rdquo; or center of mass &mdash; representing where that period's responses clustered on average.</li>
-      <li style="font-size:13px; color:var(--ink); line-height:1.5;">Each point is also matched to the <strong>closest emotion word</strong> on the grid, shown in large type beside the grid and in each dot's hover tooltip. Because an average can land between words, it is shown with how tightly that period's responses cluster (tight cluster, mixed, or widely mixed) and, when different, the word chosen most often. A &ldquo;mixed&rdquo; label means the closest word is a summary, not something many people actually picked.</li>
+      <li style="font-size:13px; color:var(--ink); line-height:1.5;">Each point is also matched to the <strong>closest emotion word</strong> on the grid, shown in large type beside the grid and in each dot's hover tooltip. Because an average can land between words, it is shown with how tightly that period's responses cluster (tight cluster, mixed, or widely mixed) and, when different, the word chosen most often. A &ldquo;mixed&rdquo; label means the closest word is a summary, not something many people actually picked. Below it, two bold arrows (energy and pleasantness) show whether this period is up, down or steady compared with the period before it, with the size of the change.</li>
       <li style="font-size:13px; color:var(--ink); line-height:1.5;">Those points are plotted on the grid and connected in chronological order by a line, so you can trace the path the average mood has taken over time.</li>
       <li style="font-size:13px; color:var(--ink); line-height:1.5;">The first point is hollow (outlined only) and the last point is solid and larger, so you can tell at a glance which end is the start and which is &ldquo;now,&rdquo; and see which direction the path is heading.</li>
     </ul>
