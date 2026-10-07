@@ -670,7 +670,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.5</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.6</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -2369,7 +2369,11 @@
     function sx(v) { return padL + ((v - xDomain[0]) / (xDomain[1] - xDomain[0])) * plotW; }
     function sy(v) { return padT + plotH - ((v - yDomain[0]) / (yDomain[1] - yDomain[0])) * plotH; }
 
-    var svg = svgEl("svg", { viewBox: "0 0 " + W + " " + H, width: "100%", height: H, style: "min-width:" + Math.min(W, 320) + "px" });
+    // fixedWidth: draw at true pixel size (W x H) instead of shrinking to fit
+    // the container, so a wide chart scrolls sideways at a readable size.
+    var svg = opts.fixedWidth
+      ? svgEl("svg", { viewBox: "0 0 " + W + " " + H, width: W, height: H, style: "display:block;max-width:none;" })
+      : svgEl("svg", { viewBox: "0 0 " + W + " " + H, width: "100%", height: H, style: "min-width:" + Math.min(W, 320) + "px" });
 
     // axes
     svg.appendChild(svgEl("line", { class: "axis-line-svg", x1: padL, y1: padT, x2: padL, y2: padT + plotH }));
@@ -3423,7 +3427,12 @@
       return;
     }
 
-    var W = Math.max(420, buckets.length * 56);
+    // Pixel-true chart: at least 64px per period, and never narrower than the
+    // card, so it fills the width when there's little data and scrolls
+    // sideways (at a readable size) when there's a lot.
+    var wrapW = $("chartTrajectory").clientWidth || 900;
+    var W = Math.max(wrapW - 2, buckets.length * 64 + 60);
+    var H = 300;
     var pleasantPts = buckets.map(function (bk) { return { x: bk.x, y: bk.pleasant, color: "#12d9a0", r: 4, title: bk.label + " — pleasantness " + bk.pleasant.toFixed(2) + " (n=" + bk.n + ")" }; });
     var energyPts = buckets.map(function (bk) { return { x: bk.x, y: bk.energy, color: "#f97316", r: 4, title: bk.label + " — energy " + bk.energy.toFixed(2) + " (n=" + bk.n + ")" }; });
 
@@ -3431,7 +3440,7 @@
     var yTicks = [-1, -0.5, 0, 0.5, 1].map(function (v) { return { v: v, label: v.toFixed(1) }; });
 
     drawScatterChart($("chartTrajectory"), pleasantPts.concat(energyPts), {
-      width: W, height: 240, padL: 36,
+      width: W, height: H, padL: 36, fixedWidth: true,
       xDomain: [0, buckets.length - 1], yDomain: [-1, 1],
       xTicks: xTicks, yTicks: yTicks, yZeroLine: true,
       line: pleasantPts, lineColor: "#12d9a0",
@@ -3441,7 +3450,7 @@
     // second pass: draw the energy line too (drawScatterChart only draws one "line")
     var existingSvg = $("chartTrajectory").querySelector("svg");
     if (existingSvg) {
-      var padL2 = 36, padR2 = 14, padT2 = 14, padB2 = 34, H2 = 240;
+      var padL2 = 36, padR2 = 14, padT2 = 14, padB2 = 36, H2 = H;
       var plotW2 = W - padL2 - padR2, plotH2 = H2 - padT2 - padB2;
       function sx2(v) { return padL2 + (v / (buckets.length - 1)) * plotW2; }
       function sy2(v) { return padT2 + plotH2 - ((v + 1) / 2) * plotH2; }
@@ -7153,6 +7162,8 @@
       $("tabSonification").classList.toggle("hidden", tab !== "sonification");
       $("tabWeather").classList.toggle("hidden", tab !== "weather");
       $("tabSpurious").classList.toggle("hidden", tab !== "spurious");
+      // The trajectory chart sizes itself from its card, which has no width while this tab is hidden.
+      if (tab === "trends") renderTrajectoryChart(getFilteredRows());
       if (tab === "weather") ensureWeatherDateDefaults();
       if (tab === "spurious") { ensureQuakeDateDefaults(); renderSpuriousTab(); }
       if (tab === "sonification") {
