@@ -3665,7 +3665,9 @@
     }
 
     // One row of jittered points per quadrant on the y-axis; x = seconds.
-    var quadOrder = [1, 3, 4, 2]; // HE Pleasant, HE Unpleasant, LE Pleasant, LE Unpleasant
+    // Listed bottom-to-top (y grows upward on the chart), so Low Energy sits
+    // below High Energy: LE Unpleasant, LE Pleasant, HE Unpleasant, HE Pleasant.
+    var quadOrder = [2, 4, 3, 1];
     var quadY = {}; quadOrder.forEach(function (q, i) { quadY[q] = i; });
 
     var locs = Array.from(new Set(timed.map(function (r) { return r.session || "(none)"; }))).sort();
