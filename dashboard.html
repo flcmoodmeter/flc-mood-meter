@@ -1658,7 +1658,7 @@
     var colNum = m ? Number(m[3]) : null;
     var info = quad ? QUAD_INFO[quad] : null;
 
-    var secondsRaw = get("seconds_on_grid") || get("seconds_on_screen2");
+    var secondsRaw = get("seconds_on_grid") || get("seconds") || get("seconds_on_screen2");
     var term = d ? termForDate(d) : null;
 
     return {
