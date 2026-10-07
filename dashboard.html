@@ -237,6 +237,17 @@
   .stacked-legend-chip { display: inline-flex; align-items: center; gap: 6px; }
   .stacked-legend-swatch { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
 
+  @keyframes centroidPulse {
+    0%   { transform: scale(0.8); opacity: 0.9; }
+    100% { transform: scale(2.4); opacity: 0; }
+  }
+  .centroid-cursor-ring {
+    fill: none; stroke: var(--accent); stroke-width: 2.5;
+    transform-box: fill-box; transform-origin: center;
+    animation: centroidPulse 0.9s ease-out infinite;
+    pointer-events: none;
+  }
+
   /* ---------------- emotion grid heatmap (mirrors the kiosk's own layout) ---------------- */
   .heatmap-wrap { overflow-x: auto; }
   .heatmap-card { max-width: 1200px; }
@@ -3355,11 +3366,19 @@
     }
   }
 
-  $("trajectoryGroupBy").addEventListener("change", function () { renderTrajectoryChart(getFilteredRows()); });
+  $("trajectoryGroupBy").addEventListener("change", function () {
+    var rows = getFilteredRows();
+    renderTrajectoryChart(rows);
+    renderCentroidChart(rows);
+  });
 
   /* ------------------------------------------------------ emotional center of gravity */
 
+  var _centroidTimer = null;
+
   function renderCentroidChart(rows) {
+    if (_centroidTimer) { clearInterval(_centroidTimer); _centroidTimer = null; }
+
     var groupBy = $("trajectoryGroupBy").value;
     var dated = rows.filter(function (r) { return r.date; });
     var b = trendBucketKeys(groupBy === "date" ? "date" : groupBy, dated);
@@ -3382,6 +3401,30 @@
       container.innerHTML = '<div class="chart-empty">No data for the current filters.</div>';
       return;
     }
+
+    // -------- playback controls --------
+    var controls = document.createElement("div");
+    controls.className = "no-print";
+    controls.style.cssText = "display:flex; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap;";
+    var playBtn = document.createElement("button");
+    playBtn.type = "button";
+    playBtn.className = "btn btn-sm";
+    playBtn.textContent = "▶ Play";
+    playBtn.style.flex = "none";
+    if (centroids.length < 2) playBtn.disabled = true;
+    var slider = document.createElement("input");
+    slider.type = "range";
+    slider.min = "0";
+    slider.max = String(Math.max(0, centroids.length - 1));
+    slider.value = String(Math.max(0, centroids.length - 1));
+    slider.style.cssText = "flex:1 1 140px; min-width:110px; accent-color:var(--accent);";
+    if (centroids.length < 2) slider.disabled = true;
+    var stepLabel = document.createElement("div");
+    stepLabel.style.cssText = "font-size:11.5px; color:var(--muted); white-space:nowrap;";
+    controls.appendChild(playBtn);
+    controls.appendChild(slider);
+    controls.appendChild(stepLabel);
+    container.appendChild(controls);
 
     var W = 480, H = 480, pad = 56;
     var plotW = W - pad * 2, plotH = H - pad * 2;
@@ -3425,64 +3468,108 @@
     defs.appendChild(marker);
     svg.appendChild(defs);
 
-    // Draw each segment separately (rather than one multi-point path) so each
-    // can carry its own arrowhead and a color that darkens from earliest
-    // (light) to latest (full accent) — that gradient reads as direction even
-    // when the path crosses or nearly retraces itself.
-    for (var i = 0; i < centroids.length - 1; i++) {
-      var c0 = centroids[i], c1 = centroids[i + 1];
-      var progress = centroids.length > 1 ? (i + 1) / (centroids.length - 1) : 1;
+    // Each segment is its own <line> (not one multi-point path) so it can
+    // carry an arrowhead and a color that darkens from earliest (light) to
+    // latest (full accent) — plus, crucially, so it can be hidden/shown
+    // individually during playback.
+    var segEls = [null]; // segEls[i] connects centroid i-1 -> i; index 0 unused
+    for (var i = 1; i < centroids.length; i++) {
+      var c0 = centroids[i - 1], c1 = centroids[i];
+      var progress = centroids.length > 1 ? i / (centroids.length - 1) : 1;
       var segColor = mixWithWhite("#2c4238", 0.35 + 0.55 * progress);
-      svg.appendChild(svgEl("line", {
+      var line = svgEl("line", {
         x1: gx(c0.pleasant).toFixed(1), y1: gy(c0.energy).toFixed(1),
         x2: gx(c1.pleasant).toFixed(1), y2: gy(c1.energy).toFixed(1),
         stroke: segColor, "stroke-width": 2, opacity: 0.8,
         "marker-end": "url(#centroidArrow)"
-      }));
+      });
+      svg.appendChild(line);
+      segEls[i] = line;
     }
 
-    // Middle points first (small, muted) so the two endpoints can be drawn
-    // last and always stay on top, even if a later period lands right on top
-    // of an earlier one.
-    centroids.forEach(function (c, i) {
-      if (i === 0 || i === centroids.length - 1) return;
-      var circle = svgEl("circle", { cx: gx(c.pleasant), cy: gy(c.energy), r: 5, fill: "var(--accent)", opacity: 0.55 });
+    var pointEls = centroids.map(function (c, i) {
+      var isFirst = i === 0, isLast = i === centroids.length - 1;
+      var circle = svgEl("circle", {
+        cx: gx(c.pleasant), cy: gy(c.energy),
+        r: isLast ? 8.5 : (isFirst ? 7 : 5),
+        fill: isFirst && centroids.length > 1 ? "#fff" : "var(--accent)",
+        stroke: isFirst ? "var(--accent)" : (isLast ? "#fff" : "none"),
+        "stroke-width": isFirst ? 2.5 : (isLast ? 1.5 : 0),
+        opacity: isFirst || isLast ? 1 : 0.55
+      });
       var title = svgEl("title", {});
-      title.textContent = c.label + " — n=" + c.n;
+      title.textContent = c.label + " — n=" + c.n + (isFirst && centroids.length > 1 ? " (earliest)" : isLast && centroids.length > 1 ? " (latest)" : "");
       circle.appendChild(title);
       svg.appendChild(circle);
+      return circle;
     });
 
-    if (centroids.length > 1) {
-      var first = centroids[0];
-      var firstCircle = svgEl("circle", {
-        cx: gx(first.pleasant), cy: gy(first.energy), r: 7,
-        fill: "#fff", stroke: "var(--accent)", "stroke-width": 2.5
-      });
-      var firstTitle = svgEl("title", {});
-      firstTitle.textContent = first.label + " — n=" + first.n + " (earliest)";
-      firstCircle.appendChild(firstTitle);
-      svg.appendChild(firstCircle);
-    }
+    // Re-append the two endpoints last so they always stay visually on top,
+    // even if a later period's average lands right on an earlier one.
+    if (pointEls.length) svg.appendChild(pointEls[0]);
+    if (pointEls.length > 1) svg.appendChild(pointEls[pointEls.length - 1]);
 
-    var last = centroids[centroids.length - 1];
-    if (last) {
-      var lastCircle = svgEl("circle", {
-        cx: gx(last.pleasant), cy: gy(last.energy), r: 8.5,
-        fill: "var(--accent)", stroke: "#fff", "stroke-width": 1.5
-      });
-      var lastTitle = svgEl("title", {});
-      lastTitle.textContent = last.label + " — n=" + last.n + (centroids.length > 1 ? " (latest)" : "");
-      lastCircle.appendChild(lastTitle);
-      svg.appendChild(lastCircle);
-    }
+    // A pulsing ring that marks "the point being added right now" during
+    // playback or scrubbing — the one unambiguous way to tell which dot is
+    // current when several periods land on the same spot (common with small
+    // sample data clustered in the four corners + center).
+    var cursorRing = svgEl("circle", { r: 9, class: "centroid-cursor-ring" });
+    cursorRing.style.display = "none";
+    svg.appendChild(cursorRing);
 
     container.appendChild(svg);
 
     var legendNote = document.createElement("div");
     legendNote.style.cssText = "font-size:10.5px;color:var(--muted);text-align:center;margin-top:4px;";
-    legendNote.innerHTML = '<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#fff;border:2px solid var(--accent);vertical-align:middle;"></span> Earliest &nbsp; → &nbsp; arrows show direction &nbsp; → &nbsp; <span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--accent);border:1.5px solid #fff;vertical-align:middle;"></span> Latest';
+    legendNote.innerHTML = '<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#fff;border:2px solid var(--accent);vertical-align:middle;"></span> Earliest &nbsp; → &nbsp; arrows + fading color show direction &nbsp; → &nbsp; <span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--accent);border:1.5px solid #fff;vertical-align:middle;"></span> Latest &nbsp; · &nbsp; pulsing ring = point being added';
     container.appendChild(legendNote);
+
+    // -------- playback logic --------
+    function setStep(step, showCursor) {
+      for (var p = 0; p < pointEls.length; p++) {
+        pointEls[p].style.opacity = p <= step ? "" : "0";
+      }
+      for (var s = 1; s < segEls.length; s++) {
+        if (segEls[s]) segEls[s].style.opacity = s <= step ? "0.8" : "0";
+      }
+      var c = centroids[step];
+      stepLabel.textContent = (step + 1) + " / " + centroids.length + " — " + c.label + " (n=" + c.n + ")";
+      slider.value = String(step);
+      if (showCursor) {
+        cursorRing.setAttribute("cx", pointEls[step].getAttribute("cx"));
+        cursorRing.setAttribute("cy", pointEls[step].getAttribute("cy"));
+        cursorRing.style.display = "";
+        svg.appendChild(cursorRing);
+      } else {
+        cursorRing.style.display = "none";
+      }
+    }
+
+    setStep(centroids.length - 1, false);
+
+    function stopPlay() {
+      if (_centroidTimer) { clearInterval(_centroidTimer); _centroidTimer = null; }
+      playBtn.textContent = "▶ Play";
+    }
+    function startPlay() {
+      if (centroids.length < 2) return;
+      playBtn.textContent = "⏸ Pause";
+      var step = 0;
+      setStep(step, true);
+      _centroidTimer = setInterval(function () {
+        step++;
+        if (step >= centroids.length) { stopPlay(); setStep(centroids.length - 1, false); return; }
+        setStep(step, true);
+      }, 650);
+    }
+    playBtn.addEventListener("click", function () {
+      if (_centroidTimer) stopPlay(); else startPlay();
+    });
+    slider.addEventListener("input", function () {
+      stopPlay();
+      var step = parseInt(slider.value, 10);
+      setStep(step, step < centroids.length - 1);
+    });
   }
 
   /* ------------------------------------------------------ scatter: energy/pleasantness over time */
