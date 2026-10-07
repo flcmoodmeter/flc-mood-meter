@@ -676,7 +676,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.7</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.8</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -3812,7 +3812,10 @@
     function startPlay() {
       if (centroids.length < 2) return;
       playBtn.textContent = "⏸ Pause";
-      var step = 0;
+      // Resume from wherever the readout is now (so Pause then Play carries on
+      // in place). Only a finished run, parked on the last period, restarts.
+      var step = parseInt(slider.value, 10) || 0;
+      if (step >= centroids.length - 1) step = 0;
       setStep(step, true);
       _centroidTimer = setInterval(function () {
         step++;
