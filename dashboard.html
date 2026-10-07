@@ -3615,12 +3615,31 @@
       };
     });
 
-    var xTickCount = 7;
-    var xTicks = [];
-    for (var i = 0; i < xTickCount; i++) {
-      var t = minT + (maxT - minT) * (i / (xTickCount - 1 || 1));
-      xTicks.push({ v: t, label: new Date(t).toLocaleDateString(undefined, { month: "short", day: "numeric" }) });
+    // One tick per distinct calendar day actually present in the data (up to
+    // a cap), anchored to that day's first real data point — not 7 ticks
+    // evenly spaced across the raw millisecond range, which repeats the same
+    // date label several times over when the data only spans a day or two.
+    var dayFirstTs = {};
+    dated.forEach(function (r) {
+      var dk = isoDate(r.date);
+      var t = r.date.getTime();
+      if (dayFirstTs[dk] == null || t < dayFirstTs[dk]) dayFirstTs[dk] = t;
+    });
+    var dayKeys = Object.keys(dayFirstTs).sort();
+    var xTickMax = 7;
+    var tickDayKeys = dayKeys;
+    if (dayKeys.length > xTickMax) {
+      var picked = {};
+      for (var ti = 0; ti < xTickMax; ti++) {
+        var idx = Math.round(ti * (dayKeys.length - 1) / (xTickMax - 1));
+        picked[dayKeys[idx]] = true;
+      }
+      tickDayKeys = Object.keys(picked).sort();
     }
+    var xTicks = tickDayKeys.map(function (dk) {
+      var t = dayFirstTs[dk];
+      return { v: t, label: new Date(t).toLocaleDateString(undefined, { month: "short", day: "numeric" }) };
+    });
     var yTicks = [
       { v: -1, label: "Unpleasant" },
       { v: 0, label: "" },
