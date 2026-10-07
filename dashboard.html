@@ -3483,8 +3483,7 @@
       var line = svgEl("line", {
         x1: gx(c0.pleasant).toFixed(1), y1: gy(c0.energy).toFixed(1),
         x2: gx(c1.pleasant).toFixed(1), y2: gy(c1.energy).toFixed(1),
-        stroke: segColor, "stroke-width": 2, opacity: 0.8,
-        "marker-end": "url(#centroidArrow)"
+        stroke: segColor, "stroke-width": 2, opacity: 0.8
       });
       svg.appendChild(line);
       segEls[i] = line;
@@ -3524,7 +3523,7 @@
 
     var legendNote = document.createElement("div");
     legendNote.style.cssText = "font-size:10.5px;color:var(--muted);text-align:center;margin-top:4px;";
-    legendNote.innerHTML = '<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#fff;border:2px solid var(--accent);vertical-align:middle;"></span> Earliest &nbsp; → &nbsp; arrows + fading color show direction &nbsp; → &nbsp; <span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--accent);border:1.5px solid #fff;vertical-align:middle;"></span> Latest &nbsp; · &nbsp; pulsing ring = point being added';
+    legendNote.innerHTML = '<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#fff;border:2px solid var(--accent);vertical-align:middle;"></span> Earliest &nbsp; → &nbsp; fading-to-solid color shows direction &nbsp; → &nbsp; <span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--accent);border:1.5px solid #fff;vertical-align:middle;"></span> Latest &nbsp; · &nbsp; arrow marks the most recent move &nbsp; · &nbsp; pulsing ring = point being added';
     container.appendChild(legendNote);
 
     // -------- playback logic --------
@@ -3533,7 +3532,13 @@
         pointEls[p].style.opacity = p <= step ? "" : "0";
       }
       for (var s = 1; s < segEls.length; s++) {
-        if (segEls[s]) segEls[s].style.opacity = s <= step ? "0.8" : "0";
+        if (!segEls[s]) continue;
+        segEls[s].style.opacity = s <= step ? "0.8" : "0";
+        // Only the segment that just arrived at the current step keeps its
+        // arrowhead — once a dot has settled, its incoming arrow is removed
+        // so the chart doesn't accumulate clutter as more points reveal.
+        if (s === step) segEls[s].setAttribute("marker-end", "url(#centroidArrow)");
+        else segEls[s].removeAttribute("marker-end");
       }
       var c = centroids[step];
       stepLabel.textContent = (step + 1) + " / " + centroids.length + " — " + c.label + " (n=" + c.n + ")";
