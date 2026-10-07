@@ -3311,8 +3311,51 @@
   // exactly +1/-1/0 almost every time, since every word counted the same —
   // which is why the trajectory and center-of-gravity charts kept landing
   // exactly on the corners or dead center with small per-period samples.
-  function pleasantScore(r) { var v = pleasantIntensity01(r); return r.pleasant === "Pleasant" ? v : -v; }
-  function energyScore(r) { var v = energyIntensity01(r); return r.energy === "High" ? v : -v; }
+  //
+  // Scores use each word's cell CENTER within its 5x5 quadrant (0.1 .. 0.9),
+  // not the cell edge (0 .. 1) that the sonification intensity uses. That keeps
+  // every one of the 100 words at a unique point, with none sitting exactly on
+  // an axis, which is what lets a centroid be matched to its nearest word.
+  function pleasantScore(r) {
+    if (r.colNum == null) return r.pleasant === "Pleasant" ? 0.5 : -0.5;
+    return r.pleasant === "Pleasant" ? (r.colNum - 0.5) / 5 : -(5.5 - r.colNum) / 5;
+  }
+  function energyScore(r) {
+    if (r.rowNum == null) return r.energy === "High" ? 0.5 : -0.5;
+    return r.energy === "High" ? (5.5 - r.rowNum) / 5 : -(r.rowNum - 0.5) / 5;
+  }
+
+  // The 100 grid words as points on the same scale as the centroid.
+  var _wordPoints = null;
+  function wordPoints() {
+    if (_wordPoints) return _wordPoints;
+    _wordPoints = [];
+    [1, 2, 3, 4].forEach(function (q) {
+      for (var row = 1; row <= 5; row++) {
+        for (var col = 1; col <= 5; col++) {
+          var word = englishLabelFor(q, row, col);
+          if (!word) continue;
+          var fake = { quad: q, rowNum: row, colNum: col, energy: QUAD_INFO[q].energy, pleasant: QUAD_INFO[q].pleasant };
+          _wordPoints.push({ word: word, x: pleasantScore(fake), y: energyScore(fake) });
+        }
+      }
+    });
+    return _wordPoints;
+  }
+  function nearestWord(x, y) {
+    var best = null, bestD = Infinity;
+    wordPoints().forEach(function (p) {
+      var d = Math.sqrt((p.x - x) * (p.x - x) + (p.y - y) * (p.y - y));
+      if (d < bestD) { bestD = d; best = p; }
+    });
+    return best ? { word: best.word, dist: bestD } : null;
+  }
+  // How tightly a period's responses cluster around its average (RMS distance).
+  function spreadLabel(s) {
+    if (s < 0.4) return "tight cluster";
+    if (s < 0.8) return "mixed";
+    return "widely mixed";
+  }
 
   function trajectoryLabel(groupBy, key) {
     if (groupBy === "week") {
@@ -3403,8 +3446,27 @@
       if (!group.length) return null;
       var pSum = 0, eSum = 0;
       group.forEach(function (r) { pSum += pleasantScore(r); eSum += energyScore(r); });
-      return { key: k, label: trajectoryLabel(groupBy, k), pleasant: pSum / group.length, energy: eSum / group.length, n: group.length };
+      var mp = pSum / group.length, me = eSum / group.length;
+      var sq = 0, wordCounts = {};
+      group.forEach(function (r) {
+        var dx = pleasantScore(r) - mp, dy = energyScore(r) - me;
+        sq += dx * dx + dy * dy;
+        if (r.labelEn) wordCounts[r.labelEn] = (wordCounts[r.labelEn] || 0) + 1;
+      });
+      var topWord = Object.keys(wordCounts).sort(function (a, b) { return wordCounts[b] - wordCounts[a]; })[0] || "";
+      var near = nearestWord(mp, me);
+      return {
+        key: k, label: trajectoryLabel(groupBy, k), pleasant: mp, energy: me, n: group.length,
+        closest: near ? near.word : "", spread: Math.sqrt(sq / group.length), topWord: topWord
+      };
     }).filter(Boolean);
+
+    // One-line description of a period used by the step label and tooltips.
+    function describeCentroid(c) {
+      var s = "closest word: " + (c.closest || "—") + " · " + spreadLabel(c.spread);
+      if (c.topWord && c.topWord !== c.closest) s += " · most chosen: " + c.topWord;
+      return s;
+    }
 
     var container = $("chartCentroid");
     container.innerHTML = "";
@@ -3431,7 +3493,7 @@
     slider.style.cssText = "flex:1 1 140px; min-width:110px; accent-color:var(--accent);";
     if (centroids.length < 2) slider.disabled = true;
     var stepLabel = document.createElement("div");
-    stepLabel.style.cssText = "font-size:11.5px; color:var(--muted); white-space:nowrap;";
+    stepLabel.style.cssText = "font-size:12px; color:var(--ink); flex:1 1 100%; min-height:1.4em;";
     controls.appendChild(playBtn);
     controls.appendChild(slider);
     controls.appendChild(stepLabel);
@@ -3508,7 +3570,7 @@
         opacity: isFirst || isLast ? 1 : 0.55
       });
       var title = svgEl("title", {});
-      title.textContent = c.label + " — n=" + c.n + (isFirst && centroids.length > 1 ? " (earliest)" : isLast && centroids.length > 1 ? " (latest)" : "");
+      title.textContent = c.label + " — n=" + c.n + (isFirst && centroids.length > 1 ? " (earliest)" : isLast && centroids.length > 1 ? " (latest)" : "") + "\n" + describeCentroid(c);
       circle.appendChild(title);
       svg.appendChild(circle);
       return circle;
@@ -3549,7 +3611,7 @@
         else segEls[s].removeAttribute("marker-end");
       }
       var c = centroids[step];
-      stepLabel.textContent = (step + 1) + " / " + centroids.length + " — " + c.label + " (n=" + c.n + ")";
+      stepLabel.textContent = (step + 1) + " / " + centroids.length + " — " + c.label + " (n=" + c.n + ") · " + describeCentroid(c);
       slider.value = String(step);
       if (showCursor) {
         cursorRing.setAttribute("cx", pointEls[step].getAttribute("cx"));
@@ -7731,6 +7793,7 @@
     <ul style="margin:0 0 14px; padding:0 0 0 18px; display:flex; flex-direction:column; gap:8px;">
       <li style="font-size:13px; color:var(--ink); line-height:1.5;">The mood grid has two axes: horizontal is pleasantness (unpleasant &larr; &rarr; pleasant), vertical is energy (low &larr; &rarr; high). Each quadrant corresponds to one of the four quadrant colors used throughout the dashboard.</li>
       <li style="font-size:13px; color:var(--ink); line-height:1.5;">For each time period (day/week/month, based on the &ldquo;group by&rdquo; selector shared with Mood trajectory), every response in that period is scored on each axis from -1 to +1 based on exactly which emotion word was chosen: the sign says which side (Pleasant is positive, Unpleasant negative; High energy positive, Low negative), and the size says how far toward the edge of the grid the word sits. A word at the outer edge scores close to &plusmn;1, while one near the middle of the grid scores closer to 0. Those scores are then averaged, which gives one point &mdash; the &ldquo;centroid,&rdquo; or center of mass &mdash; representing where that period's responses clustered on average.</li>
+      <li style="font-size:13px; color:var(--ink); line-height:1.5;">Each point is also matched to the <strong>closest emotion word</strong> on the grid, shown in the line above the chart and in each dot's hover tooltip. Because an average can land between words, it is shown with how tightly that period's responses cluster (tight cluster, mixed, or widely mixed) and, when different, the word chosen most often. A &ldquo;mixed&rdquo; label means the closest word is a summary, not something many people actually picked.</li>
       <li style="font-size:13px; color:var(--ink); line-height:1.5;">Those points are plotted on the grid and connected in chronological order by a line, so you can trace the path the average mood has taken over time.</li>
       <li style="font-size:13px; color:var(--ink); line-height:1.5;">The first point is hollow (outlined only) and the last point is solid and larger, so you can tell at a glance which end is the start and which is &ldquo;now,&rdquo; and see which direction the path is heading.</li>
     </ul>
