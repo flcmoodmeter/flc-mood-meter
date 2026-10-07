@@ -808,6 +808,7 @@
 
         <div class="dashtabs no-print">
           <button class="dashtab on" data-tab="overview" type="button">Overview</button>
+          <button class="dashtab" data-tab="trends" type="button">Trends</button>
           <button class="dashtab" data-tab="heatmap" type="button">Heat Map</button>
           <button class="dashtab" data-tab="sonification" type="button">Sonification</button>
           <button class="dashtab" data-tab="weather" type="button">Weather &amp; Air Quality</button>
@@ -899,43 +900,6 @@
             </div>
             <div class="chart-svg-wrap" id="chartLocation"></div>
           </div>
-
-          <div class="chart-card" style="grid-column: 1 / -1;">
-            <div class="chart-card-head">
-              <h3>Mood trajectory — is it rising or falling?</h3>
-              <select id="trajectoryGroupBy" class="no-print">
-                <option value="date">By day</option>
-                <option value="week" selected>By week</option>
-                <option value="month">By month</option>
-              </select>
-            </div>
-            <p style="margin:0 0 10px; font-size:11.5px; color:var(--muted);">Mean energy and pleasantness per period, scored High/Pleasant = +1, Low/Unpleasant = -1, so 0 is neutral.</p>
-            <div class="chart-svg-wrap" id="chartTrajectory"></div>
-          </div>
-
-          <div class="chart-card">
-            <div class="chart-card-head">
-              <h3>Emotional center of gravity</h3>
-            </div>
-            <p style="margin:0 0 10px; font-size:11.5px; color:var(--muted);">Each dot is one period's mean position on the mood grid. The path shows how the center has moved — first period is hollow, latest is solid.</p>
-            <div class="chart-svg-wrap" id="chartCentroid"></div>
-          </div>
-
-          <div class="chart-card">
-            <div class="chart-card-head">
-              <h3>Energy &amp; pleasantness over time</h3>
-            </div>
-            <p style="margin:0 0 10px; font-size:11.5px; color:var(--muted);">Every response plotted by when it happened and how pleasant/energetic it was, colored by quadrant.</p>
-            <div class="chart-svg-wrap" id="chartEnergyScatter"></div>
-          </div>
-
-          <div class="chart-card">
-            <div class="chart-card-head">
-              <h3>Decision time vs. mood</h3>
-            </div>
-            <p style="margin:0 0 10px; font-size:11.5px; color:var(--muted);">Seconds spent on the grid before tapping, by quadrant and colored by location — reveals whether rushed or slow choices skew toward a particular mood.</p>
-            <div class="chart-svg-wrap" id="chartSecondsScatter"></div>
-          </div>
         </div>
 
         <div class="wide-card">
@@ -982,6 +946,47 @@
             </table>
           </div>
           <p class="table-note">Showing up to 500 rows here. Use &ldquo;Download filtered CSV&rdquo; above for the complete filtered set.</p>
+        </div>
+        </div>
+
+        <div id="tabTrends" class="hidden">
+        <div class="chart-grid">
+          <div class="chart-card" style="grid-column: 1 / -1;">
+            <div class="chart-card-head">
+              <h3>Mood trajectory — is it rising or falling?</h3>
+              <select id="trajectoryGroupBy" class="no-print">
+                <option value="date">By day</option>
+                <option value="week" selected>By week</option>
+                <option value="month">By month</option>
+              </select>
+            </div>
+            <p style="margin:0 0 10px; font-size:11.5px; color:var(--muted);">Mean energy and pleasantness per period, scored High/Pleasant = +1, Low/Unpleasant = -1, so 0 is neutral.</p>
+            <div class="chart-svg-wrap" id="chartTrajectory"></div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-card-head">
+              <h3>Emotional center of gravity</h3>
+            </div>
+            <p style="margin:0 0 10px; font-size:11.5px; color:var(--muted);">Each dot is one period's mean position on the mood grid. The path shows how the center has moved — first period is hollow, latest is solid.</p>
+            <div class="chart-svg-wrap" id="chartCentroid"></div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-card-head">
+              <h3>Energy &amp; pleasantness over time</h3>
+            </div>
+            <p style="margin:0 0 10px; font-size:11.5px; color:var(--muted);">Every response plotted by when it happened and how pleasant/energetic it was, colored by quadrant.</p>
+            <div class="chart-svg-wrap" id="chartEnergyScatter"></div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-card-head">
+              <h3>Decision time vs. mood</h3>
+            </div>
+            <p style="margin:0 0 10px; font-size:11.5px; color:var(--muted);">Seconds spent on the grid before tapping, by quadrant and colored by location — reveals whether rushed or slow choices skew toward a particular mood.</p>
+            <div class="chart-svg-wrap" id="chartSecondsScatter"></div>
+          </div>
         </div>
         </div>
 
@@ -6665,6 +6670,7 @@
       document.querySelectorAll(".dashtab").forEach(function (b) { b.classList.toggle("on", b === btn); });
       var tab = btn.dataset.tab;
       $("tabOverview").classList.toggle("hidden", tab !== "overview");
+      $("tabTrends").classList.toggle("hidden", tab !== "trends");
       $("tabHeatmap").classList.toggle("hidden", tab !== "heatmap");
       $("tabSonification").classList.toggle("hidden", tab !== "sonification");
       $("tabWeather").classList.toggle("hidden", tab !== "weather");
