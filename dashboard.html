@@ -899,6 +899,43 @@
             </div>
             <div class="chart-svg-wrap" id="chartLocation"></div>
           </div>
+
+          <div class="chart-card" style="grid-column: 1 / -1;">
+            <div class="chart-card-head">
+              <h3>Mood trajectory — is it rising or falling?</h3>
+              <select id="trajectoryGroupBy" class="no-print">
+                <option value="date">By day</option>
+                <option value="week" selected>By week</option>
+                <option value="month">By month</option>
+              </select>
+            </div>
+            <p style="margin:0 0 10px; font-size:11.5px; color:var(--muted);">Mean energy and pleasantness per period, scored High/Pleasant = +1, Low/Unpleasant = -1, so 0 is neutral.</p>
+            <div class="chart-svg-wrap" id="chartTrajectory"></div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-card-head">
+              <h3>Emotional center of gravity</h3>
+            </div>
+            <p style="margin:0 0 10px; font-size:11.5px; color:var(--muted);">Each dot is one period's mean position on the mood grid. The path shows how the center has moved — first period is hollow, latest is solid.</p>
+            <div class="chart-svg-wrap" id="chartCentroid"></div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-card-head">
+              <h3>Energy &amp; pleasantness over time</h3>
+            </div>
+            <p style="margin:0 0 10px; font-size:11.5px; color:var(--muted);">Every response plotted by when it happened and how pleasant/energetic it was, colored by quadrant.</p>
+            <div class="chart-svg-wrap" id="chartEnergyScatter"></div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-card-head">
+              <h3>Decision time vs. mood</h3>
+            </div>
+            <p style="margin:0 0 10px; font-size:11.5px; color:var(--muted);">Seconds spent on the grid before tapping, by quadrant and colored by location — reveals whether rushed or slow choices skew toward a particular mood.</p>
+            <div class="chart-svg-wrap" id="chartSecondsScatter"></div>
+          </div>
         </div>
 
         <div class="wide-card">
@@ -2256,6 +2293,99 @@
     }
   }
 
+  // Generic numeric scatter plot. points: [{x, y, color, r, title}]. xDomain
+  // / yDomain: [min, max] (auto from data if omitted). opts.xTicks /
+  // opts.yTicks: arrays of {v, label} for axis labels. opts.yZeroLine: draw
+  // a horizontal reference line at y=0 (used for signed score charts).
+  function drawScatterChart(container, points, opts) {
+    container.innerHTML = "";
+    if (!points || !points.length) {
+      container.innerHTML = '<div class="chart-empty">No data for the current filters.</div>';
+      return;
+    }
+    opts = opts || {};
+    var W = opts.width || 640;
+    var H = opts.height || 280;
+    var padL = opts.padL || 44, padR = 14, padT = 14, padB = 34;
+    var plotW = W - padL - padR, plotH = H - padT - padB;
+
+    var xs = points.map(function (p) { return p.x; });
+    var ys = points.map(function (p) { return p.y; });
+    var xDomain = opts.xDomain || [Math.min.apply(null, xs), Math.max.apply(null, xs)];
+    var yDomain = opts.yDomain || [Math.min.apply(null, ys), Math.max.apply(null, ys)];
+    if (xDomain[0] === xDomain[1]) { xDomain = [xDomain[0] - 1, xDomain[1] + 1]; }
+    if (yDomain[0] === yDomain[1]) { yDomain = [yDomain[0] - 1, yDomain[1] + 1]; }
+
+    function sx(v) { return padL + ((v - xDomain[0]) / (xDomain[1] - xDomain[0])) * plotW; }
+    function sy(v) { return padT + plotH - ((v - yDomain[0]) / (yDomain[1] - yDomain[0])) * plotH; }
+
+    var svg = svgEl("svg", { viewBox: "0 0 " + W + " " + H, width: "100%", height: H, style: "min-width:" + Math.min(W, 320) + "px" });
+
+    // axes
+    svg.appendChild(svgEl("line", { class: "axis-line-svg", x1: padL, y1: padT, x2: padL, y2: padT + plotH }));
+    svg.appendChild(svgEl("line", { class: "axis-line-svg", x1: padL, y1: padT + plotH, x2: padL + plotW, y2: padT + plotH }));
+
+    if (opts.yZeroLine && yDomain[0] < 0 && yDomain[1] > 0) {
+      var zy = sy(0);
+      svg.appendChild(svgEl("line", { x1: padL, y1: zy, x2: padL + plotW, y2: zy, stroke: "var(--line-strong)", "stroke-dasharray": "3,3", "stroke-width": 1 }));
+    }
+
+    (opts.yTicks || []).forEach(function (t) {
+      var y = sy(t.v);
+      var lbl = svgEl("text", { x: padL - 7, y: y + 3.5, "text-anchor": "end", class: "bar-label", style: "font-size:10px;" });
+      lbl.textContent = t.label;
+      svg.appendChild(lbl);
+      svg.appendChild(svgEl("line", { x1: padL - 3, y1: y, x2: padL, y2: y, class: "axis-line-svg" }));
+    });
+
+    (opts.xTicks || []).forEach(function (t) {
+      var x = sx(t.v);
+      var lbl = svgEl("text", { x: x, y: padT + plotH + 16, "text-anchor": "middle", class: "bar-label", style: "font-size:10px;" });
+      lbl.textContent = t.label;
+      svg.appendChild(lbl);
+    });
+
+    if (opts.xAxisTitle) {
+      var xt = svgEl("text", { x: padL + plotW / 2, y: H - 4, "text-anchor": "middle", style: "font-size:10px;fill:var(--muted);" });
+      xt.textContent = opts.xAxisTitle;
+      svg.appendChild(xt);
+    }
+
+    // optional line path (e.g. rolling average), drawn under the points
+    if (opts.line && opts.line.length > 1) {
+      var d = opts.line.map(function (p, i) { return (i === 0 ? "M" : "L") + sx(p.x).toFixed(1) + " " + sy(p.y).toFixed(1); }).join(" ");
+      svg.appendChild(svgEl("path", { d: d, fill: "none", stroke: opts.lineColor || "var(--accent)", "stroke-width": 2 }));
+    }
+
+    points.forEach(function (p) {
+      var c = svgEl("circle", { cx: sx(p.x), cy: sy(p.y), r: p.r || 3.5, fill: p.color || "var(--accent)", opacity: p.opacity != null ? p.opacity : 0.75 });
+      if (p.title) {
+        var title = svgEl("title", {});
+        title.textContent = p.title;
+        c.appendChild(title);
+      }
+      svg.appendChild(c);
+    });
+
+    container.appendChild(svg);
+
+    if (opts.legend && opts.legend.length) {
+      var legend = document.createElement("div");
+      legend.className = "stacked-legend";
+      opts.legend.forEach(function (item) {
+        var chip = document.createElement("span");
+        chip.className = "stacked-legend-chip";
+        var sw = document.createElement("span");
+        sw.className = "stacked-legend-swatch";
+        sw.style.background = item.color;
+        chip.appendChild(sw);
+        chip.appendChild(document.createTextNode(item.name));
+        legend.appendChild(chip);
+      });
+      container.appendChild(legend);
+    }
+  }
+
   // Horizontal bar chart, for ranked lists like top emotions. items sorted
   // desc by caller. The label column width is measured from the actual
   // longest label rather than a fixed guess, so labels aren't cut short.
@@ -3151,6 +3281,252 @@
 
   $("trendGroupBy").addEventListener("change", function () { renderTrendChart(getFilteredRows()); });
   $("trendView").addEventListener("change", function () { renderTrendChart(getFilteredRows()); });
+
+  /* ------------------------------------------------------ mood trajectory (rising/falling) */
+
+  function pleasantScore(r) { return r.pleasant === "Pleasant" ? 1 : -1; }
+  function energyScore(r) { return r.energy === "High" ? 1 : -1; }
+
+  function trajectoryLabel(groupBy, key) {
+    if (groupBy === "week") {
+      // key is like "2026-W12" from isoWeek — show as "Wk 12 '26"
+      var m = /^(\d{4})-W(\d{2})$/.exec(key);
+      if (m) return "Wk " + m[2] + " '" + m[1].slice(2);
+    }
+    if (groupBy === "month") {
+      var mm = /^(\d{4})-(\d{2})$/.exec(key);
+      if (mm) return mm[2] + "/" + mm[1].slice(2);
+    }
+    return key;
+  }
+
+  function renderTrajectoryChart(rows) {
+    var groupBy = $("trajectoryGroupBy").value;
+    var dated = rows.filter(function (r) { return r.date; });
+    var b = trendBucketKeys(groupBy === "date" ? "date" : groupBy, dated);
+
+    var byKey = {};
+    b.keys.forEach(function (k) { byKey[k] = []; });
+    dated.forEach(function (r) { var k = b.keyFn(r); if (byKey[k]) byKey[k].push(r); });
+
+    var buckets = b.keys.map(function (k, i) {
+      var group = byKey[k];
+      if (!group.length) return null;
+      var pSum = 0, eSum = 0;
+      group.forEach(function (r) { pSum += pleasantScore(r); eSum += energyScore(r); });
+      return { x: i, key: k, label: trajectoryLabel(groupBy, k), pleasant: pSum / group.length, energy: eSum / group.length, n: group.length };
+    }).filter(Boolean);
+
+    if (buckets.length < 2) {
+      $("chartTrajectory").innerHTML = '<div class="chart-empty">Need at least two periods with data to show a trend. Try a wider date range or a smaller "group by" period.</div>';
+      return;
+    }
+
+    var W = Math.max(420, buckets.length * 56);
+    var pleasantPts = buckets.map(function (bk) { return { x: bk.x, y: bk.pleasant, color: "#12d9a0", r: 4, title: bk.label + " — pleasantness " + bk.pleasant.toFixed(2) + " (n=" + bk.n + ")" }; });
+    var energyPts = buckets.map(function (bk) { return { x: bk.x, y: bk.energy, color: "#f97316", r: 4, title: bk.label + " — energy " + bk.energy.toFixed(2) + " (n=" + bk.n + ")" }; });
+
+    var xTicks = buckets.map(function (bk) { return { v: bk.x, label: bk.label }; });
+    var yTicks = [-1, -0.5, 0, 0.5, 1].map(function (v) { return { v: v, label: v.toFixed(1) }; });
+
+    drawScatterChart($("chartTrajectory"), pleasantPts.concat(energyPts), {
+      width: W, height: 240, padL: 36,
+      xDomain: [0, buckets.length - 1], yDomain: [-1, 1],
+      xTicks: xTicks, yTicks: yTicks, yZeroLine: true,
+      line: pleasantPts, lineColor: "#12d9a0",
+      legend: [{ name: "Pleasantness", color: "#12d9a0" }, { name: "Energy", color: "#f97316" }]
+    });
+
+    // second pass: draw the energy line too (drawScatterChart only draws one "line")
+    var existingSvg = $("chartTrajectory").querySelector("svg");
+    if (existingSvg) {
+      var padL2 = 36, padR2 = 14, padT2 = 14, padB2 = 34, H2 = 240;
+      var plotW2 = W - padL2 - padR2, plotH2 = H2 - padT2 - padB2;
+      function sx2(v) { return padL2 + (v / (buckets.length - 1)) * plotW2; }
+      function sy2(v) { return padT2 + plotH2 - ((v + 1) / 2) * plotH2; }
+      var d2 = energyPts.map(function (p, i) { return (i === 0 ? "M" : "L") + sx2(p.x).toFixed(1) + " " + sy2(p.y).toFixed(1); }).join(" ");
+      var path2 = svgEl("path", { d: d2, fill: "none", stroke: "#f97316", "stroke-width": 2 });
+      existingSvg.insertBefore(path2, existingSvg.querySelector("circle"));
+    }
+  }
+
+  $("trajectoryGroupBy").addEventListener("change", function () { renderTrajectoryChart(getFilteredRows()); });
+
+  /* ------------------------------------------------------ emotional center of gravity */
+
+  function renderCentroidChart(rows) {
+    var groupBy = $("trajectoryGroupBy").value;
+    var dated = rows.filter(function (r) { return r.date; });
+    var b = trendBucketKeys(groupBy === "date" ? "date" : groupBy, dated);
+
+    var byKey = {};
+    b.keys.forEach(function (k) { byKey[k] = []; });
+    dated.forEach(function (r) { var k = b.keyFn(r); if (byKey[k]) byKey[k].push(r); });
+
+    var centroids = b.keys.map(function (k) {
+      var group = byKey[k];
+      if (!group.length) return null;
+      var pSum = 0, eSum = 0;
+      group.forEach(function (r) { pSum += pleasantScore(r); eSum += energyScore(r); });
+      return { key: k, label: trajectoryLabel(groupBy, k), pleasant: pSum / group.length, energy: eSum / group.length, n: group.length };
+    }).filter(Boolean);
+
+    var container = $("chartCentroid");
+    container.innerHTML = "";
+    if (centroids.length < 1) {
+      container.innerHTML = '<div class="chart-empty">No data for the current filters.</div>';
+      return;
+    }
+
+    var W = 320, H = 320, pad = 40;
+    var plotW = W - pad * 2, plotH = H - pad * 2;
+    function gx(v) { return pad + ((v + 1) / 2) * plotW; }
+    function gy(v) { return pad + plotH - ((v + 1) / 2) * plotH; }
+
+    var svg = svgEl("svg", { viewBox: "0 0 " + W + " " + H, width: "100%", height: H, style: "min-width:260px;max-width:360px;" });
+
+    // quadrant background fills (very light) + axes
+    var quadFills = [
+      { x: gx(0), y: gy(1), w: plotW / 2, h: plotH / 2, color: QUAD_INFO[1].color },   // top-right: HE Pleasant
+      { x: pad,   y: gy(1), w: plotW / 2, h: plotH / 2, color: QUAD_INFO[3].color },   // top-left: HE Unpleasant
+      { x: pad,   y: pad + plotH / 2, w: plotW / 2, h: plotH / 2, color: QUAD_INFO[2].color }, // bottom-left: LE Unpleasant
+      { x: gx(0), y: pad + plotH / 2, w: plotW / 2, h: plotH / 2, color: QUAD_INFO[4].color }  // bottom-right: LE Pleasant
+    ];
+    quadFills.forEach(function (q) {
+      svg.appendChild(svgEl("rect", { x: q.x, y: q.y, width: q.w, height: q.h, fill: q.color, opacity: 0.08 }));
+    });
+
+    svg.appendChild(svgEl("line", { x1: pad, y1: pad + plotH / 2, x2: pad + plotW, y2: pad + plotH / 2, class: "axis-line-svg" }));
+    svg.appendChild(svgEl("line", { x1: pad + plotW / 2, y1: pad, x2: pad + plotW / 2, y2: pad + plotH, class: "axis-line-svg" }));
+
+    var axLabels = [
+      { x: pad + plotW, y: pad + plotH / 2 - 6, t: "Pleasant", anchor: "end" },
+      { x: pad, y: pad + plotH / 2 - 6, t: "Unpleasant", anchor: "start" },
+      { x: pad + plotW / 2, y: pad - 6, t: "High energy", anchor: "middle" },
+      { x: pad + plotW / 2, y: pad + plotH + 14, t: "Low energy", anchor: "middle" }
+    ];
+    axLabels.forEach(function (l) {
+      var t = svgEl("text", { x: l.x, y: l.y, "text-anchor": l.anchor, style: "font-size:9.5px;fill:var(--muted);" });
+      t.textContent = l.t;
+      svg.appendChild(t);
+    });
+
+    if (centroids.length > 1) {
+      var d = centroids.map(function (c, i) { return (i === 0 ? "M" : "L") + gx(c.pleasant).toFixed(1) + " " + gy(c.energy).toFixed(1); }).join(" ");
+      svg.appendChild(svgEl("path", { d: d, fill: "none", stroke: "var(--ink)", "stroke-width": 1.5, opacity: 0.55 }));
+    }
+
+    centroids.forEach(function (c, i) {
+      var isLast = i === centroids.length - 1;
+      var isFirst = i === 0;
+      var circle = svgEl("circle", {
+        cx: gx(c.pleasant), cy: gy(c.energy), r: isLast ? 6 : 4.5,
+        fill: isFirst && centroids.length > 1 ? "#fff" : "var(--accent)",
+        stroke: "var(--accent)", "stroke-width": isFirst ? 2 : 1
+      });
+      var title = svgEl("title", {});
+      title.textContent = c.label + " — n=" + c.n + (isFirst ? " (earliest)" : isLast ? " (latest)" : "");
+      circle.appendChild(title);
+      svg.appendChild(circle);
+    });
+
+    container.appendChild(svg);
+  }
+
+  /* ------------------------------------------------------ scatter: energy/pleasantness over time */
+
+  function renderEnergyScatterChart(rows) {
+    var dated = rows.filter(function (r) { return r.date; });
+    var container = $("chartEnergyScatter");
+    if (!dated.length) {
+      container.innerHTML = '<div class="chart-empty">No data for the current filters.</div>';
+      return;
+    }
+    var minT = Math.min.apply(null, dated.map(function (r) { return r.date.getTime(); }));
+    var maxT = Math.max.apply(null, dated.map(function (r) { return r.date.getTime(); }));
+
+    // jitter energy/pleasantness score slightly so overlapping points are visible
+    function jitter() { return (Math.random() - 0.5) * 0.3; }
+
+    var points = dated.map(function (r) {
+      var q = QUAD_INFO[r.quad] || { color: "var(--accent)", name: "" };
+      return {
+        x: r.date.getTime(),
+        y: pleasantScore(r) + jitter(),
+        color: q.color,
+        r: 2.6,
+        opacity: 0.55,
+        title: r.date.toLocaleString() + " — " + (r.labelEn || r.label || q.name) + " (" + q.name + ")"
+      };
+    });
+
+    var xTickCount = 5;
+    var xTicks = [];
+    for (var i = 0; i < xTickCount; i++) {
+      var t = minT + (maxT - minT) * (i / (xTickCount - 1 || 1));
+      xTicks.push({ v: t, label: new Date(t).toLocaleDateString(undefined, { month: "short", day: "numeric" }) });
+    }
+    var yTicks = [
+      { v: -1, label: "Unpleasant" },
+      { v: 0, label: "" },
+      { v: 1, label: "Pleasant" }
+    ];
+
+    drawScatterChart(container, points, {
+      width: Math.max(420, Math.min(900, dated.length / 2)), height: 260, padL: 70,
+      xDomain: [minT, maxT], yDomain: [-1.3, 1.3],
+      xTicks: xTicks, yTicks: yTicks, yZeroLine: true,
+      legend: [1, 3, 4, 2].map(function (q) { return { name: QUAD_INFO[q].name, color: QUAD_INFO[q].color }; })
+    });
+  }
+
+  /* ------------------------------------------------------ scatter: decision seconds vs mood */
+
+  function renderSecondsScatterChart(rows) {
+    var timed = rows.filter(function (r) { return r.seconds != null && !isNaN(r.seconds) && r.quad; });
+    var container = $("chartSecondsScatter");
+    if (!timed.length) {
+      container.innerHTML = '<div class="chart-empty">No timing data for the current filters.</div>';
+      return;
+    }
+
+    // One row of jittered points per quadrant on the y-axis; x = seconds.
+    var quadOrder = [1, 3, 4, 2]; // HE Pleasant, HE Unpleasant, LE Pleasant, LE Unpleasant
+    var quadY = {}; quadOrder.forEach(function (q, i) { quadY[q] = i; });
+
+    var locs = Array.from(new Set(timed.map(function (r) { return r.session || "(none)"; }))).sort();
+    var palette = ["#3f5b4f", "#f97316", "#3b82f6", "#a855f7", "#ef4444", "#12d9a0", "#facc15", "#6366f1"];
+    var locColor = {};
+    locs.forEach(function (loc, i) { locColor[loc] = palette[i % palette.length]; });
+
+    var maxSeconds = Math.max.apply(null, timed.map(function (r) { return r.seconds; }));
+    var capSeconds = Math.min(maxSeconds, 60); // cap display at 60s so outliers don't flatten the chart
+
+    var points = timed.map(function (r) {
+      var loc = r.session || "(none)";
+      return {
+        x: Math.min(r.seconds, capSeconds),
+        y: quadY[r.quad] + (Math.random() - 0.5) * 0.55,
+        color: locColor[loc],
+        r: 2.6,
+        opacity: 0.6,
+        title: loc + " — " + (r.labelEn || r.label || "") + " — " + (+r.seconds).toFixed(1) + "s"
+      };
+    });
+
+    var yTicks = quadOrder.map(function (q, i) { return { v: i, label: QUAD_INFO[q].name }; });
+    var xTicks = [0, capSeconds / 4, capSeconds / 2, (capSeconds * 3) / 4, capSeconds].map(function (v) {
+      return { v: v, label: Math.round(v) + "s" + (v === capSeconds && maxSeconds > capSeconds ? "+" : "") };
+    });
+
+    drawScatterChart(container, points, {
+      width: Math.max(420, Math.min(900, timed.length / 2)), height: 260, padL: 150,
+      xDomain: [0, capSeconds], yDomain: [-0.6, quadOrder.length - 0.4],
+      xTicks: xTicks, yTicks: yTicks,
+      xAxisTitle: "Seconds on grid before tapping",
+      legend: locs.length > 1 ? locs.map(function (loc) { return { name: loc, color: locColor[loc] }; }) : null
+    });
+  }
   $("heatmapQuadView").addEventListener("change", function () {
     heatmapQuadView = $("heatmapQuadView").value;
     renderEmotionHeatmap(getFilteredRows());
@@ -6916,6 +7292,10 @@
     renderTopEmotionsChart(rows);
     renderDecideTimeChart(rows);
     renderTrendChart(rows);
+    renderTrajectoryChart(rows);
+    renderCentroidChart(rows);
+    renderEnergyScatterChart(rows);
+    renderSecondsScatterChart(rows);
     renderLocationChart(rows);
     renderEmotionHeatmap(rows);
     renderCalendarHeatmap(rows);
