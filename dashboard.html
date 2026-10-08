@@ -676,7 +676,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.23</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.24</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -8343,26 +8343,34 @@
     drawMixGroups(container, items, { height: 220 });
     var hint = document.createElement("div");
     hint.style.cssText = "font-size:10.5px;color:var(--muted);text-align:center;margin-top:4px;";
-    hint.textContent = "Click a bar or its label to see the emotion words chosen";
+    hint.textContent = "Click a colored segment for that quadrant's emotion words (or a label for all of them)";
     container.appendChild(hint);
     var rects = Array.from(container.querySelectorAll("svg rect"));
     var labels = Array.from(container.querySelectorAll("svg text.bar-label"));
-    var selected = -1;
-    function paint(sel) {
-      rects.forEach(function (r, j) { r.style.opacity = sel < 0 || Math.floor(j / 4) === sel ? "1" : "0.35"; });
-      labels.forEach(function (l, j) { l.style.opacity = sel < 0 || j === sel ? "1" : "0.45"; });
+    var selected = null;   // "i:seg" (seg -1 = whole bar)
+    function paint(i, seg) {
+      rects.forEach(function (r, j) {
+        var on = i < 0 || (Math.floor(j / 4) === i && (seg < 0 || j % 4 === seg));
+        r.style.opacity = on ? "1" : "0.35";
+      });
+      labels.forEach(function (l, j) { l.style.opacity = i < 0 || j === i ? "1" : "0.45"; });
     }
-    function pick(i) {
-      if (selected === i) { selected = -1; paint(-1); $("academicWords").style.display = "none"; return; }
-      selected = i; paint(i);
-      renderAcademicWords(cat, evNames[i], byName[evNames[i]]);
+    // Same as the Trends "mix" chart: a segment shows that quadrant's words,
+    // the label shows all of the break's words.
+    function pick(i, seg) {
+      var id = i + ":" + seg;
+      if (selected === id) { selected = null; paint(-1, -1); $("academicWords").style.display = "none"; return; }
+      selected = id; paint(i, seg);
+      var rs = byName[evNames[i]], q = null;
+      if (seg >= 0) { q = MIX_QUAD_ORDER[seg]; rs = rs.filter(function (r) { return r.quad === q; }); }
+      renderAcademicWords(cat, evNames[i], rs, q);
     }
-    rects.forEach(function (r, ri) { r.style.cursor = "pointer"; r.addEventListener("click", function () { pick(Math.floor(ri / 4)); }); });
-    labels.forEach(function (l, i) { l.style.cursor = "pointer"; l.addEventListener("click", function () { pick(i); }); });
+    rects.forEach(function (r, ri) { r.style.cursor = "pointer"; r.addEventListener("click", function () { pick(Math.floor(ri / 4), ri % 4); }); });
+    labels.forEach(function (l, i) { l.style.cursor = "pointer"; l.addEventListener("click", function () { pick(i, -1); }); });
   }
 
   // Emotion words for one break; words tied on count share a bar (label wraps).
-  function renderAcademicWords(cat, evName, rowsOf) {
+  function renderAcademicWords(cat, evName, rowsOf, quad) {
     var counts = countBy(rowsOf.filter(function (r) { return r.labelEn; }), function (r) { return r.labelEn; });
     var byN = {};
     Object.keys(counts).forEach(function (w) { (byN[counts[w]] = byN[counts[w]] || []).push(w); });
@@ -8373,9 +8381,9 @@
         if (cur && measureTextWidth(next + ",", 10.5, "400") > 230) { lines.push(cur + ","); cur = w; } else cur = next;
       });
       if (cur) lines.push(cur);
-      return { label: words.join(", "), lines: lines, value: +n, color: "#3f5b4f", _words: words };
+      return { label: words.join(", "), lines: lines, value: +n, color: quad ? QUAD_INFO[quad].color : "#3f5b4f", _words: words };
     }).sort(function (a, b) { return b.value - a.value; });
-    $("academicWordsHead").textContent = evName + " \u00b7 " + cat.toLowerCase() + " \u2014 emotion words chosen";
+    $("academicWordsHead").textContent = evName + " \u00b7 " + cat.toLowerCase() + (quad ? " \u00b7 " + MIX_SHORT[quad] : "") + " \u2014 emotion words chosen";
     $("academicWords").style.display = "block";
     $("academicLoc").style.display = "none";
     var container = $("academicWordsChart");
@@ -8402,7 +8410,7 @@
         var wordRows = rowsOf.filter(function (r) { return words.indexOf(r.labelEn) >= 0; });
         var locCounts = countBy(wordRows, function (r) { return r.session || "(none)"; });
         var locItems = Object.keys(locCounts)
-          .map(function (loc) { return { label: loc + " (n=" + locCounts[loc] + ")", value: locCounts[loc], color: "#3f5b4f" }; })
+          .map(function (loc) { return { label: loc + " (n=" + locCounts[loc] + ")", value: locCounts[loc], color: quad ? QUAD_INFO[quad].color : "#3f5b4f" }; })
           .sort(function (a, b) { return b.value - a.value; });
         $("academicLocHead").textContent = words.join(", ") + " \u2014 by location";
         $("academicLoc").style.display = "block";
