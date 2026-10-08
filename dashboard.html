@@ -676,7 +676,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.20</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.21</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -8154,10 +8154,8 @@
     "2027-01-18": "MLK Day", "2027-02-12": "Lincoln Day", "2027-02-15": "Washington Day", "2027-03-31": "C\u00e9sar Ch\u00e1vez Day"
   };
   var ACADEMIC_COVERAGE = ["2023-06-05", "2027-05-31"];
-  var ACADEMIC_ORDER = ["Regular instruction", "First week of term", "Withdrawal-deadline week", "Finals week", "Summer session", "Between terms", "Weekend",
+  var ACADEMIC_ORDER = ["Regular instruction", "First week of term", "Withdrawal-deadline week", "Finals week", "Summer session", "Between terms",
     "Day before a break", "Return day after a break", "Thanksgiving break", "Winter recess", "Spring break", "Other holidays"];
-  var ACADEMIC_COLORS = ["#6b7280", "#3b82f6", "#f97316", "#dc2626", "#eab308", "#a78bfa", "#9ca3af",
-    "#0ea5e9", "#22c55e", "#b45309", "#1d4ed8", "#14b8a6", "#be185d"];
   var BREAK_GROUPS = ["Thanksgiving break", "Winter recess", "Spring break", "Other holidays"];
 
   function isoAddDays(iso, n) {
@@ -8322,7 +8320,7 @@
     var skipped = all.length - recs.length;
     $("academicCoverageNote").textContent = recs.length.toLocaleString() + " filtered responses sorted. Calendar covers Summer 2023 to Spring 2027 (Los Rios Community College District, losrios.edu)" +
       (skipped ? "; " + skipped.toLocaleString() + " responses outside those dates are left out" : "") +
-      ". \"Day before\" and \"Return day\" are the last school day before and first school day after a break, and take priority over finals or first-week labels. Weekdays outside any term count as \"Between terms\"; weekends are kept apart so they don't blur the term weeks.";
+      ". \"Day before\" and \"Return day\" are the last school day before and first school day after a break, and take priority over finals or first-week labels. Weekdays outside any term count as \"Between terms\". Weekend responses are left out, since no location has weekend hours.";
   }
 
   function renderAcademicDetail(cat) {
