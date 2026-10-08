@@ -676,7 +676,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.22</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.23</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -927,6 +927,24 @@
               <div id="chartLocationDetailHead" style="font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;"></div>
               <div class="chart-svg-wrap" id="chartLocationDetailChart"></div>
             </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-card-head"><h3>&#127891; Academic calendar vs. mood mix</h3></div>
+            <div class="chart-svg-wrap" id="chartAcademic"></div>
+            <div id="academicDetail" style="margin-top:12px;display:none;">
+              <div id="academicDetailHead" style="font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;"></div>
+              <div class="chart-svg-wrap" id="academicDetailChart"></div>
+              <div id="academicWords" style="margin-top:12px;display:none;">
+                <div id="academicWordsHead" style="font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;"></div>
+                <div class="chart-svg-wrap" id="academicWordsChart"></div>
+                <div id="academicLoc" style="margin-top:12px;display:none;">
+                  <div id="academicLocHead" style="font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;"></div>
+                  <div class="chart-svg-wrap" id="academicLocChart"></div>
+                </div>
+              </div>
+            </div>
+            <p class="table-note" id="academicCoverageNote"></p>
           </div>
         </div>
 
@@ -1506,22 +1524,6 @@
             </div>
             <p class="table-note" id="wikiCoverageNote"></p>
           </div>
-
-          <div class="panel spurious-panel" style="margin: 18px 0;">
-            <h2 style="text-transform:none; font-size:14.5px; letter-spacing:0; color:var(--ink); font-weight:700;">&#127891; Los Rios academic calendar</h2>
-            <p class="import-note" style="margin:6px 0 0;">
-              Every day is sorted by where it falls in the Los Rios Community College District calendar (Summer 2023 through Spring 2027): first week of a term, the week of the withdrawal deadline, finals week, and so on. The last school day before a break and the first school day back are broken out. Click the day-before or day-back bar to see it split by break (Thanksgiving, Winter recess, Spring break, and each holiday). Built in, so no internet connection is needed.
-            </p>
-          </div>
-          <div class="chart-card spurious-card">
-            <div class="chart-card-head"><h3>Academic calendar vs. mood mix</h3></div>
-            <div class="chart-svg-wrap" id="chartAcademic"></div>
-            <div id="academicDetail" style="margin-top:12px;display:none;">
-              <div id="academicDetailHead" style="font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;"></div>
-              <div class="chart-svg-wrap" id="academicDetailChart"></div>
-            </div>
-          </div>
-          <p class="table-note" id="academicCoverageNote"></p>
 
         </div>
       </div>
@@ -7919,7 +7921,6 @@
     if (quakeFetched) renderQuakeChart(rows);
     if (kpFetched) renderKpChart(rows);
     if (wikiFetched) renderWikiChart(rows);
-    renderAcademicChart(rows);
   }
 
   /* ---------------------------------------------------------- earthquakes */
@@ -8273,7 +8274,7 @@
     var container = $("chartAcademic");
     var hint = document.createElement("div");
     hint.style.cssText = "font-size:10.5px;color:var(--muted);text-align:center;margin-top:4px;";
-    hint.textContent = "Click the day-before or day-back bar to see it by break";
+    hint.textContent = "Click the day-before or day-back bar to see it by break (Thanksgiving, Winter recess, Spring break, each holiday)";
     container.appendChild(hint);
     // Four stacked segments per bar, in bar order. Bars and their axis labels
     // are both clickable (break bars are often empty, since the colleges are
@@ -8319,7 +8320,9 @@
       ". \"Day before\" and \"Return day\" are the last school day before and first school day after a break, and take priority over finals or first-week labels. Responses on days the colleges are closed (breaks, holidays, between terms) and on weekends are left out, since no location is open then.";
   }
 
-  // Day before / return day, split by which break they belong to.
+  // Day before / return day, split by which break they belong to. Click a
+  // break bar -> the emotion words chosen (words with the same count share a
+  // bar) -> click a word bar -> which locations those words came from.
   function renderAcademicDetail(cat) {
     var rows = _academicRecs;
     var role = cat === "Day before a break" ? "before" : "return";
@@ -8327,12 +8330,85 @@
     ACADEMIC_EVENTS.forEach(function (e) { if (evNames.indexOf(e.name) < 0) evNames.push(e.name); });
     var rank = { "Thanksgiving": 0, "Winter recess": 1, "Spring break": 2 };
     evNames.sort(function (a, b) { var ra = a in rank ? rank[a] : 3, rb = b in rank ? rank[b] : 3; return ra - rb || (a < b ? -1 : 1); });
+    var byName = {};
     var items = evNames.map(function (n) {
-      return mixGroup(n, rows.filter(function (x) { return x.role === role && x.ev.name === n; }).map(function (x) { return x.row; }));
+      var rs = rows.filter(function (x) { return x.role === role && x.ev.name === n; }).map(function (x) { return x.row; });
+      byName[n] = rs;
+      return mixGroup(n, rs);
     });
     $("academicDetailHead").textContent = cat + " \u2014 by break";
     $("academicDetail").style.display = "block";
-    drawMixGroups($("academicDetailChart"), items, { height: 220 });
+    $("academicWords").style.display = "none";
+    var container = $("academicDetailChart");
+    drawMixGroups(container, items, { height: 220 });
+    var hint = document.createElement("div");
+    hint.style.cssText = "font-size:10.5px;color:var(--muted);text-align:center;margin-top:4px;";
+    hint.textContent = "Click a bar or its label to see the emotion words chosen";
+    container.appendChild(hint);
+    var rects = Array.from(container.querySelectorAll("svg rect"));
+    var labels = Array.from(container.querySelectorAll("svg text.bar-label"));
+    var selected = -1;
+    function paint(sel) {
+      rects.forEach(function (r, j) { r.style.opacity = sel < 0 || Math.floor(j / 4) === sel ? "1" : "0.35"; });
+      labels.forEach(function (l, j) { l.style.opacity = sel < 0 || j === sel ? "1" : "0.45"; });
+    }
+    function pick(i) {
+      if (selected === i) { selected = -1; paint(-1); $("academicWords").style.display = "none"; return; }
+      selected = i; paint(i);
+      renderAcademicWords(cat, evNames[i], byName[evNames[i]]);
+    }
+    rects.forEach(function (r, ri) { r.style.cursor = "pointer"; r.addEventListener("click", function () { pick(Math.floor(ri / 4)); }); });
+    labels.forEach(function (l, i) { l.style.cursor = "pointer"; l.addEventListener("click", function () { pick(i); }); });
+  }
+
+  // Emotion words for one break; words tied on count share a bar (label wraps).
+  function renderAcademicWords(cat, evName, rowsOf) {
+    var counts = countBy(rowsOf.filter(function (r) { return r.labelEn; }), function (r) { return r.labelEn; });
+    var byN = {};
+    Object.keys(counts).forEach(function (w) { (byN[counts[w]] = byN[counts[w]] || []).push(w); });
+    var items = Object.keys(byN).map(function (n) {
+      var words = byN[n].sort(), lines = [], cur = "";
+      words.forEach(function (w) {
+        var next = cur ? cur + ", " + w : w;
+        if (cur && measureTextWidth(next + ",", 10.5, "400") > 230) { lines.push(cur + ","); cur = w; } else cur = next;
+      });
+      if (cur) lines.push(cur);
+      return { label: words.join(", "), lines: lines, value: +n, color: "#3f5b4f", _words: words };
+    }).sort(function (a, b) { return b.value - a.value; });
+    $("academicWordsHead").textContent = evName + " \u00b7 " + cat.toLowerCase() + " \u2014 emotion words chosen";
+    $("academicWords").style.display = "block";
+    $("academicLoc").style.display = "none";
+    var container = $("academicWordsChart");
+    drawHBarChart(container, items);
+    var hint = document.createElement("div");
+    hint.style.cssText = "font-size:10.5px;color:var(--muted);text-align:center;margin-top:4px;";
+    hint.textContent = "Click a bar to view by location";
+    container.appendChild(hint);
+    var rects = Array.from(container.querySelectorAll("svg rect"));
+    var selected = -1;
+    rects.forEach(function (rect, i) {
+      if (!items[i]) return;
+      rect.style.cursor = "pointer";
+      rect.addEventListener("click", function () {
+        if (selected === i) {
+          selected = -1;
+          $("academicLoc").style.display = "none";
+          rects.forEach(function (r) { r.style.opacity = "1"; });
+          return;
+        }
+        selected = i;
+        rects.forEach(function (r, j) { r.style.opacity = j === i ? "1" : "0.35"; });
+        var words = items[i]._words;
+        var wordRows = rowsOf.filter(function (r) { return words.indexOf(r.labelEn) >= 0; });
+        var locCounts = countBy(wordRows, function (r) { return r.session || "(none)"; });
+        var locItems = Object.keys(locCounts)
+          .map(function (loc) { return { label: loc + " (n=" + locCounts[loc] + ")", value: locCounts[loc], color: "#3f5b4f" }; })
+          .sort(function (a, b) { return b.value - a.value; });
+        $("academicLocHead").textContent = words.join(", ") + " \u2014 by location";
+        $("academicLoc").style.display = "block";
+        drawHBarChart($("academicLocChart"), locItems);
+      });
+    });
   }
 
   function ensureSpuriousDefaults() {
@@ -8389,6 +8465,7 @@
     renderEnergyScatterChart(rows);
     renderSecondsScatterChart(rows);
     renderLocationChart(rows);
+    renderAcademicChart(rows);
     renderEmotionHeatmap(rows);
     renderCalendarHeatmap(rows);
     renderEmotionTable(rows);
