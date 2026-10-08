@@ -676,7 +676,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.17</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.18</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -1508,22 +1508,16 @@
           </div>
 
           <div class="panel spurious-panel" style="margin: 18px 0;">
-            <h2 style="text-transform:none; font-size:14.5px; letter-spacing:0; color:var(--ink); font-weight:700;">&#127881; US public holidays</h2>
-            <p class="import-note" style="margin:6px 0 12px;">
-              Fetched live from Nager.Date (free, public, no API key) for every year in your loaded data. Compares holidays, the days right before or after one, and ordinary days. Needs an internet connection when you click Fetch.
+            <h2 style="text-transform:none; font-size:14.5px; letter-spacing:0; color:var(--ink); font-weight:700;">&#127891; Los Rios academic calendar</h2>
+            <p class="import-note" style="margin:6px 0 0;">
+              Every day is sorted by where it falls in the Los Rios Community College District calendar (Summer 2023 through Spring 2027): first week of a term, the week of the withdrawal deadline, finals week, holidays and recesses, and so on. Built in, so no internet connection is needed.
             </p>
-            <div class="row" style="margin-top:0; align-items:center;">
-              <button class="btn spurious-btn" id="fetchHolidayBtn">Fetch holidays</button>
-              <span class="table-note" id="holidayStatus" style="margin:0;"></span>
-            </div>
           </div>
-          <div id="holidayResults" class="hidden">
-            <div class="chart-card spurious-card">
-              <div class="chart-card-head"><h3>Holidays vs. % Unpleasant</h3></div>
-              <div class="chart-svg-wrap" id="chartHoliday"></div>
-            </div>
-            <p class="table-note" id="holidayCoverageNote"></p>
+          <div class="chart-card spurious-card">
+            <div class="chart-card-head"><h3>Academic calendar vs. % Unpleasant</h3></div>
+            <div class="chart-svg-wrap" id="chartAcademic"></div>
           </div>
+          <p class="table-note" id="academicCoverageNote"></p>
 
         </div>
       </div>
@@ -7902,7 +7896,7 @@
     if (quakeFetched) renderQuakeChart(rows);
     if (kpFetched) renderKpChart(rows);
     if (wikiFetched) renderWikiChart(rows);
-    if (holidaysFetched) renderHolidayChart(rows);
+    renderAcademicChart(rows);
   }
 
   /* ---------------------------------------------------------- earthquakes */
@@ -8104,53 +8098,75 @@
     $("wikiCoverageNote").textContent = joined.length.toLocaleString() + " filtered responses matched to " + Object.keys(wikiByDate).length + " days of page views (" + vals[0].toLocaleString() + " to " + vals[vals.length - 1].toLocaleString() + " views per day). Days are split into thirds relative to this article and period.";
   }
 
-  /* ---------------------------------------------------------- US public holidays (Nager.Date) */
+  /* ---------------------------------------------------------- Los Rios academic calendar */
 
-  var holidaysByDate = {};  // 'YYYY-MM-DD' -> holiday name
-  var holidaysFetched = false;
+  // Dates from the official Los Rios Community College District academic
+  // calendars (losrios.edu/admissions/academic-calendar), full-term dates.
+  // start = first day of instruction; end = last day (end of finals);
+  // finals = [first, last]; withdraw = last day to withdraw with a W;
+  // recess = no-class breaks inside the term; summer terms have no finals/withdraw here.
+  var LOS_RIOS_TERMS = [
+    { name: "Summer 2023", summer: true, start: "2023-06-05", end: "2023-08-03" },
+    { name: "Fall 2023", start: "2023-08-19", end: "2023-12-14", finals: ["2023-12-08", "2023-12-14"], withdraw: "2023-11-14", recess: [["2023-11-23", "2023-11-26"]] },
+    { name: "Spring 2024", start: "2024-01-13", end: "2024-05-16", finals: ["2024-05-10", "2024-05-16"], withdraw: "2024-04-14", recess: [["2024-03-11", "2024-03-17"]] },
+    { name: "Summer 2024", summer: true, start: "2024-06-10", end: "2024-08-08" },
+    { name: "Fall 2024", start: "2024-08-24", end: "2024-12-19", finals: ["2024-12-13", "2024-12-19"], withdraw: "2024-11-19", recess: [["2024-11-28", "2024-12-01"]] },
+    { name: "Spring 2025", start: "2025-01-18", end: "2025-05-22", finals: ["2025-05-16", "2025-05-22"], withdraw: "2025-04-20", recess: [["2025-03-17", "2025-03-23"]] },
+    { name: "Summer 2025", summer: true, start: "2025-06-09", end: "2025-08-07" },
+    { name: "Fall 2025", start: "2025-08-23", end: "2025-12-18", finals: ["2025-12-12", "2025-12-18"], withdraw: "2025-11-18", recess: [["2025-11-27", "2025-11-30"]] },
+    { name: "Spring 2026", start: "2026-01-17", end: "2026-05-21", finals: ["2026-05-15", "2026-05-21"], withdraw: "2026-04-19", recess: [["2026-03-16", "2026-03-22"]] },
+    { name: "Summer 2026", summer: true, start: "2026-06-08", end: "2026-08-05" },
+    { name: "Fall 2026", start: "2026-08-22", end: "2026-12-17", finals: ["2026-12-11", "2026-12-17"], withdraw: "2026-11-17", recess: [["2026-11-26", "2026-11-29"]] },
+    { name: "Spring 2027", start: "2027-01-16", end: "2027-05-20", finals: ["2027-05-14", "2027-05-20"], withdraw: "2027-04-18", recess: [["2027-03-15", "2027-03-21"]] }
+  ];
+  // District holidays (no classes). Winter recess falls between terms.
+  var LOS_RIOS_HOLIDAYS = {};
+  ["2023-06-19","2023-07-04","2023-09-04","2023-11-10","2024-01-01","2024-01-15","2024-02-16","2024-02-19","2024-04-01","2024-05-27",
+   "2024-06-19","2024-07-04","2024-09-02","2024-11-11","2025-01-01","2025-01-20","2025-02-14","2025-02-17","2025-03-31","2025-05-26",
+   "2025-06-19","2025-07-04","2025-09-01","2025-11-11","2026-01-01","2026-01-19","2026-02-13","2026-02-16","2026-03-31",
+   "2026-06-19","2026-07-03","2026-09-07","2026-11-11","2027-01-18","2027-02-12","2027-02-15","2027-03-31"
+  ].forEach(function (d) { LOS_RIOS_HOLIDAYS[d] = true; });
+  var ACADEMIC_COVERAGE = ["2023-06-05", "2027-05-31"];
+  var ACADEMIC_ORDER = ["Regular instruction", "First week of term", "Withdrawal-deadline week", "Finals week", "Summer session", "Between terms", "Holiday or recess", "Weekend"];
 
-  async function fetchHolidays() {
-    var dated = allRows.filter(function (r) { return r.date; });
-    if (!dated.length) { toast("Load some data first."); return; }
-    var years = Array.from(new Set(dated.map(function (r) { return r.date.getFullYear(); }))).sort();
-    $("fetchHolidayBtn").disabled = true;
-    $("holidayStatus").textContent = "Fetching\u2026";
-    try {
-      var all = {};
-      for (var i = 0; i < years.length; i++) {
-        var res = await fetch("https://date.nager.at/api/v3/PublicHolidays/" + years[i] + "/US");
-        if (!res.ok) throw new Error("HTTP " + res.status + " for " + years[i]);
-        (await res.json()).forEach(function (h) { if (h.date) all[h.date] = h.localName || h.name; });
-      }
-      holidaysByDate = all;
-      holidaysFetched = true;
-      $("holidayStatus").textContent = "Fetched " + Object.keys(all).length + " holidays for " + years.join(", ") + ".";
-    } catch (err) {
-      holidaysFetched = false;
-      $("holidayStatus").textContent = "Couldn't fetch: " + (err && err.message ? err.message : "network error") + ".";
-    } finally {
-      $("fetchHolidayBtn").disabled = false;
-    }
-    renderSpuriousTab();
+  function isoAddDays(iso, n) {
+    var p = iso.split("-");
+    return isoDate(new Date(+p[0], +p[1] - 1, +p[2] + n));
   }
-  $("fetchHolidayBtn").addEventListener("click", fetchHolidays);
 
-  function renderHolidayChart(rows) {
-    var hasData = holidaysFetched;
-    $("holidayResults").classList.toggle("hidden", !hasData);
-    if (!hasData) return;
-    function shift(d, n) { var x = new Date(d.getFullYear(), d.getMonth(), d.getDate() + n); return isoDate(x); }
-    var order = ["Public holiday", "Day before or after a holiday", "Ordinary day"];
-    var joined = rows.filter(function (r) { return r.date; }).map(function (r) { return { row: r }; });
-    var items = bucketPercent(joined, order, function (j) {
-      var d = j.row.date;
-      if (holidaysByDate[isoDate(d)]) return order[0];
-      if (holidaysByDate[shift(d, -1)] || holidaysByDate[shift(d, 1)]) return order[1];
-      return order[2];
-    }, function (j) { return j.row.pleasant === "Unpleasant"; });
-    items.forEach(function (it, i) { it.color = ["#dc2626", "#f97316", "#a78bfa"][i]; });
-    drawBarChart($("chartHoliday"), items, { rotateLabels: true, height: 240 });
-    $("holidayCoverageNote").textContent = joined.length.toLocaleString() + " filtered responses; " + Object.keys(holidaysByDate).length + " holidays loaded. The kiosk is probably closed on many holidays, so check the n= counts.";
+  function academicCategory(d) {
+    var iso = isoDate(d), dow = d.getDay();
+    if (LOS_RIOS_HOLIDAYS[iso]) return "Holiday or recess";
+    if (dow === 0 || dow === 6) return "Weekend";
+    for (var i = 0; i < LOS_RIOS_TERMS.length; i++) {
+      var t = LOS_RIOS_TERMS[i];
+      if (iso < t.start || iso > t.end) continue;
+      var rc = t.recess || [];
+      for (var k = 0; k < rc.length; k++) if (iso >= rc[k][0] && iso <= rc[k][1]) return "Holiday or recess";
+      if (t.summer) return "Summer session";
+      if (iso >= t.finals[0] && iso <= t.finals[1]) return "Finals week";
+      if (iso <= isoAddDays(t.start, 6)) return "First week of term";
+      if (iso > isoAddDays(t.withdraw, -7) && iso <= t.withdraw) return "Withdrawal-deadline week";
+      return "Regular instruction";
+    }
+    return "Between terms";
+  }
+
+  function renderAcademicChart(rows) {
+    var all = rows.filter(function (r) { return r.date; });
+    var joined = all.filter(function (r) {
+      var iso = isoDate(r.date);
+      return iso >= ACADEMIC_COVERAGE[0] && iso <= ACADEMIC_COVERAGE[1];
+    }).map(function (r) { return { row: r }; });
+    var items = bucketPercent(joined, ACADEMIC_ORDER, function (j) { return academicCategory(j.row.date); },
+      function (j) { return j.row.pleasant === "Unpleasant"; });
+    var colors = ["#6b7280", "#3b82f6", "#f97316", "#dc2626", "#eab308", "#a78bfa", "#14b8a6", "#9ca3af"];
+    items.forEach(function (it, i) { it.color = colors[i]; });
+    drawBarChart($("chartAcademic"), items, { rotateLabels: true, height: 240 });
+    var skipped = all.length - joined.length;
+    $("academicCoverageNote").textContent = joined.length.toLocaleString() + " filtered responses sorted. Calendar covers Summer 2023 to Spring 2027 (Los Rios Community College District, losrios.edu)" +
+      (skipped ? "; " + skipped.toLocaleString() + " responses outside those dates are left out" : "") +
+      ". Weekdays outside any term count as \"Between terms\"; holidays and weekends are separated out so they don't blur the term weeks.";
   }
 
   function ensureSpuriousDefaults() {
