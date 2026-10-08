@@ -676,7 +676,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.13</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.14</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -3751,11 +3751,6 @@
     function makeTrendRow(name, color) {
       var row = document.createElement("div");
       row.style.cssText = "display:flex; align-items:center; gap:14px;";
-      // Half-size slot for the previous step's arrow. Always present (blank
-      // when there is no earlier step) so the main arrow never shifts sideways.
-      var priorArrow = document.createElement("div");
-      priorArrow.style.cssText = "flex:none; align-self:flex-end; width:38px; height:38px; display:flex; align-items:center; justify-content:center; opacity:0.6;";
-      priorArrow.title = "Previous step's trend";
       var arrow = document.createElement("div");
       arrow.style.cssText = "flex:none; width:76px; height:76px; display:flex; align-items:center; justify-content:center;";
       var text = document.createElement("div");
@@ -3767,11 +3762,10 @@
       detail.style.cssText = "font-size:14px; font-weight:600; color:var(--muted);";
       text.appendChild(nameEl);
       text.appendChild(detail);
-      row.appendChild(priorArrow);
       row.appendChild(arrow);
       row.appendChild(text);
       trendBox.appendChild(row);
-      return { row: row, arrow: arrow, priorArrow: priorArrow, detail: detail, color: color };
+      return { row: row, arrow: arrow, detail: detail, color: color, svg: null, rot: 0 };
     }
     var energyTrend = makeTrendRow("Energy", "#f97316");
     var pleasantTrend = makeTrendRow("Pleasantness", "#12d9a0");
@@ -3791,24 +3785,36 @@
       if (d > 0) return strong ? 0 : 45;             // up / up-right
       return strong ? 180 : 135;                     // down / down-right
     }
-    function trendArrowSvg(size, d, color) {
+    // One persistent arrow per row. Its angle is animated (CSS transition) so
+    // the arrow turns between positions as playback steps, taking the short way round.
+    function setTrendArrow(t, d) {
       var steady = Math.abs(d) < 0.05;
-      var rot = trendArrowRotation(d);
-      return '<svg viewBox="0 0 64 64" width="' + size + '" height="' + size + '" aria-hidden="true" style="overflow:visible;">' +
-        '<g transform="rotate(' + rot + ' 32 32)" fill="none" stroke="' + (steady ? "var(--muted)" : color) + '" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">' +
-        '<path d="M32 56 V9"/><path d="M10 31 L32 9 L54 31"/></g></svg>';
+      var target = trendArrowRotation(d);
+      if (!t.svg) {
+        t.arrow.innerHTML = '<svg viewBox="0 0 64 64" width="76" height="76" aria-hidden="true" style="overflow:visible;">' +
+          '<g style="transform-box:view-box; transform-origin:32px 32px; transition:transform 0.45s ease, stroke 0.45s ease;" fill="none" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">' +
+          '<path d="M32 56 V9"/><path d="M10 31 L32 9 L54 31"/></g></svg>';
+        t.svg = t.arrow.querySelector("g");
+        t.rot = target;
+      } else {
+        var diff = ((target - t.rot) % 360 + 540) % 360 - 180;
+        t.rot += diff;
+      }
+      t.svg.style.transform = "rotate(" + t.rot + "deg)";
+      t.svg.style.stroke = steady ? "var(--muted)" : t.color;
+      t.svg.parentNode.style.visibility = "";
     }
 
-    // now/before: this and the previous step's value. beforeBefore: the value
-    // before that, used for the small "prior" arrow (null when there isn't one).
-    function updateTrendRow(t, now, before, beforeLabel, beforeBefore) {
-      // Hidden (not removed) so the layout keeps its space.
-      t.priorArrow.innerHTML = (before != null && beforeBefore != null) ? trendArrowSvg(38, before - beforeBefore, t.color) : "";
-      if (before == null) { t.arrow.innerHTML = ""; t.detail.textContent = ""; t.row.querySelector("div:nth-child(3)").style.visibility = "hidden"; return; }
-      t.row.querySelector("div:nth-child(3)").style.visibility = "";
+    // now/before: this and the previous step's value.
+    function updateTrendRow(t, now, before, beforeLabel) {
+      if (before == null) {
+        if (t.svg) t.svg.parentNode.style.visibility = "hidden";
+        t.detail.textContent = ""; t.row.querySelector("div:nth-child(2)").style.visibility = "hidden"; return;
+      }
+      t.row.querySelector("div:nth-child(2)").style.visibility = "";
       var d = now - before;
       var steady = Math.abs(d) < 0.05;
-      t.arrow.innerHTML = trendArrowSvg(76, d, t.color);
+      setTrendArrow(t, d);
       t.detail.textContent = (steady ? "Steady" : (d > 0 ? "Up " : "Down ") + Math.abs(d).toFixed(2)) + " vs. " + beforeLabel;
     }
 
@@ -3937,9 +3943,8 @@
       spreadEl.textContent = spreadLabel(c.spread).charAt(0).toUpperCase() + spreadLabel(c.spread).slice(1);
       topWordEl.textContent = c.topWord && c.topWord !== c.closest ? "Most chosen: " + c.topWord : "";
       var prev = step > 0 ? centroids[step - 1] : null;
-      var prev2 = step > 1 ? centroids[step - 2] : null;
-      updateTrendRow(energyTrend, c.energy, prev ? prev.energy : null, prev ? prev.label : "", prev2 ? prev2.energy : null);
-      updateTrendRow(pleasantTrend, c.pleasant, prev ? prev.pleasant : null, prev ? prev.label : "", prev2 ? prev2.pleasant : null);
+      updateTrendRow(energyTrend, c.energy, prev ? prev.energy : null, prev ? prev.label : "");
+      updateTrendRow(pleasantTrend, c.pleasant, prev ? prev.pleasant : null, prev ? prev.label : "");
       slider.value = String(step);
       if (centroids.length > 1) {
         prevBtn.disabled = step <= 0;
