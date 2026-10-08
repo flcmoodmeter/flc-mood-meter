@@ -676,7 +676,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.18</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.19</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -1510,12 +1510,19 @@
           <div class="panel spurious-panel" style="margin: 18px 0;">
             <h2 style="text-transform:none; font-size:14.5px; letter-spacing:0; color:var(--ink); font-weight:700;">&#127891; Los Rios academic calendar</h2>
             <p class="import-note" style="margin:6px 0 0;">
-              Every day is sorted by where it falls in the Los Rios Community College District calendar (Summer 2023 through Spring 2027): first week of a term, the week of the withdrawal deadline, finals week, holidays and recesses, and so on. Built in, so no internet connection is needed.
+              Every day is sorted by where it falls in the Los Rios Community College District calendar (Summer 2023 through Spring 2027): first week of a term, the week of the withdrawal deadline, finals week, and so on. Thanksgiving break, Winter recess, Spring break and each holiday are broken out, along with the last school day before and the first school day back. Click a break bar to see day before, during and day back side by side; click the day-before or day-back bar to see it by break. Built in, so no internet connection is needed.
             </p>
           </div>
           <div class="chart-card spurious-card">
             <div class="chart-card-head"><h3>Academic calendar vs. % Unpleasant</h3></div>
             <div class="chart-svg-wrap" id="chartAcademic"></div>
+            <div id="academicDetail" style="margin-top:12px;display:none;">
+              <div id="academicDetailHead" style="font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;"></div>
+              <div id="academicHolidayWrap" class="no-print" style="display:none;margin-bottom:8px;font-size:12px;color:var(--muted);">
+                Holiday: <select id="academicHolidaySel"></select>
+              </div>
+              <div class="chart-svg-wrap" id="academicDetailChart"></div>
+            </div>
           </div>
           <p class="table-note" id="academicCoverageNote"></p>
 
@@ -8105,7 +8112,7 @@
   // start = first day of instruction; end = last day (end of finals);
   // finals = [first, last]; withdraw = last day to withdraw with a W;
   // recess = no-class breaks inside the term; summer terms have no finals/withdraw here.
-  var LOS_RIOS_TERMS = [
+  var ACADEMIC_TERMS = [
     { name: "Summer 2023", summer: true, start: "2023-06-05", end: "2023-08-03" },
     { name: "Fall 2023", start: "2023-08-19", end: "2023-12-14", finals: ["2023-12-08", "2023-12-14"], withdraw: "2023-11-14", recess: [["2023-11-23", "2023-11-26"]] },
     { name: "Spring 2024", start: "2024-01-13", end: "2024-05-16", finals: ["2024-05-10", "2024-05-16"], withdraw: "2024-04-14", recess: [["2024-03-11", "2024-03-17"]] },
@@ -8119,54 +8126,215 @@
     { name: "Fall 2026", start: "2026-08-22", end: "2026-12-17", finals: ["2026-12-11", "2026-12-17"], withdraw: "2026-11-17", recess: [["2026-11-26", "2026-11-29"]] },
     { name: "Spring 2027", start: "2027-01-16", end: "2027-05-20", finals: ["2027-05-14", "2027-05-20"], withdraw: "2027-04-18", recess: [["2027-03-15", "2027-03-21"]] }
   ];
-  // District holidays (no classes). Winter recess falls between terms.
-  var LOS_RIOS_HOLIDAYS = {};
-  ["2023-06-19","2023-07-04","2023-09-04","2023-11-10","2024-01-01","2024-01-15","2024-02-16","2024-02-19","2024-04-01","2024-05-27",
-   "2024-06-19","2024-07-04","2024-09-02","2024-11-11","2025-01-01","2025-01-20","2025-02-14","2025-02-17","2025-03-31","2025-05-26",
-   "2025-06-19","2025-07-04","2025-09-01","2025-11-11","2026-01-01","2026-01-19","2026-02-13","2026-02-16","2026-03-31",
-   "2026-06-19","2026-07-03","2026-09-07","2026-11-11","2027-01-18","2027-02-12","2027-02-15","2027-03-31"
-  ].forEach(function (d) { LOS_RIOS_HOLIDAYS[d] = true; });
+  // District holidays (no classes), date -> name. Winter recess (day after fall
+  // finals through Jan 1) and the Thanksgiving / spring recesses above are
+  // handled separately. Holidays outside any term (e.g. Memorial Day) are left
+  // as plain "Between terms" days.
+  var ACADEMIC_HOLIDAYS = {
+    "2023-06-19": "Juneteenth", "2023-07-04": "Independence Day", "2023-09-04": "Labor Day", "2023-11-10": "Veterans Day",
+    "2024-01-15": "MLK Day", "2024-02-16": "Lincoln Day", "2024-02-19": "Washington Day", "2024-04-01": "C\u00e9sar Ch\u00e1vez Day", "2024-05-27": "Memorial Day",
+    "2024-06-19": "Juneteenth", "2024-07-04": "Independence Day", "2024-09-02": "Labor Day", "2024-11-11": "Veterans Day",
+    "2025-01-20": "MLK Day", "2025-02-14": "Lincoln Day", "2025-02-17": "Washington Day", "2025-03-31": "C\u00e9sar Ch\u00e1vez Day", "2025-05-26": "Memorial Day",
+    "2025-06-19": "Juneteenth", "2025-07-04": "Independence Day", "2025-09-01": "Labor Day", "2025-11-11": "Veterans Day",
+    "2026-01-19": "MLK Day", "2026-02-13": "Lincoln Day", "2026-02-16": "Washington Day", "2026-03-31": "C\u00e9sar Ch\u00e1vez Day",
+    "2026-06-19": "Juneteenth", "2026-07-03": "Independence Day", "2026-09-07": "Labor Day", "2026-11-11": "Veterans Day",
+    "2027-01-18": "MLK Day", "2027-02-12": "Lincoln Day", "2027-02-15": "Washington Day", "2027-03-31": "C\u00e9sar Ch\u00e1vez Day"
+  };
   var ACADEMIC_COVERAGE = ["2023-06-05", "2027-05-31"];
-  var ACADEMIC_ORDER = ["Regular instruction", "First week of term", "Withdrawal-deadline week", "Finals week", "Summer session", "Between terms", "Holiday or recess", "Weekend"];
+  var ACADEMIC_ORDER = ["Regular instruction", "First week of term", "Withdrawal-deadline week", "Finals week", "Summer session", "Between terms", "Weekend",
+    "Day before a break", "Return day after a break", "Thanksgiving break", "Winter recess", "Spring break", "Other holidays"];
+  var ACADEMIC_COLORS = ["#6b7280", "#3b82f6", "#f97316", "#dc2626", "#eab308", "#a78bfa", "#9ca3af",
+    "#0ea5e9", "#22c55e", "#b45309", "#1d4ed8", "#14b8a6", "#be185d"];
+  var BREAK_GROUPS = ["Thanksgiving break", "Winter recess", "Spring break", "Other holidays"];
 
   function isoAddDays(iso, n) {
     var p = iso.split("-");
     return isoDate(new Date(+p[0], +p[1] - 1, +p[2] + n));
   }
-
-  function academicCategory(d) {
-    var iso = isoDate(d), dow = d.getDay();
-    if (LOS_RIOS_HOLIDAYS[iso]) return "Holiday or recess";
-    if (dow === 0 || dow === 6) return "Weekend";
-    for (var i = 0; i < LOS_RIOS_TERMS.length; i++) {
-      var t = LOS_RIOS_TERMS[i];
-      if (iso < t.start || iso > t.end) continue;
-      var rc = t.recess || [];
-      for (var k = 0; k < rc.length; k++) if (iso >= rc[k][0] && iso <= rc[k][1]) return "Holiday or recess";
-      if (t.summer) return "Summer session";
-      if (iso >= t.finals[0] && iso <= t.finals[1]) return "Finals week";
-      if (iso <= isoAddDays(t.start, 6)) return "First week of term";
-      if (iso > isoAddDays(t.withdraw, -7) && iso <= t.withdraw) return "Withdrawal-deadline week";
-      return "Regular instruction";
-    }
-    return "Between terms";
+  function isoDow(iso) { var p = iso.split("-"); return new Date(+p[0], +p[1] - 1, +p[2]).getDay(); }
+  function isoRange(a, b) { var out = [], d = a; while (d <= b) { out.push(d); d = isoAddDays(d, 1); } return out; }
+  function termOfIso(iso) {
+    for (var i = 0; i < ACADEMIC_TERMS.length; i++) if (iso >= ACADEMIC_TERMS[i].start && iso <= ACADEMIC_TERMS[i].end) return ACADEMIC_TERMS[i];
+    return null;
   }
+  function inTermRecess(t, iso) {
+    var rc = t.recess || [];
+    for (var k = 0; k < rc.length; k++) if (iso >= rc[k][0] && iso <= rc[k][1]) return true;
+    return false;
+  }
+  // A school day: a weekday inside a term (summer included) that isn't a holiday or recess.
+  function isSchoolDay(iso) {
+    var dow = isoDow(iso);
+    if (dow === 0 || dow === 6) return false;
+    var t = termOfIso(iso);
+    return !!t && !ACADEMIC_HOLIDAYS[iso] && !inTermRecess(t, iso);
+  }
+  function prevSchoolDay(iso) { for (var i = 1; i < 40; i++) { var d = isoAddDays(iso, -i); if (isSchoolDay(d)) return d; } return null; }
+  function nextSchoolDay(iso) { for (var i = 1; i < 40; i++) { var d = isoAddDays(iso, i); if (isSchoolDay(d)) return d; } return null; }
+
+  // Breaks: Thanksgiving, Spring break, Winter recess and each in-term holiday.
+  // Each has its break days, the last school day before, and the first school day back.
+  var ACADEMIC_EVENTS = (function () {
+    var raw = [];
+    ACADEMIC_TERMS.forEach(function (t) {
+      (t.recess || []).forEach(function (r) {
+        raw.push({ group: r[0].slice(5, 7) === "11" ? "Thanksgiving break" : "Spring break", name: r[0].slice(5, 7) === "11" ? "Thanksgiving" : "Spring break", days: isoRange(r[0], r[1]) });
+      });
+      if (/^Fall/.test(t.name)) {
+        var jan1 = (+t.end.slice(0, 4) + 1) + "-01-01";
+        raw.push({ group: "Winter recess", name: "Winter recess", days: isoRange(isoAddDays(t.end, 1), jan1) });
+      }
+    });
+    var hol = [];
+    Object.keys(ACADEMIC_HOLIDAYS).sort().forEach(function (iso) {
+      var t = termOfIso(iso);
+      if (!t || inTermRecess(t, iso)) return;
+      hol.push({ group: "Other holidays", name: ACADEMIC_HOLIDAYS[iso], days: [iso] });
+    });
+    hol.forEach(function (e) { e.ret = nextSchoolDay(e.days[e.days.length - 1]); });
+    // Neighbouring holidays that share the same day back (Lincoln Fri + Washington Mon) become one break.
+    var merged = [];
+    hol.forEach(function (e) {
+      var last = merged[merged.length - 1];
+      if (last && last.ret === e.ret) {
+        last.days = isoRange(last.days[0], e.days[e.days.length - 1]);
+        last.name = /Lincoln/.test(last.name) && /Washington/.test(e.name) ? "Presidents' Day weekend" : last.name + " + " + e.name;
+      } else merged.push(e);
+    });
+    raw = raw.concat(merged);
+    raw.forEach(function (e) {
+      e.before = prevSchoolDay(e.days[0]);
+      e.ret = nextSchoolDay(e.days[e.days.length - 1]);
+      // A holiday right after a term starts has no school day just before it
+      // (e.g. MLK Day the Monday after classes begin on a Saturday); don't reach back across a gap.
+      if (e.group === "Other holidays" && e.before && e.before < isoAddDays(e.days[0], -4)) e.before = null;
+    });
+    return raw;
+  })();
+
+  // date -> { ev: event, role: "during" | "before" | "return" }
+  var ACADEMIC_DAYINFO = (function () {
+    var m = {};
+    ACADEMIC_EVENTS.forEach(function (e) { e.days.forEach(function (d) { m[d] = { ev: e, role: "during" }; }); });
+    ACADEMIC_EVENTS.forEach(function (e) {
+      if (e.before && !m[e.before]) m[e.before] = { ev: e, role: "before" };
+      if (e.ret && !m[e.ret]) m[e.ret] = { ev: e, role: "return" };
+    });
+    return m;
+  })();
+
+  // -> { cat: category label, ev: break event or null, role }
+  function academicInfo(d) {
+    var iso = isoDate(d);
+    var info = ACADEMIC_DAYINFO[iso];
+    if (info) {
+      if (info.role === "during") return { cat: info.ev.group, ev: info.ev, role: "during" };
+      return { cat: info.role === "before" ? "Day before a break" : "Return day after a break", ev: info.ev, role: info.role };
+    }
+    var dow = d.getDay();
+    if (dow === 0 || dow === 6) return { cat: "Weekend" };
+    var t = termOfIso(iso);
+    if (!t) return { cat: "Between terms" };
+    if (t.summer) return { cat: "Summer session" };
+    if (iso >= t.finals[0] && iso <= t.finals[1]) return { cat: "Finals week" };
+    if (iso <= isoAddDays(t.start, 6)) return { cat: "First week of term" };
+    if (iso > isoAddDays(t.withdraw, -7) && iso <= t.withdraw) return { cat: "Withdrawal-deadline week" };
+    return { cat: "Regular instruction" };
+  }
+
+  var _academicRecs = [];
+  var _academicSelected = null;
 
   function renderAcademicChart(rows) {
     var all = rows.filter(function (r) { return r.date; });
-    var joined = all.filter(function (r) {
+    var recs = [];
+    all.forEach(function (r) {
       var iso = isoDate(r.date);
-      return iso >= ACADEMIC_COVERAGE[0] && iso <= ACADEMIC_COVERAGE[1];
-    }).map(function (r) { return { row: r }; });
-    var items = bucketPercent(joined, ACADEMIC_ORDER, function (j) { return academicCategory(j.row.date); },
-      function (j) { return j.row.pleasant === "Unpleasant"; });
-    var colors = ["#6b7280", "#3b82f6", "#f97316", "#dc2626", "#eab308", "#a78bfa", "#14b8a6", "#9ca3af"];
-    items.forEach(function (it, i) { it.color = colors[i]; });
+      if (iso < ACADEMIC_COVERAGE[0] || iso > ACADEMIC_COVERAGE[1]) return;
+      var info = academicInfo(r.date);
+      info.row = r;
+      recs.push(info);
+    });
+    _academicRecs = recs;
+    _academicSelected = null;
+    $("academicDetail").style.display = "none";
+
+    var joined = recs.map(function (x) { return { row: x.row, cat: x.cat }; });
+    var items = bucketPercent(joined, ACADEMIC_ORDER, function (j) { return j.cat; }, function (j) { return j.row.pleasant === "Unpleasant"; });
+    items.forEach(function (it, i) { it.color = ACADEMIC_COLORS[i]; it._cat = ACADEMIC_ORDER[i]; });
     drawBarChart($("chartAcademic"), items, { rotateLabels: true, height: 240 });
-    var skipped = all.length - joined.length;
-    $("academicCoverageNote").textContent = joined.length.toLocaleString() + " filtered responses sorted. Calendar covers Summer 2023 to Spring 2027 (Los Rios Community College District, losrios.edu)" +
+
+    var container = $("chartAcademic");
+    var hint = document.createElement("div");
+    hint.style.cssText = "font-size:10.5px;color:var(--muted);text-align:center;margin-top:4px;";
+    hint.textContent = "Click a break bar for day before / during / day back; click the day-before or day-back bar to compare breaks";
+    container.appendChild(hint);
+    var rects = Array.from(container.querySelectorAll("rect"));
+    rects.forEach(function (rect, i) {
+      var cat = items[i] && items[i]._cat;
+      var clickable = BREAK_GROUPS.indexOf(cat) >= 0 || cat === "Day before a break" || cat === "Return day after a break";
+      if (!clickable) return;
+      rect.style.cursor = "pointer";
+      rect.addEventListener("click", function () {
+        if (_academicSelected === cat) {
+          _academicSelected = null;
+          $("academicDetail").style.display = "none";
+          rects.forEach(function (r) { r.style.opacity = "1"; });
+          return;
+        }
+        _academicSelected = cat;
+        rects.forEach(function (r, j) { r.style.opacity = j === i ? "1" : "0.35"; });
+        renderAcademicDetail(cat, items[i].color);
+      });
+    });
+
+    var skipped = all.length - recs.length;
+    $("academicCoverageNote").textContent = recs.length.toLocaleString() + " filtered responses sorted. Calendar covers Summer 2023 to Spring 2027 (Los Rios Community College District, losrios.edu)" +
       (skipped ? "; " + skipped.toLocaleString() + " responses outside those dates are left out" : "") +
-      ". Weekdays outside any term count as \"Between terms\"; holidays and weekends are separated out so they don't blur the term weeks.";
+      ". \"Day before\" and \"Return day\" are the last school day before and first school day after a break, and take priority over finals or first-week labels. Weekdays outside any term count as \"Between terms\"; weekends are kept apart so they don't blur the term weeks.";
+  }
+
+  function renderAcademicDetail(cat, color) {
+    var wrap = $("academicHolidayWrap"), sel = $("academicHolidaySel");
+    var rows = _academicRecs;
+    var items, head;
+    function pct(group) { return group.filter(function (x) { return x.row.pleasant === "Unpleasant"; }).length; }
+    function bar(label, group) {
+      return { label: label + " (n=" + group.length + ")", value: group.length ? Math.round(pct(group) / group.length * 100) : 0, n: group.length, color: color };
+    }
+    if (BREAK_GROUPS.indexOf(cat) >= 0) {
+      var groupRecs = rows.filter(function (x) { return x.ev && x.ev.group === cat; });
+      var names = [];
+      if (cat === "Other holidays") {
+        ACADEMIC_EVENTS.forEach(function (e) { if (e.group === cat && names.indexOf(e.name) < 0) names.push(e.name); });
+        names.sort();
+        var cur = sel.value;
+        sel.innerHTML = '<option value="">All holidays</option>' + names.map(function (n) { return '<option value="' + n.replace(/"/g, "&quot;") + '">' + n + "</option>"; }).join("");
+        sel.value = names.indexOf(cur) >= 0 ? cur : "";
+        wrap.style.display = "block";
+        sel.onchange = function () { renderAcademicDetail(cat, color); };
+        if (sel.value) groupRecs = groupRecs.filter(function (x) { return x.ev.name === sel.value; });
+      } else {
+        wrap.style.display = "none";
+      }
+      var by = function (role) { return groupRecs.filter(function (x) { return x.role === role; }); };
+      items = [bar("Day before", by("before")), bar("During", by("during")), bar("Day back", by("return"))];
+      head = (cat === "Other holidays" && sel.value ? sel.value : cat) + " \u2014 % Unpleasant, day before / during / day back";
+    } else {
+      wrap.style.display = "none";
+      var role = cat === "Day before a break" ? "before" : "return";
+      var evNames = [];
+      ACADEMIC_EVENTS.forEach(function (e) { if (evNames.indexOf(e.name) < 0) evNames.push(e.name); });
+      var rank = { "Thanksgiving": 0, "Winter recess": 1, "Spring break": 2 };
+      evNames.sort(function (a, b) { var ra = a in rank ? rank[a] : 3, rb = b in rank ? rank[b] : 3; return ra - rb || (a < b ? -1 : 1); });
+      items = evNames.map(function (n) {
+        return bar(n, rows.filter(function (x) { return x.role === role && x.ev.name === n; }));
+      });
+      head = cat + " \u2014 % Unpleasant, by break";
+    }
+    $("academicDetailHead").textContent = head;
+    $("academicDetail").style.display = "block";
+    drawBarChart($("academicDetailChart"), items, { rotateLabels: true, height: 220 });
   }
 
   function ensureSpuriousDefaults() {
