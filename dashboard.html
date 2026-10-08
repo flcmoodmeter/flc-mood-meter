@@ -676,7 +676,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.14</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.15</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -3924,6 +3924,8 @@
     container.appendChild(legendNote);
 
     // -------- playback logic --------
+    var TREND_BEAT = 250;   // ms between word -> Energy arrow -> Pleasantness arrow
+    var trendTimers = [];
     function setStep(step, showCursor) {
       for (var p = 0; p < pointEls.length; p++) {
         pointEls[p].style.opacity = p <= step ? "" : "0";
@@ -3943,8 +3945,14 @@
       spreadEl.textContent = spreadLabel(c.spread).charAt(0).toUpperCase() + spreadLabel(c.spread).slice(1);
       topWordEl.textContent = c.topWord && c.topWord !== c.closest ? "Most chosen: " + c.topWord : "";
       var prev = step > 0 ? centroids[step - 1] : null;
-      updateTrendRow(energyTrend, c.energy, prev ? prev.energy : null, prev ? prev.label : "");
-      updateTrendRow(pleasantTrend, c.pleasant, prev ? prev.pleasant : null, prev ? prev.label : "");
+      // Sequence: closest word updates at once, then the Energy arrow, then
+      // the Pleasantness arrow, each a beat apart. A newer step cancels any
+      // pending updates from the previous one.
+      trendTimers.forEach(clearTimeout);
+      trendTimers = [
+        setTimeout(function () { updateTrendRow(energyTrend, c.energy, prev ? prev.energy : null, prev ? prev.label : ""); }, TREND_BEAT),
+        setTimeout(function () { updateTrendRow(pleasantTrend, c.pleasant, prev ? prev.pleasant : null, prev ? prev.label : ""); }, TREND_BEAT * 2)
+      ];
       slider.value = String(step);
       if (centroids.length > 1) {
         prevBtn.disabled = step <= 0;
@@ -3978,7 +3986,7 @@
         step++;
         if (step >= centroids.length) { stopPlay(); setStep(centroids.length - 1, false); return; }
         setStep(step, true);
-      }, 650);
+      }, 1000);   // long enough for the word + two arrow turns to finish
     }
     playBtn.addEventListener("click", function () {
       if (_centroidTimer) stopPlay(); else startPlay();
