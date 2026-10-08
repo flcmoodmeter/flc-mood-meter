@@ -676,7 +676,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.26</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.27</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -2085,10 +2085,12 @@
    * of the three detection rules below.  Mutates in place; safe to re-run.
    *
    * Rules (applied per-session):
-   *   1. BURST  – 5+ responses within a 60-second window → all flagged
+   *   1. BURST  – 5+ responses within 60 s AND averaging < 6 s apart → all flagged
+   *               (slower runs are real queues, e.g. at closing time)
    *   2. REPEAT – same button_id appears 3+ times consecutively → all flagged
-   *   3. SPEED  – seconds_on_grid < 2                           → flagged
+   *   3. SPEED  – seconds_on_grid < 1                           → flagged
    */
+  var BURST_MAX_AVG_GAP = 6;   // seconds between consecutive entries
   function tagSuspicious(rows) {
     // Clear any prior tags so re-runs are idempotent
     rows.forEach(function (r) { r._suspicious = false; r._burstFlag = false; r._repeatFlag = false; });
@@ -2113,7 +2115,10 @@
         var t0 = sess[i].date.getTime();
         var j = i;
         while (j < sess.length && sess[j].date && sess[j].date.getTime() - t0 <= 60000) j++;
-        if (j - i >= 5) {
+        // A closing-time queue of real people is ~10+ s apart; one person
+        // mashing buttons is only a few seconds apart. Require a tight pace.
+        var n = j - i, span = n > 1 ? (sess[j - 1].date.getTime() - t0) / 1000 : 0;
+        if (n >= 5 && span / (n - 1) < BURST_MAX_AVG_GAP) {
           for (var k = i; k < j; k++) { sess[k]._suspicious = true; sess[k]._burstFlag = true; }
         }
       }
@@ -2135,7 +2140,7 @@
 
     // Rule 3: SPEED – decided faster than a human can meaningfully read and choose
     rows.forEach(function (r) {
-      if (r.seconds != null && !isNaN(r.seconds) && r.seconds < 2) r._suspicious = true;
+      if (r.seconds != null && !isNaN(r.seconds) && r.seconds < 1) r._suspicious = true;
     });
   }
 
@@ -8714,9 +8719,9 @@
     <p style="margin:0 0 12px; font-size:13px; color:var(--ink); line-height:1.5;">When enabled, entries that appear to be spam, pranks, or accidental taps are excluded from all charts and counts.</p>
     <p style="margin:0 0 8px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted);">Detection rules</p>
     <ul style="margin:0 0 14px; padding:0; list-style:none; display:flex; flex-direction:column; gap:8px;">
-      <li style="font-size:13px; color:var(--ink); line-height:1.4;"><span style="font-size:15px;">🚀</span> <strong>Speed</strong> — Response selected in under 2 seconds (faster than a person can meaningfully read and choose)</li>
+      <li style="font-size:13px; color:var(--ink); line-height:1.4;"><span style="font-size:15px;">🚀</span> <strong>Speed</strong> — Response selected in under 1 second (faster than a person can read the grid and choose)</li>
       <li style="font-size:13px; color:var(--ink); line-height:1.4;"><span style="font-size:15px;">🔁</span> <strong>Repeat</strong> — Same emotion chosen 3 or more times in a row within a single session</li>
-      <li style="font-size:13px; color:var(--ink); line-height:1.4;"><span style="font-size:15px;">⚡</span> <strong>Burst</strong> — 5 or more responses submitted within 60 seconds in a single session</li>
+      <li style="font-size:13px; color:var(--ink); line-height:1.4;"><span style="font-size:15px;">⚡</span> <strong>Burst</strong> — 5 or more responses within 60 seconds, averaging under 6 seconds apart (a line of real people at closing time is slower than that)</li>
     </ul>
     <p style="margin:0; font-size:12px; color:var(--muted); line-height:1.5; border-top:1px solid var(--line); padding-top:10px;">Flagged entries are never deleted — turn this filter off to include them again.</p>
   </div>
