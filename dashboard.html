@@ -676,7 +676,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.16</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.17</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -3788,7 +3788,7 @@
     // One persistent arrow per row. Its angle is animated (CSS transition) so
     // the arrow turns between positions as playback steps, taking the short way round.
     // Same direction as before: the arrow gives a short push along the way it
-    // points (plus a brief brightening) so an unchanged trend still reads as
+    // points so an unchanged trend still reads as
     // "confirmed" rather than looking frozen.
     function nudgeArrow(t, deg) {
       var el = t.svg.parentNode;
@@ -3796,9 +3796,9 @@
       if (t.nudge) t.nudge.cancel();
       var a = deg * Math.PI / 180, dx = Math.sin(a) * 7, dy = -Math.cos(a) * 7;
       t.nudge = el.animate([
-        { transform: "translate(0,0)", filter: "brightness(1)" },
-        { transform: "translate(" + dx + "px," + dy + "px)", filter: "brightness(1.4)", offset: 0.4 },
-        { transform: "translate(0,0)", filter: "brightness(1)" }
+        { transform: "translate(0,0)" },
+        { transform: "translate(" + dx + "px," + dy + "px)", offset: 0.4 },
+        { transform: "translate(0,0)" }
       ], { duration: 360, easing: "ease-out" });
     }
     function setTrendArrow(t, d) {
