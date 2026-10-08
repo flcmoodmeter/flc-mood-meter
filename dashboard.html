@@ -676,7 +676,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.21</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.22</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -1510,7 +1510,7 @@
           <div class="panel spurious-panel" style="margin: 18px 0;">
             <h2 style="text-transform:none; font-size:14.5px; letter-spacing:0; color:var(--ink); font-weight:700;">&#127891; Los Rios academic calendar</h2>
             <p class="import-note" style="margin:6px 0 0;">
-              Every day is sorted by where it falls in the Los Rios Community College District calendar (Summer 2023 through Spring 2027): first week of a term, the week of the withdrawal deadline, finals week, and so on. Thanksgiving break, Winter recess, Spring break and each holiday are broken out, along with the last school day before and the first school day back. Click a bold label (or its bar) to drill down: a break shows day before, during and day back side by side; the day-before and day-back bars compare the breaks. The colleges are closed during breaks, so those bars are normally empty. Built in, so no internet connection is needed.
+              Every day is sorted by where it falls in the Los Rios Community College District calendar (Summer 2023 through Spring 2027): first week of a term, the week of the withdrawal deadline, finals week, and so on. The last school day before a break and the first school day back are broken out. Click the day-before or day-back bar to see it split by break (Thanksgiving, Winter recess, Spring break, and each holiday). Built in, so no internet connection is needed.
             </p>
           </div>
           <div class="chart-card spurious-card">
@@ -1518,9 +1518,6 @@
             <div class="chart-svg-wrap" id="chartAcademic"></div>
             <div id="academicDetail" style="margin-top:12px;display:none;">
               <div id="academicDetailHead" style="font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;"></div>
-              <div id="academicHolidayWrap" class="no-print" style="display:none;margin-bottom:8px;font-size:12px;color:var(--muted);">
-                Holiday: <select id="academicHolidaySel"></select>
-              </div>
               <div class="chart-svg-wrap" id="academicDetailChart"></div>
             </div>
           </div>
@@ -8154,9 +8151,8 @@
     "2027-01-18": "MLK Day", "2027-02-12": "Lincoln Day", "2027-02-15": "Washington Day", "2027-03-31": "C\u00e9sar Ch\u00e1vez Day"
   };
   var ACADEMIC_COVERAGE = ["2023-06-05", "2027-05-31"];
-  var ACADEMIC_ORDER = ["Regular instruction", "First week of term", "Withdrawal-deadline week", "Finals week", "Summer session", "Between terms",
-    "Day before a break", "Return day after a break", "Thanksgiving break", "Winter recess", "Spring break", "Other holidays"];
-  var BREAK_GROUPS = ["Thanksgiving break", "Winter recess", "Spring break", "Other holidays"];
+  var ACADEMIC_ORDER = ["Regular instruction", "First week of term", "Withdrawal-deadline week", "Finals week", "Summer session",
+    "Day before a break", "Return day after a break"];
 
   function isoAddDays(iso, n) {
     var p = iso.split("-");
@@ -8277,7 +8273,7 @@
     var container = $("chartAcademic");
     var hint = document.createElement("div");
     hint.style.cssText = "font-size:10.5px;color:var(--muted);text-align:center;margin-top:4px;";
-    hint.textContent = "Click a bold label or its bar: a break shows day before / during / day back; day-before and day-back compare the breaks";
+    hint.textContent = "Click the day-before or day-back bar to see it by break";
     container.appendChild(hint);
     // Four stacked segments per bar, in bar order. Bars and their axis labels
     // are both clickable (break bars are often empty, since the colleges are
@@ -8302,7 +8298,7 @@
     }
     function clickable(i) {
       var cat = items[i] && items[i]._cat;
-      return BREAK_GROUPS.indexOf(cat) >= 0 || cat === "Day before a break" || cat === "Return day after a break";
+      return cat === "Day before a break" || cat === "Return day after a break";
     }
     rects.forEach(function (rect, ri) {
       var i = Math.floor(ri / 4);
@@ -8320,45 +8316,21 @@
     var skipped = all.length - recs.length;
     $("academicCoverageNote").textContent = recs.length.toLocaleString() + " filtered responses sorted. Calendar covers Summer 2023 to Spring 2027 (Los Rios Community College District, losrios.edu)" +
       (skipped ? "; " + skipped.toLocaleString() + " responses outside those dates are left out" : "") +
-      ". \"Day before\" and \"Return day\" are the last school day before and first school day after a break, and take priority over finals or first-week labels. Weekdays outside any term count as \"Between terms\". Weekend responses are left out, since no location has weekend hours.";
+      ". \"Day before\" and \"Return day\" are the last school day before and first school day after a break, and take priority over finals or first-week labels. Responses on days the colleges are closed (breaks, holidays, between terms) and on weekends are left out, since no location is open then.";
   }
 
+  // Day before / return day, split by which break they belong to.
   function renderAcademicDetail(cat) {
-    var wrap = $("academicHolidayWrap"), sel = $("academicHolidaySel");
     var rows = _academicRecs;
-    var items, head;
-    function bar(label, group) { return mixGroup(label, group.map(function (x) { return x.row; })); }
-    if (BREAK_GROUPS.indexOf(cat) >= 0) {
-      var groupRecs = rows.filter(function (x) { return x.ev && x.ev.group === cat; });
-      var names = [];
-      if (cat === "Other holidays") {
-        ACADEMIC_EVENTS.forEach(function (e) { if (e.group === cat && names.indexOf(e.name) < 0) names.push(e.name); });
-        names.sort();
-        var cur = sel.value;
-        sel.innerHTML = '<option value="">All holidays</option>' + names.map(function (n) { return '<option value="' + n.replace(/"/g, "&quot;") + '">' + n + "</option>"; }).join("");
-        sel.value = names.indexOf(cur) >= 0 ? cur : "";
-        wrap.style.display = "block";
-        sel.onchange = function () { renderAcademicDetail(cat); };
-        if (sel.value) groupRecs = groupRecs.filter(function (x) { return x.ev.name === sel.value; });
-      } else {
-        wrap.style.display = "none";
-      }
-      var by = function (role) { return groupRecs.filter(function (x) { return x.role === role; }); };
-      items = [bar("Day before", by("before")), bar("During", by("during")), bar("Day back", by("return"))];
-      head = (cat === "Other holidays" && sel.value ? sel.value : cat) + " \u2014 day before / during / day back";
-    } else {
-      wrap.style.display = "none";
-      var role = cat === "Day before a break" ? "before" : "return";
-      var evNames = [];
-      ACADEMIC_EVENTS.forEach(function (e) { if (evNames.indexOf(e.name) < 0) evNames.push(e.name); });
-      var rank = { "Thanksgiving": 0, "Winter recess": 1, "Spring break": 2 };
-      evNames.sort(function (a, b) { var ra = a in rank ? rank[a] : 3, rb = b in rank ? rank[b] : 3; return ra - rb || (a < b ? -1 : 1); });
-      items = evNames.map(function (n) {
-        return bar(n, rows.filter(function (x) { return x.role === role && x.ev.name === n; }));
-      });
-      head = cat + " \u2014 by break";
-    }
-    $("academicDetailHead").textContent = head;
+    var role = cat === "Day before a break" ? "before" : "return";
+    var evNames = [];
+    ACADEMIC_EVENTS.forEach(function (e) { if (evNames.indexOf(e.name) < 0) evNames.push(e.name); });
+    var rank = { "Thanksgiving": 0, "Winter recess": 1, "Spring break": 2 };
+    evNames.sort(function (a, b) { var ra = a in rank ? rank[a] : 3, rb = b in rank ? rank[b] : 3; return ra - rb || (a < b ? -1 : 1); });
+    var items = evNames.map(function (n) {
+      return mixGroup(n, rows.filter(function (x) { return x.role === role && x.ev.name === n; }).map(function (x) { return x.row; }));
+    });
+    $("academicDetailHead").textContent = cat + " \u2014 by break";
     $("academicDetail").style.display = "block";
     drawMixGroups($("academicDetailChart"), items, { height: 220 });
   }
