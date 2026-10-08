@@ -676,7 +676,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.12</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.13</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -2558,28 +2558,40 @@
     var padR = 46, padT = 8;
     var fontPx = 10.5;
 
-    var widths = items.map(function (it) { return measureTextWidth(it.label, fontPx, "400"); });
+    // Optional it.lines (array of strings) draws a wrapped, multi-line label
+    // for rows that group several words under one bar.
+    var LINE_H = 12.5;
+    function linesOf(it) { return it.lines || [it.label]; }
+    var widths = [];
+    items.forEach(function (it) { linesOf(it).forEach(function (l) { widths.push(measureTextWidth(l, fontPx, "400")); }); });
     var maxLabelWidth = Math.max.apply(null, widths.concat([0]));
     var padL = Math.min(280, Math.max(80, maxLabelWidth + 18));
 
     var W = Math.max(420, padL + 220);
-    var H = items.length * rowH + 16;
+    var rowHs = items.map(function (it) { return Math.max(rowH, linesOf(it).length * LINE_H + 10); });
+    var H = rowHs.reduce(function (a, b) { return a + b; }, 0) + 16;
+    var yAcc = padT;
     var maxV = Math.max.apply(null, items.map(function (it) { return it.value; })) || 1;
     var plotW = W - padL - padR;
 
     var svg = svgEl("svg", { viewBox: "0 0 " + W + " " + H, width: "100%", height: H });
 
     items.forEach(function (it, i) {
-      var y = padT + i * rowH;
+      var rh = rowHs[i];
+      var y = yAcc; yAcc += rh;
       var w = (it.value / maxV) * plotW;
 
-      var labelText = svgEl("text", { x: padL - 8, y: y + rowH / 2 + 4, class: "bar-label", "text-anchor": "end" });
-      labelText.textContent = it.label;
-      svg.appendChild(labelText);
+      var lns = linesOf(it);
+      var ly0 = y + rh / 2 - (lns.length - 1) * LINE_H / 2 + 4;
+      lns.forEach(function (l, li) {
+        var labelText = svgEl("text", { x: padL - 8, y: ly0 + li * LINE_H, class: "bar-label", "text-anchor": "end" });
+        labelText.textContent = l;
+        svg.appendChild(labelText);
+      });
 
-      svg.appendChild(svgEl("rect", { x: padL, y: y + 3, width: Math.max(w, 2), height: rowH - 8, rx: 4, fill: it.color || "var(--accent)" }));
+      svg.appendChild(svgEl("rect", { x: padL, y: y + 3, width: Math.max(w, 2), height: rh - 8, rx: 4, fill: it.color || "var(--accent)" }));
 
-      var valText = svgEl("text", { x: padL + w + 6, y: y + rowH / 2 + 4, class: "bar-value" });
+      var valText = svgEl("text", { x: padL + w + 6, y: y + rh / 2 + 4, class: "bar-value" });
       valText.textContent = it.valueText != null ? it.valueText : it.value.toLocaleString();
       svg.appendChild(valText);
     });
@@ -2914,9 +2926,19 @@
         selected = loc;
         rects.forEach(function (r, j) { r.style.opacity = j === i ? "1" : "0.35"; });
         var counts = countBy(items[i]._rows.filter(function (r) { return r.labelEn; }), function (r) { return r.labelEn; });
-        var wordItems = Object.keys(counts)
-          .map(function (w) { return { label: w + " (n=" + counts[w] + ")", value: counts[w], color: items[i].color }; })
-          .sort(function (a, b) { return b.value - a.value; });
+        // One bar per distinct count: words tied on n share a bar, wrapped to
+        // lines of about 230px so the label column stays narrow.
+        var byN = {};
+        Object.keys(counts).forEach(function (w) { (byN[counts[w]] = byN[counts[w]] || []).push(w); });
+        var wordItems = Object.keys(byN).map(function (n) {
+          var words = byN[n].sort(), lines = [], cur = "";
+          words.forEach(function (w) {
+            var next = cur ? cur + ", " + w : w;
+            if (cur && measureTextWidth(next + ",", 10.5, "400") > 230) { lines.push(cur + ","); cur = w; } else cur = next;
+          });
+          if (cur) lines.push(cur);
+          return { label: words.join(", "), lines: lines, value: +n, color: items[i].color };
+        }).sort(function (a, b) { return b.value - a.value; });
         $("chartLocationDetailHead").textContent = loc + (metric.isPct ? " · " + metric.label : "") + " — emotion words chosen";
         $("chartLocationDetail").style.display = "block";
         drawHBarChart($("chartLocationDetailChart"), wordItems);
