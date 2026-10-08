@@ -676,7 +676,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.24</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.25</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -8321,8 +8321,8 @@
   }
 
   // Day before / return day, split by which break they belong to. Click a
-  // break bar -> the emotion words chosen (words with the same count share a
-  // bar) -> click a word bar -> which locations those words came from.
+  // break bar -> the emotion words chosen -> click a word bar -> which
+  // locations that word came from.
   function renderAcademicDetail(cat) {
     var rows = _academicRecs;
     var role = cat === "Day before a break" ? "before" : "return";
@@ -8369,20 +8369,13 @@
     labels.forEach(function (l, i) { l.style.cursor = "pointer"; l.addEventListener("click", function () { pick(i, -1); }); });
   }
 
-  // Emotion words for one break; words tied on count share a bar (label wraps).
+  // Emotion words for one break, one bar per word.
   function renderAcademicWords(cat, evName, rowsOf, quad) {
     var counts = countBy(rowsOf.filter(function (r) { return r.labelEn; }), function (r) { return r.labelEn; });
-    var byN = {};
-    Object.keys(counts).forEach(function (w) { (byN[counts[w]] = byN[counts[w]] || []).push(w); });
-    var items = Object.keys(byN).map(function (n) {
-      var words = byN[n].sort(), lines = [], cur = "";
-      words.forEach(function (w) {
-        var next = cur ? cur + ", " + w : w;
-        if (cur && measureTextWidth(next + ",", 10.5, "400") > 230) { lines.push(cur + ","); cur = w; } else cur = next;
-      });
-      if (cur) lines.push(cur);
-      return { label: words.join(", "), lines: lines, value: +n, color: quad ? QUAD_INFO[quad].color : "#3f5b4f", _words: words };
-    }).sort(function (a, b) { return b.value - a.value; });
+    // One bar per word, so the location level below is about that single word.
+    var items = Object.keys(counts).map(function (w) {
+      return { label: w + " (n=" + counts[w] + ")", value: counts[w], color: quad ? QUAD_INFO[quad].color : "#3f5b4f", _words: [w] };
+    }).sort(function (a, b) { return b.value - a.value || (a.label < b.label ? -1 : 1); });
     $("academicWordsHead").textContent = evName + " \u00b7 " + cat.toLowerCase() + (quad ? " \u00b7 " + MIX_SHORT[quad] : "") + " \u2014 emotion words chosen";
     $("academicWords").style.display = "block";
     $("academicLoc").style.display = "none";
