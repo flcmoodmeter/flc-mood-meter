@@ -676,7 +676,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.25</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.26</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -867,6 +867,7 @@
 
           <div class="chart-card">
             <div class="chart-card-head"><h3>Time to decide, by quadrant</h3></div>
+            <div id="decideTimeStats" style="display:flex; flex-wrap:wrap; gap:6px 22px; margin:2px 0 8px; font-size:12px; color:var(--muted);"></div>
             <div class="chart-svg-wrap" id="chartDecideTime"></div>
             <div id="chartDecideTimeDetail" style="margin-top:12px;display:none;">
               <div id="chartDecideTimeDetailHead" style="font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;"></div>
@@ -2723,6 +2724,26 @@
     // Hide detail if data changed
     $("chartDecideTimeDetail").style.display = "none";
     _decideTimeSelected = null;
+
+    // Overall mean / median / mode across all quadrants. Mode is the most
+    // common whole-second bin (seconds are continuous), so it reads as a range.
+    var secVals = joined.map(function (j) { return j.row.seconds; }).sort(function (a, b) { return a - b; });
+    var statsEl = $("decideTimeStats");
+    statsEl.innerHTML = "";
+    if (secVals.length) {
+      var n = secVals.length;
+      var mean = secVals.reduce(function (a, b) { return a + b; }, 0) / n;
+      var median = n % 2 ? secVals[(n - 1) / 2] : (secVals[n / 2 - 1] + secVals[n / 2]) / 2;
+      var bins = {}, modeBin = 0, modeN = 0;
+      secVals.forEach(function (v) { var k = Math.floor(v); bins[k] = (bins[k] || 0) + 1; if (bins[k] > modeN) { modeN = bins[k]; modeBin = k; } });
+      var fmt = function (x) { return (Math.round(x * 10) / 10).toLocaleString() + " s"; };
+      [["Mean", fmt(mean)], ["Median", fmt(median)], ["Mode", modeBin + "\u2013" + (modeBin + 1) + " s (n=" + modeN + ")"], ["Responses", n.toLocaleString()]].forEach(function (p) {
+        var el = document.createElement("span");
+        el.innerHTML = p[0] + " <b style=\"color:var(--ink); font-size:14px;\"></b>";
+        el.querySelector("b").textContent = p[1];
+        statsEl.appendChild(el);
+      });
+    }
 
     drawBarChart($("chartDecideTime"), items, { rotateLabels: true, height: 240, clickable: true });
 
