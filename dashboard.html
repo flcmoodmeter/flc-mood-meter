@@ -676,7 +676,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.11</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.12</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -923,6 +923,10 @@
               </select>
             </div>
             <div class="chart-svg-wrap" id="chartLocation"></div>
+            <div id="chartLocationDetail" style="margin-top:12px;display:none;">
+              <div id="chartLocationDetailHead" style="font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;"></div>
+              <div class="chart-svg-wrap" id="chartLocationDetailChart"></div>
+            </div>
           </div>
         </div>
 
@@ -2303,7 +2307,7 @@
       svg.appendChild(svgEl("rect", { x: x, y: y, width: barW, height: Math.max(h, 1), rx: 4, fill: it.color || "var(--accent)" }));
 
       var valText = svgEl("text", { x: cx, y: y - 5, class: "bar-value", "text-anchor": "middle" });
-      valText.textContent = it.value.toLocaleString();
+      valText.textContent = it.valueText != null ? it.valueText : it.value.toLocaleString();
       svg.appendChild(valText);
 
       var labelText = svgEl("text", { class: "bar-label" });
@@ -2576,7 +2580,7 @@
       svg.appendChild(svgEl("rect", { x: padL, y: y + 3, width: Math.max(w, 2), height: rowH - 8, rx: 4, fill: it.color || "var(--accent)" }));
 
       var valText = svgEl("text", { x: padL + w + 6, y: y + rowH / 2 + 4, class: "bar-value" });
-      valText.textContent = it.value.toLocaleString();
+      valText.textContent = it.valueText != null ? it.valueText : it.value.toLocaleString();
       svg.appendChild(valText);
     });
 
@@ -2844,16 +2848,20 @@
     });
   }
 
+  function locMetric(label, color, pred) {
+    return { label: label, color: color, pred: pred, isPct: true,
+      calc: function (group) { return pctWhere(group, pred); } };
+  }
   var LOCATION_METRICS = {
-    count:      { label: "responses", color: "#3f5b4f", calc: function (group) { return group.length; }, isPct: false },
-    pleasant:   { label: "% Pleasant", color: "#12d9a0", calc: function (group) { return pctWhere(group, function (r) { return r.pleasant === "Pleasant"; }); }, isPct: true },
-    unpleasant: { label: "% Unpleasant", color: "#ef4444", calc: function (group) { return pctWhere(group, function (r) { return r.pleasant === "Unpleasant"; }); }, isPct: true },
-    highEnergy: { label: "% High Energy", color: "#f97316", calc: function (group) { return pctWhere(group, function (r) { return r.energy === "High"; }); }, isPct: true },
-    lowEnergy:  { label: "% Low Energy", color: "#3b82f6", calc: function (group) { return pctWhere(group, function (r) { return r.energy === "Low"; }); }, isPct: true },
-    q1: { label: "% High Energy, Pleasant",   color: QUAD_INFO[1].color, calc: function (group) { return pctWhere(group, function (r) { return r.quad === 1; }); }, isPct: true },
-    q2: { label: "% Low Energy, Unpleasant",  color: QUAD_INFO[2].color, calc: function (group) { return pctWhere(group, function (r) { return r.quad === 2; }); }, isPct: true },
-    q3: { label: "% High Energy, Unpleasant", color: QUAD_INFO[3].color, calc: function (group) { return pctWhere(group, function (r) { return r.quad === 3; }); }, isPct: true },
-    q4: { label: "% Low Energy, Pleasant",    color: QUAD_INFO[4].color, calc: function (group) { return pctWhere(group, function (r) { return r.quad === 4; }); }, isPct: true }
+    count:      { label: "responses", color: "#3f5b4f", pred: function () { return true; }, calc: function (group) { return group.length; }, isPct: false },
+    pleasant:   locMetric("% Pleasant", "#12d9a0", function (r) { return r.pleasant === "Pleasant"; }),
+    unpleasant: locMetric("% Unpleasant", "#ef4444", function (r) { return r.pleasant === "Unpleasant"; }),
+    highEnergy: locMetric("% High Energy", "#f97316", function (r) { return r.energy === "High"; }),
+    lowEnergy:  locMetric("% Low Energy", "#3b82f6", function (r) { return r.energy === "Low"; }),
+    q1: locMetric("% High Energy, Pleasant",   QUAD_INFO[1].color, function (r) { return r.quad === 1; }),
+    q2: locMetric("% Low Energy, Unpleasant",  QUAD_INFO[2].color, function (r) { return r.quad === 2; }),
+    q3: locMetric("% High Energy, Unpleasant", QUAD_INFO[3].color, function (r) { return r.quad === 3; }),
+    q4: locMetric("% Low Energy, Pleasant",    QUAD_INFO[4].color, function (r) { return r.quad === 4; })
   };
 
   function pctWhere(group, predicateFn) {
@@ -2871,14 +2879,49 @@
       (groups[loc] = groups[loc] || []).push(r);
     });
 
+    $("chartLocationDetail").style.display = "none";
     var items = Object.keys(groups).map(function (loc) {
       var group = groups[loc];
-      return { label: loc + " (n=" + group.length + ")", value: metric.calc(group), color: metric.color };
+      var matching = group.filter(metric.pred);
+      var it = { label: loc + " (n=" + group.length + ")", value: metric.calc(group), color: metric.color, _loc: loc, _rows: matching };
+      if (metric.isPct) it.valueText = it.value + "% (n=" + matching.length + ")";
+      return it;
     });
     // Sort so the highest bar (whichever metric) leads — makes cross-location comparison read at a glance.
     items.sort(function (a, b) { return b.value - a.value; });
 
-    drawBarChart($("chartLocation"), items, { rotateLabels: true, height: 240 });
+    drawBarChart($("chartLocation"), items, { rotateLabels: true, height: 240, barGap: metric.isPct ? 72 : 46 });
+
+    var container = $("chartLocation");
+    var hint = document.createElement("div");
+    hint.style.cssText = "font-size:10.5px;color:var(--muted);text-align:center;margin-top:4px;";
+    hint.textContent = "Click a bar to view emotion words";
+    container.appendChild(hint);
+
+    var rects = Array.from(container.querySelectorAll("rect"));
+    var selected = null;
+    rects.forEach(function (rect, i) {
+      if (!items[i]) return;
+      rect.style.cursor = "pointer";
+      rect.addEventListener("click", function () {
+        var loc = items[i]._loc;
+        if (selected === loc) {
+          selected = null;
+          $("chartLocationDetail").style.display = "none";
+          rects.forEach(function (r) { r.style.opacity = "1"; });
+          return;
+        }
+        selected = loc;
+        rects.forEach(function (r, j) { r.style.opacity = j === i ? "1" : "0.35"; });
+        var counts = countBy(items[i]._rows.filter(function (r) { return r.labelEn; }), function (r) { return r.labelEn; });
+        var wordItems = Object.keys(counts)
+          .map(function (w) { return { label: w + " (n=" + counts[w] + ")", value: counts[w], color: items[i].color }; })
+          .sort(function (a, b) { return b.value - a.value; });
+        $("chartLocationDetailHead").textContent = loc + (metric.isPct ? " · " + metric.label : "") + " — emotion words chosen";
+        $("chartLocationDetail").style.display = "block";
+        drawHBarChart($("chartLocationDetailChart"), wordItems);
+      });
+    });
   }
   $("locationMetric").addEventListener("change", function () { renderLocationChart(getFilteredRows()); });
 
