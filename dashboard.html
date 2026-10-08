@@ -676,7 +676,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.19</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.20</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -1414,12 +1414,12 @@
 
           <div class="chart-grid">
             <div class="chart-card spurious-card">
-              <div class="chart-card-head"><h3>&#127769; Moon phase vs. % Unpleasant</h3></div>
+              <div class="chart-card-head"><h3>&#127769; Moon phase vs. mood mix</h3></div>
               <div class="chart-svg-wrap" id="chartMoon"></div>
             </div>
 
             <div class="chart-card spurious-card">
-              <div class="chart-card-head"><h3>&#9852;&#65039; Mercury retrograde vs. % Unpleasant</h3></div>
+              <div class="chart-card-head"><h3>&#9852;&#65039; Mercury retrograde vs. mood mix</h3></div>
               <div class="chart-svg-wrap" id="chartMercury"></div>
             </div>
           </div>
@@ -1448,7 +1448,7 @@
 
           <div id="quakeResults" class="hidden">
             <div class="chart-card spurious-card">
-              <div class="chart-card-head"><h3>Global seismic activity vs. % Unpleasant</h3></div>
+              <div class="chart-card-head"><h3>Global seismic activity vs. mood mix</h3></div>
               <div class="chart-svg-wrap" id="chartQuake"></div>
             </div>
             <p class="table-note" id="quakeCoverageNote"></p>
@@ -1466,7 +1466,7 @@
           </div>
           <div id="kpResults" class="hidden">
             <div class="chart-card spurious-card">
-              <div class="chart-card-head"><h3>Geomagnetic activity vs. % Unpleasant</h3></div>
+              <div class="chart-card-head"><h3>Geomagnetic activity vs. mood mix</h3></div>
               <div class="chart-svg-wrap" id="chartKp"></div>
             </div>
             <p class="table-note" id="kpCoverageNote"></p>
@@ -1501,7 +1501,7 @@
           </div>
           <div id="wikiResults" class="hidden">
             <div class="chart-card spurious-card">
-              <div class="chart-card-head"><h3 id="wikiChartTitle">Wikipedia attention vs. % Unpleasant</h3></div>
+              <div class="chart-card-head"><h3 id="wikiChartTitle">Wikipedia attention vs. mood mix</h3></div>
               <div class="chart-svg-wrap" id="chartWiki"></div>
             </div>
             <p class="table-note" id="wikiCoverageNote"></p>
@@ -1510,11 +1510,11 @@
           <div class="panel spurious-panel" style="margin: 18px 0;">
             <h2 style="text-transform:none; font-size:14.5px; letter-spacing:0; color:var(--ink); font-weight:700;">&#127891; Los Rios academic calendar</h2>
             <p class="import-note" style="margin:6px 0 0;">
-              Every day is sorted by where it falls in the Los Rios Community College District calendar (Summer 2023 through Spring 2027): first week of a term, the week of the withdrawal deadline, finals week, and so on. Thanksgiving break, Winter recess, Spring break and each holiday are broken out, along with the last school day before and the first school day back. Click a break bar to see day before, during and day back side by side; click the day-before or day-back bar to see it by break. Built in, so no internet connection is needed.
+              Every day is sorted by where it falls in the Los Rios Community College District calendar (Summer 2023 through Spring 2027): first week of a term, the week of the withdrawal deadline, finals week, and so on. Thanksgiving break, Winter recess, Spring break and each holiday are broken out, along with the last school day before and the first school day back. Click a bold label (or its bar) to drill down: a break shows day before, during and day back side by side; the day-before and day-back bars compare the breaks. The colleges are closed during breaks, so those bars are normally empty. Built in, so no internet connection is needed.
             </p>
           </div>
           <div class="chart-card spurious-card">
-            <div class="chart-card-head"><h3>Academic calendar vs. % Unpleasant</h3></div>
+            <div class="chart-card-head"><h3>Academic calendar vs. mood mix</h3></div>
             <div class="chart-svg-wrap" id="chartAcademic"></div>
             <div id="academicDetail" style="margin-top:12px;display:none;">
               <div id="academicDetailHead" style="font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;"></div>
@@ -7682,6 +7682,37 @@
     });
   }
 
+  // Stacked mix of all four quadrants per bucket (same look as the Trends
+  // "mix" view): each bar is 100% tall, split High Energy Pleasant / High Energy
+  // Unpleasant / Low Energy Pleasant / Low Energy Unpleasant. rowsOf: array of response rows.
+  var MIX_QUAD_ORDER = [1, 3, 4, 2];
+  var MIX_SHORT = { 1: "HE, Pleasant", 3: "HE, Unpleasant", 4: "LE, Pleasant", 2: "LE, Unpleasant" };
+  function mixGroup(label, rowsOf) {
+    var total = rowsOf.length;
+    return {
+      label: label + " (n=" + total + ")", total: total,
+      segments: MIX_QUAD_ORDER.map(function (q) {
+        var n = rowsOf.filter(function (r) { return r.quad === q; }).length;
+        return { pct: total ? Math.round((n / total) * 1000) / 10 : 0, n: n, color: QUAD_INFO[q].color, name: MIX_SHORT[q] };
+      })
+    };
+  }
+  function mixLegend() { return MIX_QUAD_ORDER.map(function (q) { return { name: MIX_SHORT[q], color: QUAD_INFO[q].color }; }); }
+  function drawMixGroups(container, groups, opts) {
+    var o = { height: 240, legend: mixLegend() };
+    for (var k in (opts || {})) o[k] = opts[k];
+    drawStackedBarChart(container, groups, o);
+  }
+  // joined: [{row, ...}], bucketFn(j) -> key in order (or null to skip)
+  function drawMixChart(container, joined, order, bucketFn, opts) {
+    var buckets = {};
+    order.forEach(function (k) { buckets[k] = []; });
+    joined.forEach(function (j) { var k = bucketFn(j); if (k != null && buckets[k]) buckets[k].push(j.row); });
+    var groups = order.map(function (k) { return mixGroup(k, buckets[k]); });
+    drawMixGroups(container, groups, opts);
+    return groups;
+  }
+
   function bucketAverage(joined, bucketOrder, bucketFn, valueFn) {
     var buckets = {};
     bucketOrder.forEach(function (k) { buckets[k] = []; });
@@ -7873,27 +7904,15 @@
   function renderMoonChart(rows) {
     var order = ["\uD83C\uDF11 New Moon", "\uD83C\uDF13 Waxing", "\uD83C\uDF15 Full Moon", "\uD83C\uDF17 Waning"];
     var dated = rows.filter(function (r) { return r.date; });
-    var items = bucketPercent(
-      dated.map(function (r) { return { row: r }; }),
-      order,
-      function (j) { return moonPhaseBucket(j.row.date); },
-      function (j) { return j.row.pleasant === "Unpleasant"; }
-    );
-    items.forEach(function (it, i) { it.color = ["#a78bfa", "#8b5cf6", "#7c3aed", "#6d28d9"][i]; });
-    drawBarChart($("chartMoon"), items, { rotateLabels: true, height: 240 });
+    drawMixChart($("chartMoon"), dated.map(function (r) { return { row: r }; }), order,
+      function (j) { return moonPhaseBucket(j.row.date); });
   }
 
   function renderMercuryChart(rows) {
     var order = ["Mercury Retrograde", "Direct (normal)"];
     var dated = rows.filter(function (r) { return r.date; });
-    var items = bucketPercent(
-      dated.map(function (r) { return { row: r }; }),
-      order,
-      function (j) { return isMercuryRetrograde(isoDate(j.row.date)) ? order[0] : order[1]; },
-      function (j) { return j.row.pleasant === "Unpleasant"; }
-    );
-    items.forEach(function (it, i) { it.color = i === 0 ? "#dc2626" : "#7c3aed"; });
-    drawBarChart($("chartMercury"), items, { rotateLabels: true, height: 240 });
+    drawMixChart($("chartMercury"), dated.map(function (r) { return { row: r }; }), order,
+      function (j) { return isMercuryRetrograde(isoDate(j.row.date)) ? order[0] : order[1]; });
   }
 
   function renderSpuriousTab() {
@@ -7964,12 +7983,10 @@
     });
 
     var order = ["Quiet globally (no M5+)", "Moderate (M5\u20136.4 somewhere)", "Major event (M6.5+ somewhere)"];
-    var items = bucketPercent(joined, order, function (j) {
+    drawMixChart($("chartQuake"), joined, order, function (j) {
       if (j.quake.count === 0) return order[0];
       return j.quake.maxMag >= 6.5 ? order[2] : order[1];
-    }, function (j) { return j.row.pleasant === "Unpleasant"; });
-    items.forEach(function (it, i) { it.color = ["#a78bfa", "#f97316", "#dc2626"][i]; });
-    drawBarChart($("chartQuake"), items, { rotateLabels: true, height: 240 });
+    });
 
     $("quakeCoverageNote").textContent = joined.length.toLocaleString() + " filtered responses checked against " + Object.keys(quakesByDate).length + " days of earthquake data.";
   }
@@ -8023,11 +8040,9 @@
       if (k) joined.push({ row: r, kp: k });
     });
     var order = ["Quiet (max Kp below 4)", "Unsettled (Kp 4\u20134.9)", "Storm (Kp 5+)"];
-    var items = bucketPercent(joined, order, function (j) {
+    drawMixChart($("chartKp"), joined, order, function (j) {
       return j.kp.max < 4 ? order[0] : (j.kp.max < 5 ? order[1] : order[2]);
-    }, function (j) { return j.row.pleasant === "Unpleasant"; });
-    items.forEach(function (it, i) { it.color = ["#a78bfa", "#f97316", "#dc2626"][i]; });
-    drawBarChart($("chartKp"), items, { rotateLabels: true, height: 240 });
+    });
     $("kpCoverageNote").textContent = joined.length.toLocaleString() + " filtered responses fall within the " + Object.keys(kpByDate).length + " days NOAA provides (days are UTC days; Kp 5+ is a minor-or-greater storm).";
   }
 
@@ -8086,7 +8101,7 @@
     var hasData = wikiFetched && Object.keys(wikiByDate).length > 0;
     $("wikiResults").classList.toggle("hidden", !hasData);
     if (!hasData) return;
-    $("wikiChartTitle").textContent = "\u201c" + wikiTitle + "\u201d Wikipedia attention vs. % Unpleasant";
+    $("wikiChartTitle").textContent = "\u201c" + wikiTitle + "\u201d Wikipedia attention vs. mood mix";
     // Split days into thirds by views, relative to this article and period.
     var vals = Object.keys(wikiByDate).map(function (k) { return wikiByDate[k]; }).sort(function (a, b) { return a - b; });
     var lo = vals[Math.floor(vals.length / 3)], hi = vals[Math.floor((vals.length * 2) / 3)];
@@ -8097,11 +8112,9 @@
       if (v != null) joined.push({ row: r, views: v });
     });
     var order = ["Least-viewed third of days", "Middle third", "Most-viewed third"];
-    var items = bucketPercent(joined, order, function (j) {
+    drawMixChart($("chartWiki"), joined, order, function (j) {
       return j.views < lo ? order[0] : (j.views < hi ? order[1] : order[2]);
-    }, function (j) { return j.row.pleasant === "Unpleasant"; });
-    items.forEach(function (it, i) { it.color = ["#a78bfa", "#f97316", "#dc2626"][i]; });
-    drawBarChart($("chartWiki"), items, { rotateLabels: true, height: 240 });
+    });
     $("wikiCoverageNote").textContent = joined.length.toLocaleString() + " filtered responses matched to " + Object.keys(wikiByDate).length + " days of page views (" + vals[0].toLocaleString() + " to " + vals[vals.length - 1].toLocaleString() + " views per day). Days are split into thirds relative to this article and period.";
   }
 
@@ -8260,32 +8273,50 @@
     $("academicDetail").style.display = "none";
 
     var joined = recs.map(function (x) { return { row: x.row, cat: x.cat }; });
-    var items = bucketPercent(joined, ACADEMIC_ORDER, function (j) { return j.cat; }, function (j) { return j.row.pleasant === "Unpleasant"; });
-    items.forEach(function (it, i) { it.color = ACADEMIC_COLORS[i]; it._cat = ACADEMIC_ORDER[i]; });
-    drawBarChart($("chartAcademic"), items, { rotateLabels: true, height: 240 });
+    drawMixChart($("chartAcademic"), joined, ACADEMIC_ORDER, function (j) { return j.cat; });
+    var items = ACADEMIC_ORDER.map(function (c) { return { _cat: c }; });
 
     var container = $("chartAcademic");
     var hint = document.createElement("div");
     hint.style.cssText = "font-size:10.5px;color:var(--muted);text-align:center;margin-top:4px;";
-    hint.textContent = "Click a break bar for day before / during / day back; click the day-before or day-back bar to compare breaks";
+    hint.textContent = "Click a bold label or its bar: a break shows day before / during / day back; day-before and day-back compare the breaks";
     container.appendChild(hint);
-    var rects = Array.from(container.querySelectorAll("rect"));
-    rects.forEach(function (rect, i) {
+    // Four stacked segments per bar, in bar order. Bars and their axis labels
+    // are both clickable (break bars are often empty, since the colleges are
+    // closed, so the label is the way in).
+    var rects = Array.from(container.querySelectorAll("svg rect"));
+    var labels = Array.from(container.querySelectorAll("svg text.bar-label"));
+    function paint(sel) {
+      rects.forEach(function (r, j) { r.style.opacity = sel < 0 || Math.floor(j / 4) === sel ? "1" : "0.35"; });
+      labels.forEach(function (l, j) { l.style.opacity = sel < 0 || j === sel ? "1" : "0.45"; });
+    }
+    function pick(i) {
+      var cat = items[i]._cat;
+      if (_academicSelected === cat) {
+        _academicSelected = null;
+        $("academicDetail").style.display = "none";
+        paint(-1);
+        return;
+      }
+      _academicSelected = cat;
+      paint(i);
+      renderAcademicDetail(cat);
+    }
+    function clickable(i) {
       var cat = items[i] && items[i]._cat;
-      var clickable = BREAK_GROUPS.indexOf(cat) >= 0 || cat === "Day before a break" || cat === "Return day after a break";
-      if (!clickable) return;
+      return BREAK_GROUPS.indexOf(cat) >= 0 || cat === "Day before a break" || cat === "Return day after a break";
+    }
+    rects.forEach(function (rect, ri) {
+      var i = Math.floor(ri / 4);
+      if (!clickable(i)) return;
       rect.style.cursor = "pointer";
-      rect.addEventListener("click", function () {
-        if (_academicSelected === cat) {
-          _academicSelected = null;
-          $("academicDetail").style.display = "none";
-          rects.forEach(function (r) { r.style.opacity = "1"; });
-          return;
-        }
-        _academicSelected = cat;
-        rects.forEach(function (r, j) { r.style.opacity = j === i ? "1" : "0.35"; });
-        renderAcademicDetail(cat, items[i].color);
-      });
+      rect.addEventListener("click", function () { pick(i); });
+    });
+    labels.forEach(function (l, i) {
+      if (!clickable(i)) return;
+      l.style.cursor = "pointer";
+      l.style.fontWeight = "600";
+      l.addEventListener("click", function () { pick(i); });
     });
 
     var skipped = all.length - recs.length;
@@ -8294,14 +8325,11 @@
       ". \"Day before\" and \"Return day\" are the last school day before and first school day after a break, and take priority over finals or first-week labels. Weekdays outside any term count as \"Between terms\"; weekends are kept apart so they don't blur the term weeks.";
   }
 
-  function renderAcademicDetail(cat, color) {
+  function renderAcademicDetail(cat) {
     var wrap = $("academicHolidayWrap"), sel = $("academicHolidaySel");
     var rows = _academicRecs;
     var items, head;
-    function pct(group) { return group.filter(function (x) { return x.row.pleasant === "Unpleasant"; }).length; }
-    function bar(label, group) {
-      return { label: label + " (n=" + group.length + ")", value: group.length ? Math.round(pct(group) / group.length * 100) : 0, n: group.length, color: color };
-    }
+    function bar(label, group) { return mixGroup(label, group.map(function (x) { return x.row; })); }
     if (BREAK_GROUPS.indexOf(cat) >= 0) {
       var groupRecs = rows.filter(function (x) { return x.ev && x.ev.group === cat; });
       var names = [];
@@ -8312,14 +8340,14 @@
         sel.innerHTML = '<option value="">All holidays</option>' + names.map(function (n) { return '<option value="' + n.replace(/"/g, "&quot;") + '">' + n + "</option>"; }).join("");
         sel.value = names.indexOf(cur) >= 0 ? cur : "";
         wrap.style.display = "block";
-        sel.onchange = function () { renderAcademicDetail(cat, color); };
+        sel.onchange = function () { renderAcademicDetail(cat); };
         if (sel.value) groupRecs = groupRecs.filter(function (x) { return x.ev.name === sel.value; });
       } else {
         wrap.style.display = "none";
       }
       var by = function (role) { return groupRecs.filter(function (x) { return x.role === role; }); };
       items = [bar("Day before", by("before")), bar("During", by("during")), bar("Day back", by("return"))];
-      head = (cat === "Other holidays" && sel.value ? sel.value : cat) + " \u2014 % Unpleasant, day before / during / day back";
+      head = (cat === "Other holidays" && sel.value ? sel.value : cat) + " \u2014 day before / during / day back";
     } else {
       wrap.style.display = "none";
       var role = cat === "Day before a break" ? "before" : "return";
@@ -8330,11 +8358,11 @@
       items = evNames.map(function (n) {
         return bar(n, rows.filter(function (x) { return x.role === role && x.ev.name === n; }));
       });
-      head = cat + " \u2014 % Unpleasant, by break";
+      head = cat + " \u2014 by break";
     }
     $("academicDetailHead").textContent = head;
     $("academicDetail").style.display = "block";
-    drawBarChart($("academicDetailChart"), items, { rotateLabels: true, height: 220 });
+    drawMixGroups($("academicDetailChart"), items, { height: 220 });
   }
 
   function ensureSpuriousDefaults() {
