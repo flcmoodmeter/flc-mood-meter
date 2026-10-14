@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<!-- Display version: v1.9 (shown in the top-left corner, #appVersion). Bump by 0.1 on every change. -->
+<!-- Display version: v2.0 (shown in the top-left corner, #appVersion). Bump by 0.1 on every change. -->
 <title>Mood Meter — Display</title>
 <style>
   :root {
@@ -221,7 +221,7 @@
     <div class="src-indicator">
       <span class="dot"></span>
       <span class="src-indicator-label">Mood Meter</span>
-      <span class="hud-version" id="appVersion" title="Display version">v1.9</span>
+      <span class="hud-version" id="appVersion" title="Display version">v2.0</span>
     </div>
     <div class="hud-cog empty" id="cog">
       <h3 id="cogTitle">How do we feel?</h3>
@@ -285,6 +285,7 @@
     var QUAD_INFO = MoodData.QUAD_INFO;
     var TRANSITION_LERP = 0.06;  // per-frame smoothing toward target bar heights
     var MAX_BAR_HEIGHT = 6.2;
+    var BAR_SCALE_FLOOR = 10;   // responses a cell needs before the scale starts stepping up (bars only ever grow within a day)
 
     // Build speeds: how long it takes a mode's rows to finish stacking up,
     // from empty to the full total — "Fast" is the requested one-minute pace.
@@ -845,6 +846,18 @@
         var changed = false;
         while (playback.revealedIdx < playback.total && playback.revealTimes[playback.revealedIdx] <= playback.elapsedMs) {
           var r = playback.rows[playback.revealedIdx];
+          // A new day starts the bars over from zero. Wait for the previous
+          // day's last flourishes to land first, then shift the remaining
+          // schedule by however long that took so the cadence stays steady.
+          if (playback.revealedIdx > 0 && r.date && playback.rows[playback.revealedIdx - 1].date &&
+              dayKeyOf(r.date) !== dayKeyOf(playback.rows[playback.revealedIdx - 1].date)) {
+            if (activeEffects.length || tronQueue.length) break;
+            var lag = playback.elapsedMs - playback.revealTimes[playback.revealedIdx];
+            for (var j = playback.revealedIdx; j < playback.total; j++) playback.revealTimes[j] += lag;
+            playback.counts = {}; playback.max = 0;
+            updateBarTargets({}, 0);   // bars ease down to nothing
+            barsDirty = false;
+          }
           var key = cellKeyFor(r);
           cogAdd(r);
           // Arriving at the front of the timeline just starts the flourish
@@ -1157,7 +1170,7 @@
     }
 
     function updateBarTargets(counts, max) {
-      var denom = Math.max(1, max);
+      var denom = Math.max(BAR_SCALE_FLOOR, max);   // never rescale below the floor, so one response isn't a full-height bar
       Object.keys(barsByKey).forEach(function (key) {
         var entry = barsByKey[key];
         var segArr = counts[key];
