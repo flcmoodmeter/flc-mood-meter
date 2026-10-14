@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<!-- Display version: v1.6 (shown in the top-left corner, #appVersion). Bump by 0.1 on every change. -->
+<!-- Display version: v1.7 (shown in the top-left corner, #appVersion). Bump by 0.1 on every change. -->
 <title>Mood Meter — Display</title>
 <style>
   :root {
@@ -108,7 +108,7 @@
     transition: opacity .4s;
   }
   .hud-cog.empty { opacity: 0.55; }
-  .hud-cog h3 { margin: 0 0 4px; font-size: 10.5px; font-weight: 700; letter-spacing: 0.07em; white-space: nowrap; text-transform: uppercase; color: var(--muted); }
+  .hud-cog h3 { margin: 0 0 4px; font-size: 19px; font-weight: 700; letter-spacing: -0.005em; white-space: nowrap; color: var(--ink); }
   .cog-cap { margin-top: 10px; font-size: 10.5px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); }
   .cog-word { margin-top: 6px; font-size: 34px; font-weight: 800; line-height: 1.08; letter-spacing: -0.01em; min-height: 1.1em; overflow-wrap: anywhere; }
   .cog-trends { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
@@ -221,10 +221,10 @@
     <div class="src-indicator">
       <span class="dot"></span>
       <span class="src-indicator-label">Mood Meter</span>
-      <span class="hud-version" id="appVersion" title="Display version">v1.6</span>
+      <span class="hud-version" id="appVersion" title="Display version">v1.7</span>
     </div>
     <div class="hud-cog empty" id="cog">
-      <h3 id="cogTitle">Center of gravity</h3>
+      <h3 id="cogTitle">How do we feel?</h3>
       <div class="info-date" id="infoDate"></div>
       <div class="cog-word" id="cogWord">&mdash;</div>
       <div class="cog-trends">
@@ -685,7 +685,7 @@
         ? allRows.filter(function (r) { return r.session === mode.location; }) : allRows;
       cogStrong = 0.3;   // size of day-to-day change that gives a full vertical arrow
       cogTimers.forEach(clearTimeout);
-      $("cogTitle").textContent = "Center of gravity \u00b7 " + RANGE_LABEL[mode.range];
+      $("cogTitle").textContent = mode.range === "today" ? "How do we feel?" : "How did we feel?";
       {
         // One center per day (how the day felt overall) in every view. The word
         // and arrows change once per day, as the replay reaches that day, and
@@ -737,6 +737,8 @@
         p = c.p / c.n; e = c.e / c.n; b = c.before; label = c.label;
       }
       $("cogWord").textContent = nearestWord(p, e);
+      // Present tense only while the day being shown is today.
+      $("cogTitle").textContent = c.curKey === dayKeyOf(new Date()) ? "How do we feel?" : "How did we feel?";
       cogTimers = [
         setTimeout(function () { cogUpdateRow(cogEnergy, e, b ? b.energy : null, label); }, COG_BEAT),
         setTimeout(function () { cogUpdateRow(cogPleasant, p, b ? b.pleasant : null, label); }, COG_BEAT * 2)
