@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<!-- Display version: v2.0 (shown in the top-left corner, #appVersion). Bump by 0.1 on every change. -->
+<!-- Display version: v2.1 (shown in the top-left corner, #appVersion). Bump by 0.1 on every change. -->
 <title>Mood Meter — Display</title>
 <style>
   :root {
@@ -221,7 +221,7 @@
     <div class="src-indicator">
       <span class="dot"></span>
       <span class="src-indicator-label">Mood Meter</span>
-      <span class="hud-version" id="appVersion" title="Display version">v2.0</span>
+      <span class="hud-version" id="appVersion" title="Display version">v2.1</span>
     </div>
     <div class="hud-cog empty" id="cog">
       <h3 id="cogTitle">How do we feel?</h3>
@@ -285,7 +285,7 @@
     var QUAD_INFO = MoodData.QUAD_INFO;
     var TRANSITION_LERP = 0.06;  // per-frame smoothing toward target bar heights
     var MAX_BAR_HEIGHT = 6.2;
-    var BAR_SCALE_FLOOR = 10;   // responses a cell needs before the scale starts stepping up (bars only ever grow within a day)
+    var BAR_SCALE_FLOOR = 20;   // responses a cell needs before the scale starts stepping up (bars only ever grow within a day)
 
     // Build speeds: how long it takes a mode's rows to finish stacking up,
     // from empty to the full total — "Fast" is the requested one-minute pace.
@@ -827,6 +827,7 @@
       playback.counts = {};
       playback.max = 0;
       playback.phase = "building";
+      playback.wiping = false;
       playback.lastDateText = null;
       if (cogCtx) { cogCtx.p = 0; cogCtx.e = 0; cogCtx.n = 0; cogCtx.curKey = null; cogCtx.dirty = false; cogCtx.lastAt = -1e9; cogShow(); }
       updateBarTargets({}, 0);
@@ -838,6 +839,14 @@
     // while paused). Reveals rows whose place in the mode's own timeline has
     // been reached, then — once every row is in — holds the finished picture
     // for a beat before looping back to replay the same mode from the start.
+    function boardIsClear() {
+      for (var i = 0; i < bars.length; i++) {
+        if (bars[i].labelOpacity > 0.02) return false;
+        for (var k = 0; k < bars[i].segs.length; k++) if (bars[i].segs[k].current > 0.02) return false;
+      }
+      return true;
+    }
+
     function tickPlayback(dt) {
       if (!playback || paused) return;
       playback.elapsedMs += dt * 1000;
@@ -852,11 +861,17 @@
           if (playback.revealedIdx > 0 && r.date && playback.rows[playback.revealedIdx - 1].date &&
               dayKeyOf(r.date) !== dayKeyOf(playback.rows[playback.revealedIdx - 1].date)) {
             if (activeEffects.length || tronQueue.length) break;
+            if (!playback.wiping) {
+              playback.wiping = true;
+              playback.counts = {}; playback.max = 0;
+              updateBarTargets({}, 0);   // bars ease down to nothing
+              barsDirty = false;
+            }
+            // Hold the next day's first response until the board is bare.
+            if (!boardIsClear()) break;
+            playback.wiping = false;
             var lag = playback.elapsedMs - playback.revealTimes[playback.revealedIdx];
             for (var j = playback.revealedIdx; j < playback.total; j++) playback.revealTimes[j] += lag;
-            playback.counts = {}; playback.max = 0;
-            updateBarTargets({}, 0);   // bars ease down to nothing
-            barsDirty = false;
           }
           var key = cellKeyFor(r);
           cogAdd(r);
