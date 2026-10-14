@@ -98,6 +98,24 @@
     color: var(--muted);
   }
 
+
+  /* Center of gravity: closest word + Energy / Pleasantness trend arrows */
+  .hud-cog {
+    position: absolute; right: 32px; top: 64px; width: 290px;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+    padding: 14px 16px; text-align: left;
+    transition: opacity .4s;
+  }
+  .hud-cog.empty { opacity: 0.55; }
+  .hud-cog h3 { margin: 0 0 4px; font-size: 10.5px; font-weight: 700; letter-spacing: 0.07em; white-space: nowrap; text-transform: uppercase; color: var(--muted); }
+  .cog-word { font-size: 34px; font-weight: 800; line-height: 1.08; letter-spacing: -0.01em; min-height: 1.1em; overflow-wrap: anywhere; }
+  .cog-trends { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
+  .cog-row { display: flex; align-items: center; gap: 10px; }
+  .cog-arrow { flex: none; width: 46px; height: 46px; display: flex; align-items: center; justify-content: center; }
+  .cog-name { font-size: 15px; font-weight: 800; line-height: 1.2; }
+  .cog-detail { font-size: 12px; font-weight: 600; color: var(--muted); line-height: 1.25; }
+  .cog-text { display: flex; flex-direction: column; }
+
   .hud-dots { position: absolute; left: 0; right: 0; bottom: 30px; display: flex; justify-content: center; gap: 7px; }
   .hud-dots .d { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.18); transition: background .3s, transform .3s; }
   .hud-dots .d.on { background: var(--ink); transform: scale(1.35); }
@@ -291,6 +309,14 @@
       <button class="src-change-btn" id="srcChangeBtn" type="button">📊 Sheets</button>
     </div>
     <div class="hud-clock" id="clock">--:--</div>
+    <div class="hud-cog empty" id="cog">
+      <h3 id="cogTitle">Center of gravity</h3>
+      <div class="cog-word" id="cogWord">&mdash;</div>
+      <div class="cog-trends">
+        <div class="cog-row" id="cogEnergyRow"><div class="cog-arrow"></div><div class="cog-text"><div class="cog-name">Energy</div><div class="cog-detail"></div></div></div>
+        <div class="cog-row" id="cogPleasantRow"><div class="cog-arrow"></div><div class="cog-text"><div class="cog-name">Pleasantness</div><div class="cog-detail"></div></div></div>
+      </div>
+    </div>
     <div class="hud-left">
       <div class="legend-panel">
         <h3>Mood Quadrants</h3>
@@ -736,6 +762,146 @@
       });
     }
 
+
+    /* ------------------------------------------------------ center of gravity */
+    // Same math as the dashboard's Trends > Emotional center of gravity: each
+    // response scores -1..1 on Pleasantness and Energy from its grid cell; the
+    // period's center is the mean; its "closest word" is the grid word nearest
+    // that point. Arrows compare this period's center with the previous one.
+
+    function pleasantScore(r) {
+      if (r.colNum == null) return r.pleasant === "Pleasant" ? 0.5 : -0.5;
+      return r.pleasant === "Pleasant" ? (r.colNum - 0.5) / 5 : -(5.5 - r.colNum) / 5;
+    }
+    function energyScore(r) {
+      if (r.rowNum == null) return r.energy === "High" ? 0.5 : -0.5;
+      return r.energy === "High" ? (5.5 - r.rowNum) / 5 : -(r.rowNum - 0.5) / 5;
+    }
+    var _wordPoints = null;
+    function wordPoints() {
+      if (_wordPoints) return _wordPoints;
+      _wordPoints = [];
+      [1, 2, 3, 4].forEach(function (q) {
+        for (var row = 1; row <= 5; row++) for (var col = 1; col <= 5; col++) {
+          var word = MoodData.englishLabelFor(q, row, col);
+          if (!word) continue;
+          var fake = { quad: q, rowNum: row, colNum: col, energy: QUAD_INFO[q].energy, pleasant: QUAD_INFO[q].pleasant };
+          _wordPoints.push({ word: word, x: pleasantScore(fake), y: energyScore(fake) });
+        }
+      });
+      return _wordPoints;
+    }
+    function nearestWord(x, y) {
+      var best = null, bestD = Infinity;
+      wordPoints().forEach(function (p) {
+        var d = (p.x - x) * (p.x - x) + (p.y - y) * (p.y - y);
+        if (d < bestD) { bestD = d; best = p; }
+      });
+      return best ? best.word : "";
+    }
+    function centerOf(rows) {
+      if (!rows.length) return null;
+      var p = 0, e = 0;
+      rows.forEach(function (r) { p += pleasantScore(r); e += energyScore(r); });
+      p /= rows.length; e /= rows.length;
+      return { pleasant: p, energy: e, word: nearestWord(p, e), n: rows.length };
+    }
+
+    // Previous period to compare with, same location filter. Today compares
+    // with the most recent earlier day that has responses (the colleges are
+    // closed on weekends and holidays); the others with the previous
+    // calendar week / month / year.
+    var COG_STRONG = { today: 0.3, week: 0.15, month: 0.1, year: 0.1 };
+    function previousPeriod(mode, nowD, rows) {
+      var since = MoodData.TIME_RANGES[mode.range].since(nowD);
+      function inWin(a, b) { return rows.filter(function (r) { return r.date && r.date >= a && r.date < b; }); }
+      if (mode.range === "today") {
+        for (var i = 1; i <= 14; i++) {
+          var a = new Date(since.getFullYear(), since.getMonth(), since.getDate() - i);
+          var b = new Date(since.getFullYear(), since.getMonth(), since.getDate() - i + 1);
+          var rs = inWin(a, b);
+          if (rs.length) return { rows: rs, label: i === 1 ? "yesterday" : a.toLocaleDateString(undefined, { weekday: "long" }) };
+        }
+        return { rows: [], label: "" };
+      }
+      var start, label;
+      if (mode.range === "week") { start = new Date(since.getFullYear(), since.getMonth(), since.getDate() - 7); label = "last week"; }
+      else if (mode.range === "month") { start = new Date(since.getFullYear(), since.getMonth() - 1, 1); label = "last month"; }
+      else { start = new Date(since.getFullYear() - 1, 0, 1); label = "last year"; }
+      return { rows: inWin(start, since), label: label };
+    }
+
+    function makeCogRow(id, color) {
+      var row = $(id);
+      return { row: row, arrow: row.querySelector(".cog-arrow"), text: row.querySelector(".cog-text"),
+               detail: row.querySelector(".cog-detail"), color: color, svg: null, rot: 0, nudge: null };
+    }
+    var cogEnergy = makeCogRow("cogEnergyRow", "#f97316");
+    var cogPleasant = makeCogRow("cogPleasantRow", "#12d9a0");
+    var cogTimers = [], cogStrong = 0.3;
+
+    function cogArrowRotation(d) {
+      var m = Math.abs(d);
+      if (m < 0.05) return 90;                       // steady: pointing right
+      var strong = m >= cogStrong;
+      if (d > 0) return strong ? 0 : 45;             // up / up-right
+      return strong ? 180 : 135;                     // down / down-right
+    }
+    function cogNudge(t, deg) {
+      var el = t.svg.parentNode;
+      if (!el.animate) return;
+      if (t.nudge) t.nudge.cancel();
+      var a = deg * Math.PI / 180, dx = Math.sin(a) * 6, dy = -Math.cos(a) * 6;
+      t.nudge = el.animate([
+        { transform: "translate(0,0)" },
+        { transform: "translate(" + dx + "px," + dy + "px)", offset: 0.4 },
+        { transform: "translate(0,0)" }
+      ], { duration: 360, easing: "ease-out" });
+    }
+    function cogSetArrow(t, d) {
+      var steady = Math.abs(d) < 0.05, target = cogArrowRotation(d);
+      if (!t.svg) {
+        t.arrow.innerHTML = '<svg viewBox="0 0 64 64" width="46" height="46" aria-hidden="true" style="overflow:visible;">' +
+          '<g style="transform-box:view-box; transform-origin:32px 32px; transition:transform 0.45s ease, stroke 0.45s ease;" fill="none" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">' +
+          '<path d="M32 56 V9"/><path d="M10 31 L32 9 L54 31"/></g></svg>';
+        t.svg = t.arrow.querySelector("g");
+        t.rot = target;
+      } else {
+        var diff = ((target - t.rot) % 360 + 540) % 360 - 180;
+        t.rot += diff;
+        if (diff === 0) cogNudge(t, target);   // same direction: a little push so it doesn't look frozen
+      }
+      t.svg.style.transform = "rotate(" + t.rot + "deg)";
+      t.svg.style.stroke = steady ? "var(--muted)" : t.color;
+      t.arrow.style.visibility = "";
+    }
+    function cogUpdateRow(t, now, before, beforeLabel) {
+      if (before == null) { t.arrow.style.visibility = "hidden"; t.text.style.visibility = "hidden"; t.detail.textContent = ""; return; }
+      t.text.style.visibility = "";
+      var d = now - before, steady = Math.abs(d) < 0.05;
+      cogSetArrow(t, d);
+      t.detail.textContent = (steady ? "Steady" : (d > 0 ? "Up " : "Down ") + Math.abs(d).toFixed(2)) + " vs. " + beforeLabel;
+    }
+
+    // Sequence: closest word first, then the Energy arrow, then Pleasantness.
+    var COG_BEAT = 250;
+    function updateCog(mode, filteredRows, nowD) {
+      var cur = centerOf(filteredRows);
+      var scoped = (mode.location && mode.location !== "__ALL__")
+        ? allRows.filter(function (r) { return r.session === mode.location; }) : allRows;
+      var prev = cur ? previousPeriod(mode, nowD, scoped) : { rows: [], label: "" };
+      var before = centerOf(prev.rows);
+      cogStrong = COG_STRONG[mode.range] || 0.1;
+      cogTimers.forEach(clearTimeout);
+      $("cogTitle").textContent = "Center of gravity · " + MoodData.TIME_RANGES[mode.range].label;
+      $("cog").classList.toggle("empty", !cur);
+      $("cogWord").textContent = cur ? cur.word : "—";
+      cogTimers = [
+        setTimeout(function () { cogUpdateRow(cogEnergy, cur && cur.energy, before && cur ? before.energy : null, prev.label); }, COG_BEAT),
+        setTimeout(function () { cogUpdateRow(cogPleasant, cur && cur.pleasant, before && cur ? before.pleasant : null, prev.label); }, COG_BEAT * 2)
+      ];
+    }
+
     function applyMode(mode) {
       var nowD = new Date();
       var inRange = MoodData.rowsInTimeRange(allRows, mode.range, nowD);
@@ -746,6 +912,7 @@
       // Chronological order, so the build genuinely replays the data's own
       // timeline rather than an arbitrary row order.
       filtered = filtered.slice().sort(function (a, b) { return a.date - b.date; });
+      updateCog(mode, filtered, nowD);
 
       var total = filtered.length;
       var durationMs = total ? SPEED_MS[currentSpeed] : 0;
