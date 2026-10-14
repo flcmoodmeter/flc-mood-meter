@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<!-- Display version: v1.2 (shown in the top-left corner, #appVersion). Bump by 0.1 on every change. -->
+<!-- Display version: v1.3 (shown in the top-left corner, #appVersion). Bump by 0.1 on every change. -->
 <title>Mood Meter — Display</title>
 <style>
   :root {
@@ -109,7 +109,7 @@
   .hud-cog.empty { opacity: 0.55; }
   .hud-cog h3 { margin: 0 0 4px; font-size: 10.5px; font-weight: 700; letter-spacing: 0.07em; white-space: nowrap; text-transform: uppercase; color: var(--muted); }
   .cog-cap { margin-top: 10px; font-size: 10.5px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); }
-  .cog-word { font-size: 34px; font-weight: 800; line-height: 1.08; letter-spacing: -0.01em; min-height: 1.1em; overflow-wrap: anywhere; }
+  .cog-word { margin-top: 6px; font-size: 34px; font-weight: 800; line-height: 1.08; letter-spacing: -0.01em; min-height: 1.1em; overflow-wrap: anywhere; }
   .cog-trends { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
   .cog-row { display: flex; align-items: center; gap: 10px; }
   .cog-arrow { flex: none; width: 46px; height: 46px; display: flex; align-items: center; justify-content: center; }
@@ -220,16 +220,11 @@
     <div class="src-indicator">
       <span class="dot"></span>
       <span class="src-indicator-label">Mood Meter</span>
-      <span class="hud-version" id="appVersion" title="Display version">v1.2</span>
+      <span class="hud-version" id="appVersion" title="Display version">v1.3</span>
     </div>
     <div class="hud-cog empty" id="cog">
       <h3 id="cogTitle">Center of gravity</h3>
       <div class="info-date" id="infoDate"></div>
-      <div class="info-chip" id="infoChip">
-        <span class="chip-swatch" id="infoChipSwatch"></span>
-        <span id="infoChipName"></span>
-      </div>
-      <div class="cog-cap">Closest word</div>
       <div class="cog-word" id="cogWord">&mdash;</div>
       <div class="cog-trends">
         <div class="cog-row" id="cogEnergyRow"><div class="cog-arrow"></div><div class="cog-text"><div class="cog-name">Energy</div><div class="cog-detail"></div></div></div>
@@ -350,6 +345,7 @@
       onDataLoaded(result.rows); // always rebuilds bars/locations/modes correctly
     }
 
+    var pendingRange = null;   // range to open on after the next source load
     var sourceGen = 0;   // bumped on every source switch so a late fetch can't overwrite newer data
     function loadFromSheets() {
       var gen = sourceGen;
@@ -370,7 +366,7 @@
 
     // Kiosk data is the default source; it refreshes itself every 5 minutes.
     function startSheetsMode() {
-      dataSource = "sheets"; sourceGen++;
+      dataSource = "sheets"; sourceGen++; if (dataLoaded) pendingRange = "today";
       setSrcStatus("");
       setSrcToggle("sheets");
       loadFromSheets();
@@ -379,7 +375,7 @@
     }
 
     function startSampleMode() {
-      dataSource = "sample"; sourceGen++;
+      dataSource = "sample"; sourceGen++; pendingRange = "year";
       var gen = sourceGen;
       if (sheetsRefreshTimer) { clearInterval(sheetsRefreshTimer); sheetsRefreshTimer = null; }
       setSrcStatus("");
@@ -678,21 +674,49 @@
 
     // Sequence: closest word first, then the Energy arrow, then Pleasantness.
     var COG_BEAT = 250;
-    function updateCog(mode, filteredRows, nowD) {
-      var cur = centerOf(filteredRows);
+    // The center builds up with the replay: it is the average of the responses
+    // revealed so far, so the word and arrows move as the bars fill and end
+    // on the full period's center. Arrows compare against the previous period.
+    var cogCtx = null;
+    function cogSetup(mode, filteredRows, nowD) {
       var scoped = (mode.location && mode.location !== "__ALL__")
         ? allRows.filter(function (r) { return r.session === mode.location; }) : allRows;
-      var prev = cur ? previousPeriod(mode, nowD, scoped) : { rows: [], label: "" };
-      var before = centerOf(prev.rows);
+      var prev = filteredRows.length ? previousPeriod(mode, nowD, scoped) : { rows: [], label: "" };
+      cogCtx = { before: centerOf(prev.rows), label: prev.label, p: 0, e: 0, n: 0, dirty: false, lastAt: -1e9 };
       cogStrong = COG_STRONG[mode.range] || 0.1;
       cogTimers.forEach(clearTimeout);
-      $("cogTitle").textContent = "Center of gravity · " + RANGE_LABEL[mode.range];
-      $("cog").classList.toggle("empty", !cur);
-      $("cogWord").textContent = cur ? cur.word : "—";
+      $("cogTitle").textContent = "Center of gravity \u00b7 " + RANGE_LABEL[mode.range];
+      cogShow();
+    }
+    function cogAdd(r) {
+      if (!cogCtx) return;
+      cogCtx.p += pleasantScore(r); cogCtx.e += energyScore(r); cogCtx.n++; cogCtx.dirty = true;
+    }
+    // Word first, then the Energy arrow, then Pleasantness, a beat apart.
+    function cogShow() {
+      var c = cogCtx;
+      cogTimers.forEach(clearTimeout);
+      $("cog").classList.toggle("empty", !c || !c.n);
+      if (!c || !c.n) {
+        $("cogWord").textContent = "\u2014";
+        cogUpdateRow(cogEnergy, 0, null, ""); cogUpdateRow(cogPleasant, 0, null, "");
+        return;
+      }
+      var p = c.p / c.n, e = c.e / c.n;
+      $("cogWord").textContent = nearestWord(p, e);
+      var b = c.before;
       cogTimers = [
-        setTimeout(function () { cogUpdateRow(cogEnergy, cur && cur.energy, before && cur ? before.energy : null, prev.label); }, COG_BEAT),
-        setTimeout(function () { cogUpdateRow(cogPleasant, cur && cur.pleasant, before && cur ? before.pleasant : null, prev.label); }, COG_BEAT * 2)
+        setTimeout(function () { cogUpdateRow(cogEnergy, e, b ? b.energy : null, c.label); }, COG_BEAT),
+        setTimeout(function () { cogUpdateRow(cogPleasant, p, b ? b.pleasant : null, c.label); }, COG_BEAT * 2)
       ];
+    }
+    // Called every frame during a build; refreshes at most every 700 ms.
+    function cogTick(nowMs, force) {
+      var c = cogCtx;
+      if (!c || !c.dirty) return;
+      if (!force && nowMs - c.lastAt < 700) return;
+      c.dirty = false; c.lastAt = nowMs;
+      cogShow();
     }
 
     function applyMode(mode) {
@@ -705,7 +729,7 @@
       // Chronological order, so the build genuinely replays the data's own
       // timeline rather than an arbitrary row order.
       filtered = filtered.slice().sort(function (a, b) { return a.date - b.date; });
-      updateCog(mode, filtered, nowD);
+      cogSetup(mode, filtered, nowD);
 
       var total = filtered.length;
       // Steady cadence: responses arrive at an even interval, oldest first,
@@ -720,7 +744,6 @@
 
       updateBarTargets({}, 0); // flatten to baseline; the build grows back up from here
       setHudDate("");
-      setHudChip(null);
       clearEffects();
 
       playback = {
@@ -744,9 +767,9 @@
       playback.max = 0;
       playback.phase = "building";
       playback.lastDateText = null;
+      if (cogCtx) { cogCtx.p = 0; cogCtx.e = 0; cogCtx.n = 0; cogCtx.dirty = false; cogCtx.lastAt = -1e9; cogShow(); }
       updateBarTargets({}, 0);
       setHudDate("");
-      setHudChip(null);
       clearEffects();
     }
 
@@ -763,6 +786,7 @@
         while (playback.revealedIdx < playback.total && playback.revealTimes[playback.revealedIdx] <= playback.elapsedMs) {
           var r = playback.rows[playback.revealedIdx];
           var key = cellKeyFor(r);
+          cogAdd(r);
           // Arriving at the front of the timeline just starts the flourish
           // (a drop falling, a streak flying in, ...) — the bar itself only
           // grows once that flourish actually lands on the cell, via
@@ -776,7 +800,6 @@
           // The corner chip reflects the most recent data point this frame
           // brought in — one per frame is plenty even when several rows
           // land in the same tick at a fast build speed.
-          setHudChip(lastRow);
           if (lastRow.date) {
             var dtext = formatMonthDay(lastRow.date);
             if (dtext !== playback.lastDateText) {
@@ -785,12 +808,14 @@
             }
           }
         }
+        cogTick(playback.elapsedMs, false);
         // Don't call the build "done" while flourishes are still in flight —
         // otherwise the hold-then-loop would clear them before they land and
         // their rows would never actually show up on the bars.
         if (playback.revealedIdx >= playback.total && activeEffects.length === 0 && tronQueue.length === 0) {
           playback.phase = "holding";
           playback.holdStart = playback.elapsedMs;
+          cogTick(playback.elapsedMs, true);
         }
       } else if (playback.phase === "holding") {
         if (playback.elapsedMs - playback.holdStart >= playback.holdMs) {
@@ -911,19 +936,6 @@
       if (!el) return;
       el.textContent = text || "";
       el.classList.toggle("on", !!text);
-    }
-
-    // Shows which cell the most recently landed data point belongs to —
-    // its quadrant color plus the emotion word, same word the bar's own
-    // permanent label uses (MoodData.englishLabelFor via row.labelEn).
-    function setHudChip(row) {
-      var chip = $("infoChip"), swatch = $("infoChipSwatch"), name = $("infoChipName");
-      if (!chip || !swatch || !name) return;
-      if (!row) { chip.classList.remove("on"); return; }
-      var info = QUAD_INFO[row.quad];
-      swatch.style.background = info ? info.color : "#999";
-      name.textContent = row.labelEn || row.label || "";
-      chip.classList.add("on");
     }
 
     // ── PurpleAir AQI ──────────────────────────────────────────────────────
@@ -1694,7 +1706,8 @@
         setSrcStatus("Scene error: " + e);
         return;
       }
-      var keepRange = dataLoaded && modes[modeIndex] ? modes[modeIndex].range : null;
+      var keepRange = pendingRange || (dataLoaded && modes[modeIndex] ? modes[modeIndex].range : null);
+      pendingRange = null;
       dataLoaded = true;
       modeIndex = 0;
       var start = defaultModeIndex(modes);
