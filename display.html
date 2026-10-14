@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<!-- Display version: v1.0 (shown in the top-left corner, #appVersion). Bump by 0.1 on every change. -->
+<!-- Display version: v1.2 (shown in the top-left corner, #appVersion). Bump by 0.1 on every change. -->
 <title>Mood Meter — Display</title>
 <style>
   :root {
@@ -101,7 +101,7 @@
 
   /* Center of gravity: closest word + Energy / Pleasantness trend arrows */
   .hud-cog {
-    position: absolute; right: 32px; top: 64px; width: 290px;
+    position: absolute; right: 32px; top: 28px; width: 290px;
     background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
     padding: 14px 16px; text-align: left;
     transition: opacity .4s;
@@ -182,74 +182,6 @@
   .menu-rows.speed-rows { flex-direction: row; }
   .menu-rows.speed-rows button { text-align: center; min-height: 30px; padding: 6px 8px; }
 
-  .hint {
-    position: absolute; bottom: 30px; right: 32px;
-    font-size: 11px; color: var(--muted); opacity: 0;
-    transition: opacity .4s; letter-spacing: 0.02em;
-  }
-  body.show-hints .hint { opacity: 0.85; }
-
-  .paused-badge {
-    position: absolute; top: 64px; left: 50%; transform: translateX(-50%);
-    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--muted); opacity: 0; transition: opacity .3s;
-  }
-  body.is-paused .paused-badge { opacity: 0.9; }
-
-  /* ---------------- load screen ---------------- */
-
-  #loadScreen {
-    position: fixed; inset: 0; z-index: 10;
-    display: flex; align-items: center; justify-content: center;
-    background: radial-gradient(ellipse at 50% 30%, #101726 0%, #05070b 70%);
-  }
-  #loadScreen.hidden { display: none; }
-  .load-card {
-    width: min(560px, 88vw);
-    background: var(--panel);
-    border: 1px solid var(--line);
-    border-radius: 18px;
-    padding: 44px 40px;
-    text-align: center;
-    backdrop-filter: blur(8px);
-  }
-  .load-card .mark {
-    width: 46px; height: 46px; margin: 0 auto 18px;
-    border-radius: 12px;
-    background: conic-gradient(from 45deg, var(--q1), var(--q3), var(--q2), var(--q4), var(--q1));
-  }
-  .load-card h2 { margin: 0 0 8px; font-size: 22px; font-weight: 650; }
-  .load-card p { margin: 0 0 26px; font-size: 14px; color: var(--muted); line-height: 1.55; }
-  .load-card .filename { color: var(--ink); font-family: var(--mono); }
-
-  .pick-btn {
-    display: inline-flex; align-items: center; gap: 10px;
-    padding: 13px 26px; border-radius: 999px; border: 1px solid var(--line);
-    background: var(--ink); color: #0b0d12; font-size: 14px; font-weight: 650;
-    cursor: pointer; transition: transform .15s ease;
-  }
-  .pick-btn:hover { transform: translateY(-1px); }
-  .pick-btn:active { transform: translateY(0); }
-  #fileInput { display: none; }
-
-  .sample-btn {
-    margin-top: 14px; background: none; border: none;
-    color: var(--muted); font-size: 12px; text-decoration: underline;
-    text-underline-offset: 3px; cursor: pointer; padding: 4px;
-  }
-  .sample-btn:hover { color: var(--ink); }
-
-  .load-note {
-    margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line);
-    font-size: 11.5px; color: var(--muted); line-height: 1.6; text-align: left;
-  }
-  .load-note code {
-    font-family: var(--mono); font-size: 11px; color: var(--ink);
-    background: rgba(255,255,255,0.06); padding: 1px 5px; border-radius: 4px;
-  }
-  .load-error { margin-top: 14px; font-size: 12.5px; color: #ff9a8b; min-height: 1em; }
-
-  /* source toggle */
   .source-toggle {
     display: inline-flex; border-radius: 999px;
     border: 1px solid var(--line); overflow: hidden;
@@ -263,41 +195,21 @@
   .source-toggle button.on { background: var(--ink); color: #0b0d12; }
   .source-toggle button:not(.on):hover { color: var(--ink); }
 
-  .hud-source-toggle { margin-top: 2px; width: 100%; border-radius: 8px; }
-  .hud-source-toggle button { flex: 1; text-align: center; font-size: 12px; padding: 6px 10px; }
+  .hud-source-toggle { margin: 2px 0 0; width: 100%; border-radius: 8px; }
+  .src-status { margin-top: 6px; font-size: 11px; color: #ff9a8b; min-height: 1.2em; line-height: 1.3; }
+  .hud-source-toggle { flex-direction: column; }
+  .hud-source-toggle button { text-align: left; font-size: 12px; padding: 8px 12px; white-space: nowrap; }
+  #timeCtrl { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+  #timeCtrl button { padding: 6px 2px; min-width: 0; font-size: 11.5px; }
 
-  .fs-btn {
-    position: absolute; top: 28px; right: 32px;
-    pointer-events: auto; background: none; border: 1px solid var(--line);
-    color: var(--muted); border-radius: 8px; padding: 6px 11px; font-size: 11px;
-    cursor: pointer; letter-spacing: 0.04em;
-  }
-  .fs-btn:hover { color: var(--ink); border-color: rgba(255,255,255,0.3); }
-
-  /* always-visible source button in top-left corner */
+  /* name + version, top-left corner */
   .src-indicator {
     position: absolute; top: 28px; left: 32px;
-    pointer-events: auto;
     display: flex; align-items: center; gap: 8px;
   }
   .src-indicator .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); flex-shrink: 0; }
   .hud-version { font-family: var(--mono); font-size: 11px; color: var(--muted); opacity: 0.8; }
   .src-indicator-label { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
-  .src-change-btn {
-    background: none; border: 1px solid var(--line); color: var(--muted);
-    border-radius: 8px; padding: 4px 10px; font-size: 11px; cursor: pointer;
-    letter-spacing: 0.04em; transition: color .15s, border-color .15s;
-  }
-  .src-change-btn:hover { color: var(--ink); border-color: rgba(255,255,255,0.3); }
-
-  /* close / resume button on load screen (hidden until data is loaded) */
-  .load-close-btn {
-    display: none; margin-top: 18px; background: none; border: none;
-    color: var(--muted); font-size: 12px; text-decoration: underline;
-    text-underline-offset: 3px; cursor: pointer; padding: 4px;
-  }
-  .load-close-btn:hover { color: var(--ink); }
-  #loadScreen.can-close .load-close-btn { display: inline-block; }
 </style>
 </head>
 <body>
@@ -308,10 +220,8 @@
     <div class="src-indicator">
       <span class="dot"></span>
       <span class="src-indicator-label">Mood Meter</span>
-      <span class="hud-version" id="appVersion" title="Display version">v1.0</span>
-      <button class="src-change-btn" id="srcChangeBtn" type="button">📊 Sheets</button>
+      <span class="hud-version" id="appVersion" title="Display version">v1.2</span>
     </div>
-    <div class="hud-clock" id="clock">--:--</div>
     <div class="hud-cog empty" id="cog">
       <h3 id="cogTitle">Center of gravity</h3>
       <div class="info-date" id="infoDate"></div>
@@ -335,6 +245,14 @@
         <div class="legend-rows" id="locLegendRows"></div>
       </div>
       <div class="menu-panel">
+        <h3>Time</h3>
+        <div class="menu-rows speed-rows" id="timeCtrl">
+          <button type="button" data-range="today">Day</button>
+          <button type="button" data-range="week">Week</button>
+          <button type="button" data-range="month">Month</button>
+          <button type="button" data-range="year">Year</button>
+        </div>
+        <div class="menu-divider"></div>
         <h3>Visualization</h3>
         <div class="menu-rows" id="styleMenu"></div>
         <div class="menu-divider"></div>
@@ -347,44 +265,18 @@
         <div class="menu-divider"></div>
         <h3>Data Source</h3>
         <div class="source-toggle hud-source-toggle">
-          <button type="button" id="hudSrcSheets" class="on">📊 Sheets</button>
-          <button type="button" id="hudSrcLocal">📁 CSV</button>
+          <button type="button" id="srcKioskBtn" class="on">📊 Kiosk Data</button>
+          <button type="button" id="sampleBtn">🧪 Load sample data</button>
         </div>
-        <input type="file" id="hudFileInput" accept=".csv,text/csv" style="display:none">
+        <div class="src-status" id="srcStatus"></div>
       </div>
     </div>
-    <div class="paused-badge" id="pausedBadge">Paused — press space to resume</div>
-    <div class="hud-dots" id="dots"></div>
     <div class="hud-info" id="hudInfo">
       <div class="info-aqi" id="infoAqi">
         <span class="aqi-dot" id="aqiDot"></span>
         <span id="aqiValue"></span>
         <span class="aqi-label">AQI · Outdoor</span>
       </div>
-    </div>
-    <div class="hint">&larr; &rarr; change view · space pause · F fullscreen</div>
-  </div>
-
-  <div id="loadScreen">
-    <div class="load-card">
-      <div class="mark"></div>
-      <h2>Mood Meter — Display</h2>
-      <div class="source-toggle">
-        <button type="button" id="srcSheets" class="on">📊 Google Sheets</button>
-        <button type="button" id="srcLocal">📁 Local CSV</button>
-      </div>
-      <p id="loadMsg">Connecting to Google Sheets…</p>
-      <div id="localCsvArea" style="display:none; margin-bottom:20px;">
-        <label class="pick-btn" for="fileInput">
-          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v10M5 7l5-5 5 5"/><rect x="2" y="13" width="16" height="5" rx="1.5"/></svg>
-          Choose CSV File
-        </label>
-        <input type="file" id="fileInput" accept=".csv,text/csv">
-        <p id="fileNameDisplay" style="font-size:12px;color:var(--muted);margin-top:8px;"></p>
-      </div>
-      <div class="load-error" id="loadError"></div>
-      <div><button class="sample-btn" id="sampleBtn" type="button">Load Sample Data</button></div>
-      <div><button class="load-close-btn" id="loadCloseBtn" type="button">Resume display →</button></div>
     </div>
   </div>
 
@@ -434,30 +326,7 @@
       $("legend").appendChild(row);
     });
 
-    function tickClock() {
-      var d = new Date();
-      var h = d.getHours(), m = d.getMinutes();
-      var period = h < 12 ? "AM" : "PM";
-      var h12 = h % 12; if (h12 === 0) h12 = 12;
-      $("clock").textContent = h12 + ":" + (m < 10 ? "0" + m : m) + " " + period + "  ·  " +
-        d.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
-    }
-    tickClock();
-    setInterval(tickClock, 15000);
-
-    var hintTimer = null;
-    function nudgeHints() {
-      document.body.classList.add("show-hints");
-      clearTimeout(hintTimer);
-      hintTimer = setTimeout(function () { document.body.classList.remove("show-hints"); }, 4000);
-    }
-    window.addEventListener("mousemove", nudgeHints, { passive: true });
-    window.addEventListener("keydown", nudgeHints);
-
-    var fsBtn = document.createElement("button");
-    fsBtn.className = "fs-btn"; fsBtn.type = "button"; fsBtn.textContent = "Fullscreen";
-    fsBtn.addEventListener("click", toggleFullscreen);
-    $("hud").appendChild(fsBtn);
+    // Fullscreen is still on the F key (not advertised on screen).
     function toggleFullscreen() {
       if (document.fullscreenElement) document.exitFullscreen();
       else document.documentElement.requestFullscreen().catch(function () {});
@@ -468,128 +337,68 @@
     var SHEETS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSHrL-P3Xgs96UdKWcso5UhIVl891t211CWYRaAC1PhG0Twm8_ybBtjbSa8Tsx7SEHPF7d1OwpaQoMh/pub?gid=0&single=true&output=csv";
     var SHEETS_REFRESH_MS = 5 * 60 * 1000;
     var dataLoaded = false;
-    var dataSource = "sheets"; // "sheets" | "local"
+    var dataSource = "sheets"; // "sheets" | "sample"
     var sheetsRefreshTimer = null;
+
+    function setSrcStatus(msg) { $("srcStatus").textContent = msg || ""; }
 
     function ingestCsvText(text) {
       var result = MoodData.rowsFromCsvText(text);
-      if (result.error) { $("loadError").textContent = "Parse error: " + result.error; return; }
-      if (!result.rows.length) { $("loadError").textContent = "CSV fetched but no usable rows found."; return; }
-      $("loadError").textContent = "";
+      if (result.error) { setSrcStatus("Parse error: " + result.error); return; }
+      if (!result.rows.length) { setSrcStatus("Loaded, but no usable rows found."); return; }
+      setSrcStatus("");
       onDataLoaded(result.rows); // always rebuilds bars/locations/modes correctly
     }
 
+    var sourceGen = 0;   // bumped on every source switch so a late fetch can't overwrite newer data
     function loadFromSheets() {
+      var gen = sourceGen;
       fetch(SHEETS_CSV_URL).then(function (resp) {
         if (!resp.ok) throw new Error("HTTP " + resp.status);
         return resp.text();
       }).then(function (text) {
-        ingestCsvText(text);
-      }).catch(function (err) {
-        if (!dataLoaded) {
-          $("loadMsg").textContent = "Could not reach Google Sheets.";
-          $("loadError").textContent = "Check your internet connection, or use Local CSV / sample data below.";
-        }
+        if (gen === sourceGen) ingestCsvText(text);
+      }).catch(function () {
+        if (gen === sourceGen && !dataLoaded) setSrcStatus("Could not reach kiosk data. Check the connection, or load sample data.");
       });
     }
 
     function setSrcToggle(src) {
-      // load screen toggles
-      $("srcSheets").classList.toggle("on", src === "sheets");
-      $("srcLocal").classList.toggle("on", src === "local");
-      // HUD toggles
-      $("hudSrcSheets").classList.toggle("on", src === "sheets");
-      $("hudSrcLocal").classList.toggle("on", src === "local");
-      // always-visible indicator button
-      $("srcChangeBtn").textContent = src === "sheets" ? "📊 Sheets" : "📁 CSV";
+      $("srcKioskBtn").classList.toggle("on", src === "sheets");
+      $("sampleBtn").classList.toggle("on", src === "sample");
     }
 
+    // Kiosk data is the default source; it refreshes itself every 5 minutes.
     function startSheetsMode() {
-      dataSource = "sheets";
-      $("loadMsg").textContent = "Connecting to Google Sheets…";
-      $("loadError").textContent = "";
-      $("localCsvArea").style.display = "none";
+      dataSource = "sheets"; sourceGen++;
+      setSrcStatus("");
       setSrcToggle("sheets");
       loadFromSheets();
       if (sheetsRefreshTimer) clearInterval(sheetsRefreshTimer);
       sheetsRefreshTimer = setInterval(loadFromSheets, SHEETS_REFRESH_MS);
     }
 
-    function startLocalMode() {
-      dataSource = "local";
+    function startSampleMode() {
+      dataSource = "sample"; sourceGen++;
+      var gen = sourceGen;
       if (sheetsRefreshTimer) { clearInterval(sheetsRefreshTimer); sheetsRefreshTimer = null; }
-      $("loadMsg").textContent = "Choose a CSV file to load.";
-      $("loadError").textContent = "";
-      $("localCsvArea").style.display = "block";
-      setSrcToggle("local");
-    }
-
-    $("srcSheets").addEventListener("click", function () {
-      if (dataSource === "sheets") return;
-      dataLoaded = false;
-      startSheetsMode();
-    });
-
-    $("srcLocal").addEventListener("click", function () {
-      if (dataSource === "local") return;
-      startLocalMode();
-    });
-
-    // HUD source buttons — clicking CSV opens file picker directly
-    $("hudSrcSheets").addEventListener("click", function () {
-      if (dataSource === "sheets") return;
-      dataLoaded = false;
-      startSheetsMode();
-    });
-
-    $("hudSrcLocal").addEventListener("click", function () {
-      if (dataSource === "local") {
-        // Already in local mode — trigger file picker again
-        $("hudFileInput").click();
-        return;
-      }
-      startLocalMode();
-      // Open load screen so user can pick a file (or trigger file input)
-      $("loadScreen").classList.remove("hidden");
-    });
-
-    $("hudFileInput").addEventListener("change", function () {
-      var file = this.files && this.files[0];
-      if (!file) return;
-      $("loadError").textContent = "";
-      var reader = new FileReader();
-      reader.onload = function (e) { ingestCsvText(e.target.result); };
-      reader.onerror = function () { $("loadError").textContent = "Could not read file."; };
-      reader.readAsText(file);
-    });
-
-    $("fileInput").addEventListener("change", function () {
-      var file = this.files && this.files[0];
-      if (!file) return;
-      $("fileNameDisplay").textContent = file.name;
-      $("loadError").textContent = "";
-      $("loadMsg").textContent = "Reading file…";
-      var reader = new FileReader();
-      reader.onload = function (e) { ingestCsvText(e.target.result); };
-      reader.onerror = function () { $("loadError").textContent = "Could not read file."; };
-      reader.readAsText(file);
-    });
-
-    // Auto-load Sheets on open
-    startSheetsMode();
-
-    $("sampleBtn").addEventListener("click", function () {
-      $("loadError").textContent = "";
-      dataLoaded = false; // force full reload/reset
+      setSrcStatus("");
+      setSrcToggle("sample");
       fetch("sample_data/mm_data_test.csv").then(function (resp) {
         if (!resp.ok) throw new Error("HTTP " + resp.status);
         return resp.text();
       }).then(function (text) {
-        ingestCsvText(text);
+        if (gen === sourceGen) ingestCsvText(text);
       }).catch(function () {
-        $("loadError").textContent = "Could not load sample data.";
+        if (gen === sourceGen) setSrcStatus("Could not load sample data.");
       });
-    });
+    }
+
+    $("srcKioskBtn").addEventListener("click", function () { if (dataSource !== "sheets") startSheetsMode(); });
+    $("sampleBtn").addEventListener("click", function () { if (dataSource !== "sample") startSampleMode(); });
+
+    // Open on kiosk data
+    startSheetsMode();
 
     /* ------------------------------------------------------ modes (time range × location) */
 
@@ -608,46 +417,33 @@
       return 0;
     }
 
-    function modeLabel(mode) {
-      var rangeLabel = MoodData.TIME_RANGES[mode.range].label;
-      if (!mode.location) return rangeLabel;
-      if (mode.location === "__ALL__") return rangeLabel + " · All Locations";
-      return rangeLabel + " · " + mode.location;
-    }
-
-    function renderDots() {
-      var wrap = $("dots"); wrap.innerHTML = "";
-      modes.forEach(function (m, i) {
-        var d = document.createElement("span");
-        d.className = "d" + (i === modeIndex ? " on" : "");
-        wrap.appendChild(d);
+    function refreshTimeButtons() {
+      Array.prototype.forEach.call($("timeCtrl").querySelectorAll("button"), function (b) {
+        b.classList.toggle("on", modes.length > 0 && modes[modeIndex].range === b.dataset.range);
       });
     }
-
     function goToMode(i) {
       modeIndex = ((i % modes.length) + modes.length) % modes.length;
       applyMode(modes[modeIndex]);
-      renderDots();
+      refreshTimeButtons();
     }
-    function nextMode() { goToMode(modeIndex + 1); }
-    function prevMode() { goToMode(modeIndex - 1); }
+    Array.prototype.forEach.call($("timeCtrl").querySelectorAll("button"), function (b) {
+      b.addEventListener("click", function () {
+        for (var i = 0; i < modes.length; i++) {
+          if (modes[i].range === b.dataset.range) { if (i !== modeIndex) goToMode(i); return; }
+        }
+      });
+    });
 
+    // Space (pause) is kept as a hidden shortcut, along with F for fullscreen.
     window.addEventListener("keydown", function (e) {
       if (!modes.length) return;
-      if (e.key === "ArrowRight") { nextMode(); }
-      else if (e.key === "ArrowLeft") { prevMode(); }
-      else if (e.code === "Space") { e.preventDefault(); togglePause(); }
+      if (e.code === "Space") { e.preventDefault(); togglePause(); }
       else if (e.key === "f" || e.key === "F") { toggleFullscreen(); }
-    });
-    document.addEventListener("click", function (e) {
-      if (!modes.length) return;
-      if (e.target.closest(".fs-btn") || e.target.closest(".hud-left") || e.target.closest("#loadScreen")) return;
-      nextMode();
     });
 
     function togglePause() {
       paused = !paused;
-      document.body.classList.toggle("is-paused", paused);
     }
 
     function refreshSpeedButtons() {
@@ -912,17 +708,15 @@
       updateCog(mode, filtered, nowD);
 
       var total = filtered.length;
+      // Steady cadence: responses arrive at an even interval, oldest first,
+      // so the whole build takes the chosen Build Speed. The gap is capped so
+      // a view with only a few responses doesn't crawl.
+      var MAX_GAP_MS = 2500;
       var durationMs = total ? SPEED_MS[currentSpeed] : 0;
+      var gapMs = total > 1 ? Math.min(durationMs / (total - 1), MAX_GAP_MS) : 0;
+      durationMs = gapMs * Math.max(total - 1, 0);
       var revealTimes = [];
-      if (total > 1) {
-        var minT = filtered[0].date.getTime(), maxT = filtered[total - 1].date.getTime();
-        var span = maxT - minT;
-        for (var i = 0; i < total; i++) {
-          revealTimes.push(span > 0 ? ((filtered[i].date.getTime() - minT) / span) * durationMs : (i / (total - 1)) * durationMs);
-        }
-      } else if (total === 1) {
-        revealTimes.push(0);
-      }
+      for (var i = 0; i < total; i++) revealTimes.push(i * gapMs);
 
       updateBarTargets({}, 0); // flatten to baseline; the build grows back up from here
       setHudDate("");
@@ -1897,25 +1691,17 @@
         if (!scene) initScene();
         else { clearBars(); buildBars(); } // rebuild segments for new location count
       } catch(e) {
-        $("loadError").textContent = "Scene error: " + e;
+        setSrcStatus("Scene error: " + e);
         return;
       }
+      var keepRange = dataLoaded && modes[modeIndex] ? modes[modeIndex].range : null;
       dataLoaded = true;
-      $("loadScreen").classList.add("hidden");
-      $("loadScreen").classList.add("can-close");
       modeIndex = 0;
-      goToMode(defaultModeIndex(modes));
+      var start = defaultModeIndex(modes);
+      if (keepRange) for (var i = 0; i < modes.length; i++) if (modes[i].range === keepRange) start = i;
+      goToMode(start);   // By Day on first load; later refreshes keep the chosen range
     }
 
-    // Always-visible indicator button opens the load screen
-    $("srcChangeBtn").addEventListener("click", function () {
-      $("loadScreen").classList.remove("hidden");
-    });
-
-    // Close button returns to display
-    $("loadCloseBtn").addEventListener("click", function () {
-      $("loadScreen").classList.add("hidden");
-    });
   })();
   </script>
 </body>
