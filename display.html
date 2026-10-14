@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<!-- Display version: v1.4 (shown in the top-left corner, #appVersion). Bump by 0.1 on every change. -->
+<!-- Display version: v1.5 (shown in the top-left corner, #appVersion). Bump by 0.1 on every change. -->
 <title>Mood Meter — Display</title>
 <style>
   :root {
@@ -220,7 +220,7 @@
     <div class="src-indicator">
       <span class="dot"></span>
       <span class="src-indicator-label">Mood Meter</span>
-      <span class="hud-version" id="appVersion" title="Display version">v1.4</span>
+      <span class="hud-version" id="appVersion" title="Display version">v1.5</span>
     </div>
     <div class="hud-cog empty" id="cog">
       <h3 id="cogTitle">Center of gravity</h3>
@@ -682,17 +682,13 @@
     function cogSetup(mode, filteredRows, nowD) {
       var scoped = (mode.location && mode.location !== "__ALL__")
         ? allRows.filter(function (r) { return r.session === mode.location; }) : allRows;
-      cogStrong = mode.range === "today" ? COG_STRONG.today : 0.3;   // day-to-day change in the per-day views
+      cogStrong = 0.3;   // size of day-to-day change that gives a full vertical arrow
       cogTimers.forEach(clearTimeout);
       $("cogTitle").textContent = "Center of gravity \u00b7 " + RANGE_LABEL[mode.range];
-      if (mode.range === "today") {
-        // One day: the center builds up response by response, vs. the previous day.
-        var prev = filteredRows.length ? previousPeriod(mode, nowD, scoped) : { rows: [], label: "" };
-        cogCtx = { daily: false, before: centerOf(prev.rows), label: prev.label, p: 0, e: 0, n: 0, dirty: false, lastAt: -1e9 };
-      } else {
-        // Week / Month / Year: one center per day. The word and arrows change
-        // once per day, as the replay reaches that day, and compare the day
-        // with the day of data before it.
+      {
+        // One center per day (how the day felt overall) in every view. The word
+        // and arrows change once per day, as the replay reaches that day, and
+        // compare the day with the day of data before it.
         var byDay = {};
         scoped.forEach(function (r) {
           if (!r.date) return;
