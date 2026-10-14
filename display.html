@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<!-- Display version: v1.5 (shown in the top-left corner, #appVersion). Bump by 0.1 on every change. -->
+<!-- Display version: v1.6 (shown in the top-left corner, #appVersion). Bump by 0.1 on every change. -->
 <title>Mood Meter — Display</title>
 <style>
   :root {
@@ -101,7 +101,8 @@
 
   /* Center of gravity: closest word + Energy / Pleasantness trend arrows */
   .hud-cog {
-    position: absolute; right: 32px; top: 28px; width: 290px;
+    position: absolute; right: 32px; top: 32px; width: 290px;
+    transform-origin: top right; transform: scale(var(--cog-s, 1));
     background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
     padding: 14px 16px; text-align: left;
     transition: opacity .4s;
@@ -220,7 +221,7 @@
     <div class="src-indicator">
       <span class="dot"></span>
       <span class="src-indicator-label">Mood Meter</span>
-      <span class="hud-version" id="appVersion" title="Display version">v1.5</span>
+      <span class="hud-version" id="appVersion" title="Display version">v1.6</span>
     </div>
     <div class="hud-cog empty" id="cog">
       <h3 id="cogTitle">Center of gravity</h3>
@@ -749,6 +750,24 @@
       c.dirty = false; c.force = false; c.lastAt = nowMs;
       cogShow();
     }
+
+
+    // Size the Center of Gravity panel to the screen. Projecting the 3D scene
+    // through its whole orbit (bars at full height, word labels, axis labels)
+    // leaves a free region in the top-right corner of about 19.6% of the
+    // screen width by 34.8% of its height on a 16:9 display (e.g. 376 px square
+    // at 1920x1080). The panel is scaled to fill ~19% x 34% of that.
+    function fitCogPanel() {
+      var el = $("cog");
+      if (!el) return;
+      el.style.setProperty("--cog-s", "1");
+      var w = el.offsetWidth, h = el.offsetHeight;
+      var s = Math.min(0.19 * window.innerWidth / w, 0.34 * window.innerHeight / h);
+      s = Math.max(0.7, Math.min(2, s));
+      el.style.setProperty("--cog-s", s.toFixed(3));
+    }
+    fitCogPanel();
+    window.addEventListener("resize", fitCogPanel);
 
     function applyMode(mode) {
       var nowD = new Date();
