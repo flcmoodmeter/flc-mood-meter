@@ -692,7 +692,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.29</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.30</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -8219,8 +8219,8 @@
     var order = ["Quiet (max Kp below 4)", "Unsettled (Kp 4\u20134.9)", "Storm (Kp 5+)"];
     var _g_chartKp = drawMixChart($("chartKp"), joined, order, function (j) {
       return j.kp.max < 4 ? order[0] : (j.kp.max < 5 ? order[1] : order[2]);
-    enableMixDrill($("chartKp"), _g_chartKp);
     });
+    enableMixDrill($("chartKp"), _g_chartKp);
     $("kpCoverageNote").textContent = joined.length.toLocaleString() + " filtered responses fall within the " + Object.keys(kpByDate).length + " days NOAA provides (days are UTC days; Kp 5+ is a minor-or-greater storm).";
   }
 
@@ -8292,8 +8292,8 @@
     var order = ["Least-viewed third of days", "Middle third", "Most-viewed third"];
     var _g_chartWiki = drawMixChart($("chartWiki"), joined, order, function (j) {
       return j.views < lo ? order[0] : (j.views < hi ? order[1] : order[2]);
-    enableMixDrill($("chartWiki"), _g_chartWiki);
     });
+    enableMixDrill($("chartWiki"), _g_chartWiki);
     $("wikiCoverageNote").textContent = joined.length.toLocaleString() + " filtered responses matched to " + Object.keys(wikiByDate).length + " days of page views (" + vals[0].toLocaleString() + " to " + vals[vals.length - 1].toLocaleString() + " views per day). Days are split into thirds relative to this article and period.";
   }
 
