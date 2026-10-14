@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<!-- Display version: v1.0 (shown in the top-left corner, #appVersion). Bump by 0.1 on every change. -->
 <title>Mood Meter — Display</title>
 <style>
   :root {
@@ -68,20 +69,19 @@
     display: flex; flex-direction: column; align-items: flex-end; gap: 8px;
     text-align: right;
   }
-  .hud-info .info-date {
-    margin: 0; font-size: clamp(22px, 2.6vw, 38px); font-weight: 650;
+  .hud-cog .info-date {
+    margin: 4px 0 2px; font-size: 26px; font-weight: 650; min-height: 1.2em;
     letter-spacing: -0.01em; text-wrap: balance;
-    text-shadow: 0 2px 24px rgba(0,0,0,0.55);
     opacity: 0; transition: opacity .4s;
   }
-  .hud-info .info-date.on { opacity: 0.95; }
-  .hud-info .info-chip {
+  .hud-cog .info-date.on { opacity: 0.95; }
+  .hud-cog .info-chip {
     display: flex; align-items: center; gap: 9px;
-    font-size: 15px; font-weight: 560; letter-spacing: 0.01em;
+    font-size: 15px; font-weight: 560; letter-spacing: 0.01em; min-height: 1.3em;
     opacity: 0; transition: opacity .25s;
   }
-  .hud-info .info-chip.on { opacity: 0.92; }
-  .hud-info .info-chip .chip-swatch {
+  .hud-cog .info-chip.on { opacity: 0.92; }
+  .hud-cog .info-chip .chip-swatch {
     width: 15px; height: 15px; border-radius: 5px; flex: 0 0 auto;
     box-shadow: 0 0 8px rgba(0,0,0,0.4);
   }
@@ -108,6 +108,7 @@
   }
   .hud-cog.empty { opacity: 0.55; }
   .hud-cog h3 { margin: 0 0 4px; font-size: 10.5px; font-weight: 700; letter-spacing: 0.07em; white-space: nowrap; text-transform: uppercase; color: var(--muted); }
+  .cog-cap { margin-top: 10px; font-size: 10.5px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); }
   .cog-word { font-size: 34px; font-weight: 800; line-height: 1.08; letter-spacing: -0.01em; min-height: 1.1em; overflow-wrap: anywhere; }
   .cog-trends { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
   .cog-row { display: flex; align-items: center; gap: 10px; }
@@ -280,6 +281,7 @@
     display: flex; align-items: center; gap: 8px;
   }
   .src-indicator .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); flex-shrink: 0; }
+  .hud-version { font-family: var(--mono); font-size: 11px; color: var(--muted); opacity: 0.8; }
   .src-indicator-label { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
   .src-change-btn {
     background: none; border: 1px solid var(--line); color: var(--muted);
@@ -306,11 +308,18 @@
     <div class="src-indicator">
       <span class="dot"></span>
       <span class="src-indicator-label">Mood Meter</span>
+      <span class="hud-version" id="appVersion" title="Display version">v1.0</span>
       <button class="src-change-btn" id="srcChangeBtn" type="button">📊 Sheets</button>
     </div>
     <div class="hud-clock" id="clock">--:--</div>
     <div class="hud-cog empty" id="cog">
       <h3 id="cogTitle">Center of gravity</h3>
+      <div class="info-date" id="infoDate"></div>
+      <div class="info-chip" id="infoChip">
+        <span class="chip-swatch" id="infoChipSwatch"></span>
+        <span id="infoChipName"></span>
+      </div>
+      <div class="cog-cap">Closest word</div>
       <div class="cog-word" id="cogWord">&mdash;</div>
       <div class="cog-trends">
         <div class="cog-row" id="cogEnergyRow"><div class="cog-arrow"></div><div class="cog-text"><div class="cog-name">Energy</div><div class="cog-detail"></div></div></div>
@@ -347,11 +356,6 @@
     <div class="paused-badge" id="pausedBadge">Paused — press space to resume</div>
     <div class="hud-dots" id="dots"></div>
     <div class="hud-info" id="hudInfo">
-      <div class="info-date" id="infoDate"></div>
-      <div class="info-chip" id="infoChip">
-        <span class="chip-swatch" id="infoChipSwatch"></span>
-        <span id="infoChipName"></span>
-      </div>
       <div class="info-aqi" id="infoAqi">
         <span class="aqi-dot" id="aqiDot"></span>
         <span id="aqiValue"></span>
@@ -593,22 +597,14 @@
     var modeIndex = 0;
     var paused = false;
 
+    // Four views, in the order the arrow keys cycle through them. Each covers
+    // all locations (the bars already split by site).
     function buildModes(rows) {
-      var locs = MoodData.locationsPresent(rows);
-      var locList = locs.length ? ["__ALL__"].concat(locs) : [null];
-      var list = [];
-      locList.forEach(function (loc) {
-        MoodData.TIME_RANGE_ORDER.forEach(function (rk) {
-          list.push({ range: rk, location: loc });
-        });
-      });
-      return list;
+      return MoodData.TIME_RANGE_ORDER.map(function (rk) { return { range: rk, location: "__ALL__" }; });
     }
 
     function defaultModeIndex(list) {
-      for (var i = 0; i < list.length; i++) {
-        if (list[i].range === "year" && list[i].location === "__ALL__") return i;
-      }
+      for (var i = 0; i < list.length; i++) if (list[i].range === "today") return i;   // By Day
       return 0;
     }
 
@@ -811,6 +807,7 @@
     // with the most recent earlier day that has responses (the colleges are
     // closed on weekends and holidays); the others with the previous
     // calendar week / month / year.
+    var RANGE_LABEL = { today: "By Day", week: "By Week", month: "By Month", year: "By Year" };
     var COG_STRONG = { today: 0.3, week: 0.15, month: 0.1, year: 0.1 };
     function previousPeriod(mode, nowD, rows) {
       var since = MoodData.TIME_RANGES[mode.range].since(nowD);
@@ -893,7 +890,7 @@
       var before = centerOf(prev.rows);
       cogStrong = COG_STRONG[mode.range] || 0.1;
       cogTimers.forEach(clearTimeout);
-      $("cogTitle").textContent = "Center of gravity · " + MoodData.TIME_RANGES[mode.range].label;
+      $("cogTitle").textContent = "Center of gravity · " + RANGE_LABEL[mode.range];
       $("cog").classList.toggle("empty", !cur);
       $("cogWord").textContent = cur ? cur.word : "—";
       cogTimers = [
