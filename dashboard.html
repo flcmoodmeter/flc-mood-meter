@@ -698,7 +698,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.31</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.32</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -2227,7 +2227,7 @@
     });
     var reporting = tiles.filter(function (h) { return h.indexOf('pulse-tile ok') > -1; }).length;
     var inHours = tiles.filter(function (h) { return h.indexOf('pulse-tile off') === -1; }).length;
-    el.innerHTML = '<div class="pulse-head"><h3>Kiosk pulse &middot; ' + (stale ? "status unavailable" : inHours ? reporting + " of " + inHours + " open kiosks reporting normally" : "no kiosks in their usual hours") + '</h3><span class="pulse-asof">' +
+    el.innerHTML = '<div class="pulse-head"><h3>Kiosk pulse &middot; ' + (stale ? "status unavailable" : inHours ? reporting + " of " + inHours + " kiosks reporting normally" : "no kiosks in their usual hours") + '</h3><span class="pulse-asof">' +
       (stale ? "Newest data: " + new Date(newest).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) + " &mdash; load current data to see live status"
              : "As of " + now.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) + " &middot; compared with the same weekday and time in past weeks") +
       '</span></div><div class="pulse-row">' + tiles.join("") + '</div>';
