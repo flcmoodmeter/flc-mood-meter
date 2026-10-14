@@ -210,6 +210,22 @@
   .spurious-btn:hover { background: #6d28d9; border-color: #6d28d9; }
   .dashtab:hover:not(.on) { color: var(--ink); }
 
+  /* kiosk pulse */
+  .pulse-wrap { margin-bottom: 18px; }
+  .pulse-head { display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:8px; }
+  .pulse-head h3 { margin:0; font-size:13px; font-weight:700; }
+  .pulse-head .pulse-asof { font-size:11.5px; color:var(--muted); }
+  .pulse-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:12px; }
+  .pulse-tile { border:1px solid var(--line); border-radius:8px; padding:10px 12px; background:var(--bg); }
+  .pulse-name { display:flex; align-items:center; gap:8px; font-weight:700; font-size:13.5px; }
+  .pulse-dot { width:11px; height:11px; border-radius:50%; flex:none; background:#98a2b3; }
+  .pulse-dot.ok { background:#1f9d62; } .pulse-dot.low { background:#e0a100; } .pulse-dot.down { background:var(--danger); } .pulse-dot.off { background:#98a2b3; }
+  .pulse-state { margin-left:auto; font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); }
+  .pulse-tile.down { border-color:var(--danger); background:var(--danger-soft); } .pulse-tile.low { border-color:#e0a100; background:var(--warn-soft); }
+  .pulse-last { font-size:12.5px; margin:6px 0 4px; }
+  .pulse-nums { display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:11.5px; color:var(--muted); }
+  .pulse-nums b { display:block; font-size:18px; color:var(--ink); letter-spacing:-.01em; font-variant-numeric:tabular-nums; }
+  .pulse-note { font-size:11.5px; color:var(--warn-ink); margin-top:6px; }
   .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 22px; }
   .stat-card {
     border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; background: #fff;
@@ -676,7 +692,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.27</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.28</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -840,6 +856,7 @@
         </div>
 
         <div id="tabOverview">
+        <div class="pulse-wrap" id="kioskPulse"></div>
         <div class="stat-row" id="statRow"></div>
 
         <div class="chart-grid">
@@ -2143,6 +2160,71 @@
       if (r.seconds != null && !isNaN(r.seconds) && r.seconds < 1) r._suspicious = true;
     });
   }
+
+
+  /* ------------------------------------------------------ kiosk pulse */
+  // Is each kiosk reporting? Judged against that kiosk's own history for the
+  // same weekday and time of day, so closed hours don't read as outages.
+  function esc(x) { return String(x).replace(/[&<>"]/g, function (c) { return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]; }); }
+  function renderKioskPulse() {
+    var el = $("kioskPulse");
+    if (!el) return;
+    var dated = allRows.filter(function (r) { return r.date && !isNaN(r.date.getTime()); });
+    if (!dated.length) { el.innerHTML = ""; return; }
+    var now = new Date(), nowMs = now.getTime(), HOUR = 3600000;
+    var todayKey = isoDate(now), nowMin = now.getHours() * 60 + now.getMinutes();
+    var newest = Math.max.apply(null, dated.map(function (r) { return r.date.getTime(); }));
+    var stale = nowMs - newest > 3 * HOUR;       // data itself isn't current
+    var kiosks = {};
+    dated.forEach(function (r) { var k = r.session || "(none)"; (kiosks[k] = kiosks[k] || []).push(r); });
+    function ago(ms) {
+      var m = Math.round(ms / 60000);
+      if (m < 1) return "just now";
+      if (m < 60) return m + " min ago";
+      var h = Math.floor(m / 60); return h + " h " + (m % 60) + " min ago";
+    }
+    var tiles = Object.keys(kiosks).sort().map(function (k) {
+      var rows = kiosks[k], dow = now.getDay();
+      var byDay = {};
+      rows.forEach(function (r) { var d = isoDate(r.date); (byDay[d] = byDay[d] || []).push(r); });
+      var past = Object.keys(byDay).filter(function (d) { return d < todayKey; }).sort();
+      var same = past.filter(function (d) { return new Date(d + "T12:00:00").getDay() === dow; }).slice(-6);
+      if (same.length < 2) same = past.slice(-6);        // too little history: any recent days
+      var typToday = 0, typHour = 0;
+      same.forEach(function (d) {
+        byDay[d].forEach(function (r) {
+          var m = r.date.getHours() * 60 + r.date.getMinutes();
+          if (m <= nowMin) typToday++;
+          if (m <= nowMin && m > nowMin - 60) typHour++;
+        });
+      });
+      if (same.length) { typToday /= same.length; typHour /= same.length; }
+      var today = (byDay[todayKey] || []).filter(function (r) { return r.date.getTime() <= nowMs; }).length;
+      var hour = rows.filter(function (r) { var t = r.date.getTime(); return t <= nowMs && t > nowMs - HOUR; }).length;
+      var upTo = rows.filter(function (r) { return r.date.getTime() <= nowMs; }), last = Math.max.apply(null, (upTo.length ? upTo : rows).map(function (r) { return r.date.getTime(); }));
+      var state, label, note = "";
+      if (stale) { state = "off"; label = "No current data"; }
+      else if (typHour < 0.5 && typToday < 0.5) { state = hour || today ? "ok" : "off"; label = hour || today ? "Reporting" : "Outside usual hours"; }
+      else if (hour === 0 && typHour >= 1 && typHour < 2) { state = "low"; label = "Quiet this hour"; }
+      else if (hour === 0 && typHour >= 2) { state = "down"; label = "Silent"; note = "Usually about " + typHour.toFixed(1) + " responses in this hour."; }
+      else if ((typHour >= 2 && hour < 0.5 * typHour) || (typToday >= 4 && today < 0.5 * typToday)) { state = "low"; label = "Quieter than usual"; }
+      else { state = "ok"; label = "Reporting"; }
+      var lastTxt = isoDate(new Date(last)) === todayKey ? "Last response " + ago(nowMs - last)
+        : "No responses today (last: " + new Date(last).toLocaleDateString(undefined, { month: "short", day: "numeric" }) + ")";
+      var t = function (v) { return same.length ? "typical " + (Math.round(v * 10) / 10) : "no history"; };
+      return '<div class="pulse-tile ' + state + '"><div class="pulse-name"><span class="pulse-dot ' + state + '"></span>' + esc(k) +
+        '<span class="pulse-state">' + label + '</span></div><div class="pulse-last">' + lastTxt + '</div>' +
+        '<div class="pulse-nums"><div><b>' + today + '</b>today (' + t(typToday) + ' by now)</div><div><b>' + hour + '</b>last hour (' + t(typHour) + ')</div></div>' +
+        (note ? '<div class="pulse-note">' + note + '</div>' : "") + '</div>';
+    });
+    var reporting = tiles.filter(function (h) { return h.indexOf('pulse-tile ok') > -1; }).length;
+    var inHours = tiles.filter(function (h) { return h.indexOf('pulse-tile off') === -1; }).length;
+    el.innerHTML = '<div class="pulse-head"><h3>Kiosk pulse &middot; ' + (stale ? "status unavailable" : inHours ? reporting + " of " + inHours + " open kiosks reporting normally" : "no kiosks in their usual hours") + '</h3><span class="pulse-asof">' +
+      (stale ? "Newest data: " + new Date(newest).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) + " &mdash; load current data to see live status"
+             : "As of " + now.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) + " &middot; compared with the same weekday and time in past weeks") +
+      '</span></div><div class="pulse-row">' + tiles.join("") + '</div>';
+  }
+  setInterval(renderKioskPulse, 60000);
 
   /* ------------------------------------------------------ filtering */
 
@@ -8461,6 +8543,7 @@
   }
 
   function onFiltersChanged() {
+    renderKioskPulse();
     var rows = getFilteredRows();
     // Always show how many suspicious entries exist across all rows
     var suspCount = allRows.filter(function (r) { return r._suspicious; }).length;
