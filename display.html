@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<!-- Display version: v1.7 (shown in the top-left corner, #appVersion). Bump by 0.1 on every change. -->
+<!-- Display version: v1.8 (shown in the top-left corner, #appVersion). Bump by 0.1 on every change. -->
 <title>Mood Meter — Display</title>
 <style>
   :root {
@@ -221,7 +221,7 @@
     <div class="src-indicator">
       <span class="dot"></span>
       <span class="src-indicator-label">Mood Meter</span>
-      <span class="hud-version" id="appVersion" title="Display version">v1.7</span>
+      <span class="hud-version" id="appVersion" title="Display version">v1.8</span>
     </div>
     <div class="hud-cog empty" id="cog">
       <h3 id="cogTitle">How do we feel?</h3>
@@ -665,8 +665,16 @@
       t.svg.style.stroke = steady ? "var(--muted)" : t.color;
       t.arrow.style.visibility = "";
     }
-    function cogUpdateRow(t, now, before, beforeLabel) {
-      if (before == null) { t.arrow.style.visibility = "hidden"; t.text.style.visibility = "hidden"; t.detail.textContent = ""; return; }
+    function cogUpdateRow(t, now, before, beforeLabel, showNeutral) {
+      if (before == null) {
+        if (!showNeutral) { t.arrow.style.visibility = "hidden"; t.text.style.visibility = "hidden"; t.detail.textContent = ""; return; }
+        // First day of record: nothing to compare with, so a grey, level arrow
+        // and the label, without any Up / Down wording.
+        t.text.style.visibility = "";
+        cogSetArrow(t, 0);
+        t.detail.textContent = "";
+        return;
+      }
       t.text.style.visibility = "";
       var d = now - before, steady = Math.abs(d) < 0.05;
       cogSetArrow(t, d);
@@ -740,8 +748,8 @@
       // Present tense only while the day being shown is today.
       $("cogTitle").textContent = c.curKey === dayKeyOf(new Date()) ? "How do we feel?" : "How did we feel?";
       cogTimers = [
-        setTimeout(function () { cogUpdateRow(cogEnergy, e, b ? b.energy : null, label); }, COG_BEAT),
-        setTimeout(function () { cogUpdateRow(cogPleasant, p, b ? b.pleasant : null, label); }, COG_BEAT * 2)
+        setTimeout(function () { cogUpdateRow(cogEnergy, e, b ? b.energy : null, label, true); }, COG_BEAT),
+        setTimeout(function () { cogUpdateRow(cogPleasant, p, b ? b.pleasant : null, label, true); }, COG_BEAT * 2)
       ];
     }
     // Called every frame during a build; refreshes at most every 700 ms.
