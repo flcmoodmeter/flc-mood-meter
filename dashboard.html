@@ -692,7 +692,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.28</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.29</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -7797,7 +7797,7 @@
   function mixGroup(label, rowsOf) {
     var total = rowsOf.length;
     return {
-      label: label + " (n=" + total + ")", total: total,
+      label: label + " (n=" + total + ")", total: total, rows: rowsOf, bare: label,
       segments: MIX_QUAD_ORDER.map(function (q) {
         var n = rowsOf.filter(function (r) { return r.quad === q; }).length;
         return { pct: total ? Math.round((n / total) * 1000) / 10 : 0, n: n, color: QUAD_INFO[q].color, name: MIX_SHORT[q] };
@@ -7818,6 +7818,74 @@
     var groups = order.map(function (k) { return mixGroup(k, buckets[k]); });
     drawMixGroups(container, groups, opts);
     return groups;
+  }
+
+
+  // Drill-down for a stacked mood-mix chart (same behavior as By quadrant on
+  // the Overview): click a colored segment for that quadrant's emotion words
+  // in that bar (or the bar's label for all of its words); click a word for
+  // its locations. The detail panels sit just below the chart and reset
+  // whenever the chart is redrawn.
+  function enableMixDrill(container, groups) {
+    if (!container) return;
+    var host = container._drillHost;
+    if (host && host.parentNode) host.parentNode.removeChild(host);
+    host = document.createElement("div");
+    host.style.cssText = "margin-top:12px;display:none;";
+    container.parentNode.insertBefore(host, container.nextSibling);
+    container._drillHost = host;
+    var HEAD = "font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;";
+    host.innerHTML = '<div class="mixdrill-wh" style="' + HEAD + '"></div><div class="chart-svg-wrap mixdrill-wc"></div>' +
+      '<div class="mixdrill-loc" style="margin-top:12px;display:none;"><div class="mixdrill-lh" style="' + HEAD + '"></div><div class="chart-svg-wrap mixdrill-lc"></div></div>';
+    var wh = host.querySelector(".mixdrill-wh"), wc = host.querySelector(".mixdrill-wc");
+    var loc = host.querySelector(".mixdrill-loc"), lh = host.querySelector(".mixdrill-lh"), lc = host.querySelector(".mixdrill-lc");
+    var hint = document.createElement("div");
+    hint.style.cssText = "font-size:10.5px;color:var(--muted);text-align:center;margin-top:4px;";
+    hint.textContent = "Click a colored segment to see that quadrant's emotion words (or a label for all of them)";
+    container.appendChild(hint);
+    var rects = Array.from(container.querySelectorAll("svg rect"));
+    var labels = Array.from(container.querySelectorAll("svg text.bar-label"));
+    var selected = null;
+    function paint(i, seg) {
+      rects.forEach(function (r, j) { r.style.opacity = i < 0 || (Math.floor(j / 4) === i && (seg < 0 || j % 4 === seg)) ? "1" : "0.35"; });
+      labels.forEach(function (l, j) { l.style.opacity = i < 0 || j === i ? "1" : "0.45"; });
+    }
+    function showWords(g, quad) {
+      var rs = g.rows.filter(function (r) { return (!quad || r.quad === quad) && r.labelEn; });
+      var counts = countBy(rs, function (r) { return r.labelEn; });
+      var color = quad ? QUAD_INFO[quad].color : "#3f5b4f";
+      var items = Object.keys(counts).map(function (w) { return { label: w + " (n=" + counts[w] + ")", value: counts[w], color: color, _word: w }; })
+        .sort(function (a, b) { return b.value - a.value || (a.label < b.label ? -1 : 1); });
+      wh.textContent = g.bare + (quad ? " · " + MIX_SHORT[quad] : "") + " — emotion words chosen";
+      host.style.display = "block"; loc.style.display = "none";
+      drawHBarChart(wc, items);
+      var h2 = document.createElement("div");
+      h2.style.cssText = hint.style.cssText; h2.textContent = "Click a bar to view by location";
+      wc.appendChild(h2);
+      var wr = Array.from(wc.querySelectorAll("svg rect")), sel = -1;
+      wr.forEach(function (rect, i) {
+        if (!items[i]) return;
+        rect.style.cursor = "pointer";
+        rect.addEventListener("click", function () {
+          if (sel === i) { sel = -1; loc.style.display = "none"; wr.forEach(function (r) { r.style.opacity = "1"; }); return; }
+          sel = i; wr.forEach(function (r, j) { r.style.opacity = j === i ? "1" : "0.35"; });
+          var lcnt = countBy(rs.filter(function (r) { return r.labelEn === items[i]._word; }), function (r) { return r.session || "(none)"; });
+          var li = Object.keys(lcnt).map(function (l) { return { label: l + " (n=" + lcnt[l] + ")", value: lcnt[l], color: color }; })
+            .sort(function (a, b) { return b.value - a.value; });
+          lh.textContent = items[i]._word + " — by location";
+          loc.style.display = "block";
+          drawHBarChart(lc, li);
+        });
+      });
+    }
+    function pick(i, seg) {
+      var id = i + ":" + seg;
+      if (selected === id) { selected = null; paint(-1, -1); host.style.display = "none"; return; }
+      selected = id; paint(i, seg);
+      showWords(groups[i], seg >= 0 ? MIX_QUAD_ORDER[seg] : null);
+    }
+    rects.forEach(function (r, ri) { r.style.cursor = "pointer"; r.addEventListener("click", function () { pick(Math.floor(ri / 4), ri % 4); }); });
+    labels.forEach(function (l, i) { l.style.cursor = "pointer"; l.addEventListener("click", function () { pick(i, -1); }); });
   }
 
   function bucketAverage(joined, bucketOrder, bucketFn, valueFn) {
@@ -8011,15 +8079,17 @@
   function renderMoonChart(rows) {
     var order = ["\uD83C\uDF11 New Moon", "\uD83C\uDF13 Waxing", "\uD83C\uDF15 Full Moon", "\uD83C\uDF17 Waning"];
     var dated = rows.filter(function (r) { return r.date; });
-    drawMixChart($("chartMoon"), dated.map(function (r) { return { row: r }; }), order,
+    var _g_chartMoon = drawMixChart($("chartMoon"), dated.map(function (r) { return { row: r }; }), order,
       function (j) { return moonPhaseBucket(j.row.date); });
+    enableMixDrill($("chartMoon"), _g_chartMoon);
   }
 
   function renderMercuryChart(rows) {
     var order = ["Mercury Retrograde", "Direct (normal)"];
     var dated = rows.filter(function (r) { return r.date; });
-    drawMixChart($("chartMercury"), dated.map(function (r) { return { row: r }; }), order,
+    var _g_chartMercury = drawMixChart($("chartMercury"), dated.map(function (r) { return { row: r }; }), order,
       function (j) { return isMercuryRetrograde(isoDate(j.row.date)) ? order[0] : order[1]; });
+    enableMixDrill($("chartMercury"), _g_chartMercury);
   }
 
   function renderSpuriousTab() {
@@ -8089,10 +8159,11 @@
     });
 
     var order = ["Quiet globally (no M5+)", "Moderate (M5\u20136.4 somewhere)", "Major event (M6.5+ somewhere)"];
-    drawMixChart($("chartQuake"), joined, order, function (j) {
+    var _g_chartQuake = drawMixChart($("chartQuake"), joined, order, function (j) {
       if (j.quake.count === 0) return order[0];
       return j.quake.maxMag >= 6.5 ? order[2] : order[1];
     });
+    enableMixDrill($("chartQuake"), _g_chartQuake);
 
     $("quakeCoverageNote").textContent = joined.length.toLocaleString() + " filtered responses checked against " + Object.keys(quakesByDate).length + " days of earthquake data.";
   }
@@ -8146,8 +8217,9 @@
       if (k) joined.push({ row: r, kp: k });
     });
     var order = ["Quiet (max Kp below 4)", "Unsettled (Kp 4\u20134.9)", "Storm (Kp 5+)"];
-    drawMixChart($("chartKp"), joined, order, function (j) {
+    var _g_chartKp = drawMixChart($("chartKp"), joined, order, function (j) {
       return j.kp.max < 4 ? order[0] : (j.kp.max < 5 ? order[1] : order[2]);
+    enableMixDrill($("chartKp"), _g_chartKp);
     });
     $("kpCoverageNote").textContent = joined.length.toLocaleString() + " filtered responses fall within the " + Object.keys(kpByDate).length + " days NOAA provides (days are UTC days; Kp 5+ is a minor-or-greater storm).";
   }
@@ -8218,8 +8290,9 @@
       if (v != null) joined.push({ row: r, views: v });
     });
     var order = ["Least-viewed third of days", "Middle third", "Most-viewed third"];
-    drawMixChart($("chartWiki"), joined, order, function (j) {
+    var _g_chartWiki = drawMixChart($("chartWiki"), joined, order, function (j) {
       return j.views < lo ? order[0] : (j.views < hi ? order[1] : order[2]);
+    enableMixDrill($("chartWiki"), _g_chartWiki);
     });
     $("wikiCoverageNote").textContent = joined.length.toLocaleString() + " filtered responses matched to " + Object.keys(wikiByDate).length + " days of page views (" + vals[0].toLocaleString() + " to " + vals[vals.length - 1].toLocaleString() + " views per day). Days are split into thirds relative to this article and period.";
   }
