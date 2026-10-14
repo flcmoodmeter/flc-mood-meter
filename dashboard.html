@@ -625,6 +625,12 @@
 
   /* ---------------- table ---------------- */
 
+  .shade-head { cursor: pointer; user-select: none; margin-bottom: 12px; }
+  .shade.collapsed .shade-head { margin-bottom: 0; }
+  .shade.collapsed .shade-body { display: none; }
+  .shade-caret { display: inline-block; width: 1em; transition: transform .15s; }
+  .shade:not(.collapsed) .shade-caret { transform: rotate(90deg); }
+  @media print { .shade.collapsed .shade-body { display: block; } .shade-caret { display: none; } }
   .table-card { border: 1px solid var(--line); border-radius: 10px; padding: 16px; background: #fff; margin-bottom: 10px; }
   .table-card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
   .table-card h3 { font-size: 13.5px; font-weight: 700; }
@@ -692,7 +698,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.30</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.31</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -971,31 +977,14 @@
           <div class="cal-wrap" id="chartCalendar"></div>
         </div>
 
-        <div class="table-card">
-          <div class="table-card-head no-print">
-            <h3>All emotions (filtered)</h3>
-          </div>
-          <div class="tablewrap">
-            <table class="datatable" id="emotionTable">
-              <thead><tr>
-                <th data-key="label">Emotion</th>
-                <th data-key="quadName">Quadrant</th>
-                <th data-key="count">Count</th>
-                <th data-key="pct">% of filtered</th>
-              </tr></thead>
-              <tbody></tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="table-card no-print">
-          <div class="table-card-head">
-            <h3>Raw responses (filtered)</h3>
+        <div class="table-card shade collapsed no-print" id="shadeRaw">
+          <div class="table-card-head shade-head" role="button" tabindex="0" aria-expanded="false" data-shade="shadeRaw">
+            <h3><span class="shade-caret" aria-hidden="true">&#9656;</span> Raw responses (filtered)</h3>
             <div class="table-actions">
               <span class="table-note" id="rawTableNote" style="margin:0;"></span>
             </div>
           </div>
-          <div class="tablewrap" style="max-height: 420px; overflow-y: auto;">
+          <div class="shade-body"><div class="tablewrap" style="max-height: 420px; overflow-y: auto;">
             <table class="datatable" id="rawTable">
               <thead><tr>
                 <th data-key="timestamp">Timestamp</th>
@@ -1010,6 +999,25 @@
             </table>
           </div>
           <p class="table-note">Showing up to 500 rows here. Use &ldquo;Download filtered CSV&rdquo; above for the complete filtered set.</p>
+          </div>
+        </div>
+
+        <div class="table-card shade collapsed" id="shadeEmotions">
+          <div class="table-card-head shade-head no-print" role="button" tabindex="0" aria-expanded="false" data-shade="shadeEmotions">
+            <h3><span class="shade-caret" aria-hidden="true">&#9656;</span> All emotions (filtered)</h3>
+          </div>
+          <div class="shade-body"><div class="tablewrap">
+            <table class="datatable" id="emotionTable">
+              <thead><tr>
+                <th data-key="label">Emotion</th>
+                <th data-key="quadName">Quadrant</th>
+                <th data-key="count">Count</th>
+                <th data-key="pct">% of filtered</th>
+              </tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          </div>
         </div>
         </div>
 
@@ -8592,6 +8600,18 @@
       });
     });
   }
+
+
+  // Windowshade headers (All emotions / Raw responses tables)
+  document.querySelectorAll(".shade-head").forEach(function (h) {
+    function toggle() {
+      var card = $(h.getAttribute("data-shade"));
+      var closed = card.classList.toggle("collapsed");
+      h.setAttribute("aria-expanded", closed ? "false" : "true");
+    }
+    h.addEventListener("click", toggle);
+    h.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } });
+  });
 
   function ensureSpuriousDefaults() {
     if ($("wikiStart").value || $("wikiEnd").value) return;
