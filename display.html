@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<!-- Display version: v2.1 (shown in the top-left corner, #appVersion). Bump by 0.1 on every change. -->
+<!-- Display version: v2.2 (shown in the top-left corner, #appVersion). Bump by 0.1 on every change. -->
 <title>Mood Meter — Display</title>
 <style>
   :root {
@@ -221,7 +221,7 @@
     <div class="src-indicator">
       <span class="dot"></span>
       <span class="src-indicator-label">Mood Meter</span>
-      <span class="hud-version" id="appVersion" title="Display version">v2.1</span>
+      <span class="hud-version" id="appVersion" title="Display version">v2.2</span>
     </div>
     <div class="hud-cog empty" id="cog">
       <h3 id="cogTitle">How do we feel?</h3>
@@ -810,7 +810,7 @@
       playback = {
         rows: filtered, revealTimes: revealTimes, total: total,
         durationMs: durationMs, holdMs: total ? BUILD_HOLD_MS : EMPTY_HOLD_MS,
-        elapsedMs: 0, revealedIdx: 0, counts: {}, max: 0, phase: "building",
+        elapsedMs: 0, revealedIdx: 0, counts: {}, max: 0, phase: "clearing",
         lastDateText: null
       };
     }
@@ -826,7 +826,7 @@
       playback.revealedIdx = 0;
       playback.counts = {};
       playback.max = 0;
-      playback.phase = "building";
+      playback.phase = "clearing";
       playback.wiping = false;
       playback.lastDateText = null;
       if (cogCtx) { cogCtx.p = 0; cogCtx.e = 0; cogCtx.n = 0; cogCtx.curKey = null; cogCtx.dirty = false; cogCtx.lastAt = -1e9; cogShow(); }
@@ -849,6 +849,11 @@
 
     function tickPlayback(dt) {
       if (!playback || paused) return;
+      // Nothing new appears until the previous picture has fully cleared.
+      if (playback.phase === "clearing") {
+        if (activeEffects.length || tronQueue.length || !boardIsClear()) return;
+        playback.phase = "building"; playback.elapsedMs = 0;
+      }
       playback.elapsedMs += dt * 1000;
 
       if (playback.phase === "building") {
