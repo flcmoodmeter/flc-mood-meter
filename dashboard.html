@@ -698,7 +698,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.32</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.33</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -7793,7 +7793,8 @@
       var group = buckets[k];
       var hits = group.filter(predicateFn).length;
       var pct = group.length ? Math.round((hits / group.length) * 100) : 0;
-      return { label: k + " (n=" + group.length + ")", value: pct, n: group.length, color: "#3f5b4f" };
+      return { label: k + " (n=" + group.length + ")", value: pct, n: group.length, color: "#3f5b4f", bare: k,
+        _all: group.map(function (j) { return j.row; }), _hits: group.filter(predicateFn).map(function (j) { return j.row; }) };
     });
   }
 
@@ -7899,18 +7900,86 @@
   function bucketAverage(joined, bucketOrder, bucketFn, valueFn) {
     var buckets = {};
     bucketOrder.forEach(function (k) { buckets[k] = []; });
+    var rowsBy = {};
+    bucketOrder.forEach(function (k) { rowsBy[k] = []; });
     joined.forEach(function (j) {
       var k = bucketFn(j);
       if (k == null || buckets[k] === undefined) return;
       var v = valueFn(j);
       if (v == null || isNaN(v)) return;
       buckets[k].push(v);
+      rowsBy[k].push(j.row);
     });
     return bucketOrder.map(function (k) {
       var vals = buckets[k];
       var avg = vals.length ? vals.reduce(function (a, b) { return a + b; }, 0) / vals.length : 0;
-      return { label: k + " (n=" + vals.length + ")", value: Math.round(avg * 10) / 10, n: vals.length, color: "#3f5b4f" };
+      return { label: k + " (n=" + vals.length + ")", value: Math.round(avg * 10) / 10, n: vals.length, color: "#3f5b4f", bare: k, _all: rowsBy[k], _hits: rowsBy[k] };
     });
+  }
+
+
+  // Drill-down for single-color bar charts (Weather & Air Quality): click a
+  // bar (or its label) for the emotion words behind it, then a word for its
+  // locations. items[i]._hits are the responses the bar measures; _all are
+  // every response in the bucket. `what` names the measured responses.
+  function enableBarDrill(container, items, what) {
+    if (!container) return;
+    var host = container._drillHost;
+    if (host && host.parentNode) host.parentNode.removeChild(host);
+    host = document.createElement("div");
+    host.style.cssText = "margin-top:12px;display:none;";
+    container.parentNode.insertBefore(host, container.nextSibling);
+    container._drillHost = host;
+    var HEAD = "font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;";
+    host.innerHTML = '<div class="mixdrill-wh" style="' + HEAD + '"></div><div class="chart-svg-wrap mixdrill-wc"></div>' +
+      '<div class="mixdrill-loc" style="margin-top:12px;display:none;"><div class="mixdrill-lh" style="' + HEAD + '"></div><div class="chart-svg-wrap mixdrill-lc"></div></div>';
+    var wh = host.querySelector(".mixdrill-wh"), wc = host.querySelector(".mixdrill-wc");
+    var loc = host.querySelector(".mixdrill-loc"), lh = host.querySelector(".mixdrill-lh"), lc = host.querySelector(".mixdrill-lc");
+    var hint = document.createElement("div");
+    hint.style.cssText = "font-size:10.5px;color:var(--muted);text-align:center;margin-top:4px;";
+    hint.textContent = "Click a bar to see the emotion words behind it";
+    container.appendChild(hint);
+    var rects = Array.from(container.querySelectorAll("svg rect"));
+    var labels = Array.from(container.querySelectorAll("svg text.bar-label"));
+    var selected = -1;
+    function paint(i) {
+      rects.forEach(function (r, j) { r.style.opacity = i < 0 || j === i ? "1" : "0.35"; });
+      labels.forEach(function (l, j) { l.style.opacity = i < 0 || j === i ? "1" : "0.45"; });
+    }
+    function showWords(it) {
+      var rs = it._hits.filter(function (r) { return r.labelEn; });
+      var counts = countBy(rs, function (r) { return r.labelEn; });
+      var items2 = Object.keys(counts).map(function (w) { return { label: w + " (n=" + counts[w] + ")", value: counts[w], color: it.color, _word: w }; })
+        .sort(function (a, b) { return b.value - a.value || (a.label < b.label ? -1 : 1); });
+      wh.textContent = it.bare + " — " + (what ? what + " " : "") + "emotion words (" + it._hits.length + " of " + it._all.length + " responses)";
+      host.style.display = "block"; loc.style.display = "none";
+      drawHBarChart(wc, items2);
+      var h2 = document.createElement("div");
+      h2.style.cssText = hint.style.cssText; h2.textContent = "Click a bar to view by location";
+      wc.appendChild(h2);
+      var wr = Array.from(wc.querySelectorAll("svg rect")), sel = -1;
+      wr.forEach(function (rect, i) {
+        if (!items2[i]) return;
+        rect.style.cursor = "pointer";
+        rect.addEventListener("click", function () {
+          if (sel === i) { sel = -1; loc.style.display = "none"; wr.forEach(function (r) { r.style.opacity = "1"; }); return; }
+          sel = i; wr.forEach(function (r, j) { r.style.opacity = j === i ? "1" : "0.35"; });
+          var lcnt = countBy(rs.filter(function (r) { return r.labelEn === items2[i]._word; }), function (r) { return r.session || "(none)"; });
+          var li = Object.keys(lcnt).map(function (l) { return { label: l + " (n=" + lcnt[l] + ")", value: lcnt[l], color: it.color }; })
+            .sort(function (a, b) { return b.value - a.value; });
+          lh.textContent = items2[i]._word + " — by location";
+          loc.style.display = "block";
+          drawHBarChart(lc, li);
+        });
+      });
+    }
+    function pick(i) {
+      if (!items[i]) return;
+      if (selected === i) { selected = -1; paint(-1); host.style.display = "none"; return; }
+      selected = i; paint(i); showWords(items[i]);
+    }
+    rects.forEach(function (r, i) { r.style.cursor = "pointer"; r.addEventListener("click", function () { pick(i); }); });
+    labels.forEach(function (l, i) { l.style.cursor = "pointer"; l.addEventListener("click", function () { pick(i); }); });
   }
 
   function skyBucket(weatherCode) {
@@ -7931,6 +8000,7 @@
     }, function (j) { return j.row.pleasant === "Unpleasant"; });
     items.forEach(function (it) { it.color = "#ef4444"; });
     drawBarChart($("chartHeat"), items, { rotateLabels: true, height: 240 });
+    enableBarDrill($("chartHeat"), items, "Unpleasant");
   }
 
   function renderAqiChart(joined) {
@@ -7942,6 +8012,7 @@
     }, function (j) { return j.row.pleasant === "Unpleasant"; });
     items.forEach(function (it) { it.color = "#8b5cf6"; });
     drawBarChart($("chartAqi"), items, { rotateLabels: true, height: 240 });
+    enableBarDrill($("chartAqi"), items, "Unpleasant");
   }
 
   function renderDaylightChart(joined) {
@@ -7953,6 +8024,7 @@
     }, function (j) { return j.row.energy === "Low" && j.row.pleasant === "Unpleasant"; });
     items.forEach(function (it) { it.color = "#3b82f6"; });
     drawBarChart($("chartDaylight"), items, { rotateLabels: true, height: 240 });
+    enableBarDrill($("chartDaylight"), items, "Low Energy, Unpleasant");
   }
 
   function renderSkyChart(joined) {
@@ -7961,6 +8033,7 @@
       function (j) { return j.row.energy === "High" && j.row.pleasant === "Pleasant"; });
     items.forEach(function (it, i) { it.color = ["#facc15", "#94a3b8", "#3b82f6"][i]; });
     drawBarChart($("chartSky"), items, { rotateLabels: true, height: 240 });
+    enableBarDrill($("chartSky"), items, "High Energy, Pleasant");
   }
 
   function renderPressureChart(joined) {
@@ -7972,6 +8045,7 @@
     }, function (j) { return j.row.seconds; });
     items.forEach(function (it) { it.color = "#f97316"; });
     drawBarChart($("chartPressure"), items, { rotateLabels: true, height: 240 });
+    enableBarDrill($("chartPressure"), items, "");
   }
 
   function renderWeatherDowChart(joined) {
@@ -7987,10 +8061,13 @@
         });
         var hits = group.filter(function (j) { return j.row.energy === "High" && j.row.pleasant === "Pleasant"; }).length;
         var pct = group.length ? Math.round((hits / group.length) * 100) : 0;
-        items.push({ label: dowShort[d] + " " + cond + " (n=" + group.length + ")", value: pct, color: cond === "Rain" ? "#3b82f6" : "#facc15" });
+        items.push({ label: dowShort[d] + " " + cond + " (n=" + group.length + ")", value: pct, color: cond === "Rain" ? "#3b82f6" : "#facc15", bare: dowShort[d] + " " + cond,
+          _all: group.map(function (j) { return j.row; }),
+          _hits: group.filter(function (j) { return j.row.energy === "High" && j.row.pleasant === "Pleasant"; }).map(function (j) { return j.row; }) });
       });
     }
     drawBarChart($("chartWeatherDow"), items, { rotateLabels: true, height: 260, barGap: 40 });
+    enableBarDrill($("chartWeatherDow"), items, "High Energy, Pleasant");
   }
 
   function renderWeatherStats(joined, filteredCount) {
