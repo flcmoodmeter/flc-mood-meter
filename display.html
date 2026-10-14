@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<!-- Display version: v1.3 (shown in the top-left corner, #appVersion). Bump by 0.1 on every change. -->
+<!-- Display version: v1.4 (shown in the top-left corner, #appVersion). Bump by 0.1 on every change. -->
 <title>Mood Meter — Display</title>
 <style>
   :root {
@@ -220,7 +220,7 @@
     <div class="src-indicator">
       <span class="dot"></span>
       <span class="src-indicator-label">Mood Meter</span>
-      <span class="hud-version" id="appVersion" title="Display version">v1.3</span>
+      <span class="hud-version" id="appVersion" title="Display version">v1.4</span>
     </div>
     <div class="hud-cog empty" id="cog">
       <h3 id="cogTitle">Center of gravity</h3>
@@ -678,19 +678,49 @@
     // revealed so far, so the word and arrows move as the bars fill and end
     // on the full period's center. Arrows compare against the previous period.
     var cogCtx = null;
+    function dayKeyOf(d) { return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); }
     function cogSetup(mode, filteredRows, nowD) {
       var scoped = (mode.location && mode.location !== "__ALL__")
         ? allRows.filter(function (r) { return r.session === mode.location; }) : allRows;
-      var prev = filteredRows.length ? previousPeriod(mode, nowD, scoped) : { rows: [], label: "" };
-      cogCtx = { before: centerOf(prev.rows), label: prev.label, p: 0, e: 0, n: 0, dirty: false, lastAt: -1e9 };
-      cogStrong = COG_STRONG[mode.range] || 0.1;
+      cogStrong = mode.range === "today" ? COG_STRONG.today : 0.3;   // day-to-day change in the per-day views
       cogTimers.forEach(clearTimeout);
       $("cogTitle").textContent = "Center of gravity \u00b7 " + RANGE_LABEL[mode.range];
+      if (mode.range === "today") {
+        // One day: the center builds up response by response, vs. the previous day.
+        var prev = filteredRows.length ? previousPeriod(mode, nowD, scoped) : { rows: [], label: "" };
+        cogCtx = { daily: false, before: centerOf(prev.rows), label: prev.label, p: 0, e: 0, n: 0, dirty: false, lastAt: -1e9 };
+      } else {
+        // Week / Month / Year: one center per day. The word and arrows change
+        // once per day, as the replay reaches that day, and compare the day
+        // with the day of data before it.
+        var byDay = {};
+        scoped.forEach(function (r) {
+          if (!r.date) return;
+          var k = dayKeyOf(r.date);
+          (byDay[k] || (byDay[k] = { date: new Date(r.date.getFullYear(), r.date.getMonth(), r.date.getDate()), rows: [] })).rows.push(r);
+        });
+        var days = Object.keys(byDay).map(function (k) { return byDay[k]; }).sort(function (x, y) { return x.date - y.date; });
+        var info = {};
+        days.forEach(function (d, i) {
+          info[dayKeyOf(d.date)] = {
+            center: centerOf(d.rows),
+            before: i > 0 ? centerOf(days[i - 1].rows) : null,
+            label: i > 0 ? days[i - 1].date.toLocaleDateString(undefined, { month: "short", day: "numeric" }) : ""
+          };
+        });
+        cogCtx = { daily: true, info: info, curKey: null, n: 0, dirty: false, lastAt: -1e9 };
+      }
       cogShow();
     }
     function cogAdd(r) {
-      if (!cogCtx) return;
-      cogCtx.p += pleasantScore(r); cogCtx.e += energyScore(r); cogCtx.n++; cogCtx.dirty = true;
+      var c = cogCtx;
+      if (!c) return;
+      if (c.daily) {
+        var k = r.date ? dayKeyOf(r.date) : null;
+        if (k && k !== c.curKey) { c.curKey = k; c.n = 1; c.dirty = true; c.force = true; }   // a new day: update right away
+      } else {
+        c.p += pleasantScore(r); c.e += energyScore(r); c.n++; c.dirty = true;
+      }
     }
     // Word first, then the Energy arrow, then Pleasantness, a beat apart.
     function cogShow() {
@@ -702,20 +732,25 @@
         cogUpdateRow(cogEnergy, 0, null, ""); cogUpdateRow(cogPleasant, 0, null, "");
         return;
       }
-      var p = c.p / c.n, e = c.e / c.n;
+      var p, e, b, label;
+      if (c.daily) {
+        var d = c.info[c.curKey];
+        p = d.center.pleasant; e = d.center.energy; b = d.before; label = d.label;
+      } else {
+        p = c.p / c.n; e = c.e / c.n; b = c.before; label = c.label;
+      }
       $("cogWord").textContent = nearestWord(p, e);
-      var b = c.before;
       cogTimers = [
-        setTimeout(function () { cogUpdateRow(cogEnergy, e, b ? b.energy : null, c.label); }, COG_BEAT),
-        setTimeout(function () { cogUpdateRow(cogPleasant, p, b ? b.pleasant : null, c.label); }, COG_BEAT * 2)
+        setTimeout(function () { cogUpdateRow(cogEnergy, e, b ? b.energy : null, label); }, COG_BEAT),
+        setTimeout(function () { cogUpdateRow(cogPleasant, p, b ? b.pleasant : null, label); }, COG_BEAT * 2)
       ];
     }
     // Called every frame during a build; refreshes at most every 700 ms.
     function cogTick(nowMs, force) {
       var c = cogCtx;
       if (!c || !c.dirty) return;
-      if (!force && nowMs - c.lastAt < 700) return;
-      c.dirty = false; c.lastAt = nowMs;
+      if (!force && !c.force && nowMs - c.lastAt < 700) return;
+      c.dirty = false; c.force = false; c.lastAt = nowMs;
       cogShow();
     }
 
@@ -767,7 +802,7 @@
       playback.max = 0;
       playback.phase = "building";
       playback.lastDateText = null;
-      if (cogCtx) { cogCtx.p = 0; cogCtx.e = 0; cogCtx.n = 0; cogCtx.dirty = false; cogCtx.lastAt = -1e9; cogShow(); }
+      if (cogCtx) { cogCtx.p = 0; cogCtx.e = 0; cogCtx.n = 0; cogCtx.curKey = null; cogCtx.dirty = false; cogCtx.lastAt = -1e9; cogShow(); }
       updateBarTargets({}, 0);
       setHudDate("");
       clearEffects();
