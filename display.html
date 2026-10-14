@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<!-- Display version: v1.8 (shown in the top-left corner, #appVersion). Bump by 0.1 on every change. -->
+<!-- Display version: v1.9 (shown in the top-left corner, #appVersion). Bump by 0.1 on every change. -->
 <title>Mood Meter — Display</title>
 <style>
   :root {
@@ -221,7 +221,7 @@
     <div class="src-indicator">
       <span class="dot"></span>
       <span class="src-indicator-label">Mood Meter</span>
-      <span class="hud-version" id="appVersion" title="Display version">v1.8</span>
+      <span class="hud-version" id="appVersion" title="Display version">v1.9</span>
     </div>
     <div class="hud-cog empty" id="cog">
       <h3 id="cogTitle">How do we feel?</h3>
@@ -1074,7 +1074,7 @@
     // ───────────────────────────────────────────────────────────────────────
 
     function formatMonthDay(d) {
-      return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+      return d.toLocaleDateString(undefined, { month: "short", day: "numeric" }) + " - " + d.toLocaleDateString(undefined, { weekday: "long" });
     }
 
     function buildAxisLabels() {
@@ -1766,8 +1766,12 @@
         setSrcStatus("Scene error: " + e);
         return;
       }
+      var fromPending = !!pendingRange;
       var keepRange = pendingRange || (dataLoaded && modes[modeIndex] ? modes[modeIndex].range : null);
       pendingRange = null;
+      // Day is the default; with nothing recorded today, open on Week instead.
+      if ((!dataLoaded || fromPending) && (!keepRange || keepRange === "today") &&
+          !MoodData.rowsInTimeRange(rows, "today", new Date()).length) keepRange = "week";
       dataLoaded = true;
       modeIndex = 0;
       var start = defaultModeIndex(modes);
