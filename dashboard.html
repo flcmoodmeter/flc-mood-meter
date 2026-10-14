@@ -698,7 +698,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.33</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.34</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -4051,7 +4051,7 @@
 
     var legendNote = document.createElement("div");
     legendNote.style.cssText = "font-size:10.5px;color:var(--muted);text-align:center;margin-top:4px;";
-    legendNote.innerHTML = '<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#fff;border:2px solid var(--accent);vertical-align:middle;"></span> Earliest &nbsp; → &nbsp; fading-to-solid color shows direction &nbsp; → &nbsp; <span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--accent);border:1.5px solid #fff;vertical-align:middle;"></span> Latest &nbsp; · &nbsp; arrow marks the most recent move &nbsp; · &nbsp; pulsing ring = point being added';
+    legendNote.innerHTML = '<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#fff;border:2px solid var(--accent);vertical-align:middle;"></span> Earliest &nbsp; → &nbsp; fading-to-solid color shows direction &nbsp; → &nbsp; <span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--accent);border:1.5px solid #fff;vertical-align:middle;"></span> Latest &nbsp; · &nbsp; arrowhead on the path shows the latest move &nbsp; · &nbsp; pulsing ring = point being added';
     container.appendChild(legendNote);
 
     // -------- playback logic --------
@@ -9018,7 +9018,7 @@
     <ul style="margin:0 0 14px; padding:0 0 0 18px; display:flex; flex-direction:column; gap:8px;">
       <li style="font-size:13px; color:var(--ink); line-height:1.5;">The mood grid has two axes: horizontal is pleasantness (unpleasant &larr; &rarr; pleasant), vertical is energy (low &larr; &rarr; high). Each quadrant corresponds to one of the four quadrant colors used throughout the dashboard.</li>
       <li style="font-size:13px; color:var(--ink); line-height:1.5;">For each time period (day/week/month, based on the selector in this card's header), every response in that period is scored on each axis from -1 to +1 based on exactly which emotion word was chosen: the sign says which side (Pleasant is positive, Unpleasant negative; High energy positive, Low negative), and the size says how far toward the edge of the grid the word sits. A word at the outer edge scores close to &plusmn;1, while one near the middle of the grid scores closer to 0. Those scores are then averaged, which gives one point &mdash; the &ldquo;centroid,&rdquo; or center of mass &mdash; representing where that period's responses clustered on average.</li>
-      <li style="font-size:13px; color:var(--ink); line-height:1.5;">Each point is also matched to the <strong>closest emotion word</strong> on the grid, shown in large type beside the grid and in each dot's hover tooltip. Because an average can land between words, it is shown with how tightly that period's responses cluster (tight cluster, mixed, or widely mixed) and, when different, the word chosen most often. A &ldquo;mixed&rdquo; label means the closest word is a summary, not something many people actually picked. Below it, two bold arrows (energy and pleasantness) show whether this period is up, down or steady compared with the period before it, with the size of the change. The arrow tilts to match: pointing right when steady, angled up-right or down-right for a modest change, and straight up or down for a large one. A small, fainter copy to its left shows the previous step&rsquo;s arrow.</li>
+      <li style="font-size:13px; color:var(--ink); line-height:1.5;">Each point is also matched to the <strong>closest emotion word</strong> on the grid, shown in large type beside the grid and in each dot's hover tooltip. Because an average can land between words, it is shown with how tightly that period's responses cluster (tight cluster, mixed, or widely mixed) and, when different, the word chosen most often. A &ldquo;mixed&rdquo; label means the closest word is a summary, not something many people actually picked. Below it, two bold arrows (energy and pleasantness) show whether this period is up, down or steady compared with the period before it, with the size of the change written beside each. Each arrow turns as you step through time: pointing right when steady, angled up-right or down-right for a modest change, and straight up or down for a large one. The first period has nothing to compare against, so its arrows are hidden.</li>
       <li style="font-size:13px; color:var(--ink); line-height:1.5;">Those points are plotted on the grid and connected in chronological order by a line, so you can trace the path the average mood has taken over time.</li>
       <li style="font-size:13px; color:var(--ink); line-height:1.5;">The first point is hollow (outlined only) and the last point is solid and larger, so you can tell at a glance which end is the start and which is &ldquo;now,&rdquo; and see which direction the path is heading.</li>
     </ul>
