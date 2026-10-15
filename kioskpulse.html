@@ -1,0 +1,247 @@
+<!doctype html>
+<!-- Kiosk Pulse version: v1.0. Bump by 0.1 on every change.
+     Phone-friendly status page: is each Mood Meter kiosk reporting today and in the last hour?
+     Uses the same logic as the Dashboard's "Kiosk pulse" strip. Lives beside dashboard.html and
+     display.html and loads shared-mood-data.js from the same folder. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#3f5b4f">
+<title>Kiosk Pulse</title>
+<style>
+  :root {
+    --bg: #f4f6f5;
+    --card: #ffffff;
+    --line: #dfe3e6;
+    --ink: #16191c;
+    --muted: #667085;
+    --accent: #3f5b4f;
+    --ok: #1f9d62;       --ok-soft: #e3f4ea;
+    --low: #c58a00;      --low-soft: #fdf0d5;   --low-ink: #7a5a12;
+    --down: #b3261e;     --down-soft: #fbe4e2;
+    --off: #8a93a1;      --off-soft: #eceff2;
+    --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #111513; --card: #1a201d; --line: #2c3530; --ink: #eef2ef; --muted: #9aa5a0;
+      --accent: #7fb59b;
+      --ok: #3fc084;   --ok-soft: #173325;
+      --low: #e7b73a;  --low-soft: #3a2f10;  --low-ink: #f1d58a;
+      --down: #ff7b72; --down-soft: #3b1a18;
+      --off: #7d8794;  --off-soft: #232a27;
+    }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans);
+    padding: env(safe-area-inset-top, 0) 16px calc(24px + env(safe-area-inset-bottom, 0));
+    min-height: 100vh;
+  }
+  .wrap { max-width: 560px; margin: 0 auto; }
+  header { display: flex; align-items: center; justify-content: space-between; padding: 16px 0 12px; gap: 12px; }
+  h1 { margin: 0; font-size: 20px; letter-spacing: -.01em; }
+  .ver { font-size: 11px; color: var(--muted); font-weight: 500; margin-left: 6px; }
+  #refreshBtn {
+    min-width: 48px; height: 44px; padding: 0 16px; border-radius: 22px; border: 1px solid var(--line);
+    background: var(--card); color: var(--ink); font: 600 14px var(--sans); cursor: pointer;
+  }
+  #refreshBtn:active { transform: scale(.97); }
+  #refreshBtn[disabled] { opacity: .55; }
+
+  /* headline banner */
+  .banner { border-radius: 16px; padding: 16px 18px; border: 1px solid var(--line); background: var(--card); }
+  .banner .big { font-size: 26px; font-weight: 800; letter-spacing: -.02em; line-height: 1.15; }
+  .banner .sub { margin-top: 6px; font-size: 13px; color: var(--muted); line-height: 1.4; }
+  .banner.ok   { background: var(--ok-soft);   border-color: var(--ok); }
+  .banner.low  { background: var(--low-soft);  border-color: var(--low); }
+  .banner.down { background: var(--down-soft); border-color: var(--down); }
+  .banner.off  { background: var(--off-soft);  border-color: var(--off); }
+
+  /* tiles */
+  .tiles { display: flex; flex-direction: column; gap: 12px; margin-top: 14px; }
+  .tile { border-radius: 14px; padding: 14px 16px; border: 1px solid var(--line); background: var(--card); border-left-width: 6px; }
+  .tile.ok { border-left-color: var(--ok); } .tile.low { border-left-color: var(--low); background: var(--low-soft); }
+  .tile.down { border-left-color: var(--down); background: var(--down-soft); } .tile.off { border-left-color: var(--off); }
+  .name { display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 700; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; flex: none; background: var(--off); }
+  .dot.ok { background: var(--ok); } .dot.low { background: var(--low); } .dot.down { background: var(--down); }
+  .state { margin-left: auto; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); text-align: right; }
+  .tile.down .state { color: var(--down); } .tile.low .state { color: var(--low-ink); } .tile.ok .state { color: var(--ok); }
+  .last { margin: 8px 0 10px; font-size: 14px; }
+  .nums { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .num { background: var(--bg); border-radius: 10px; padding: 8px 10px; font-size: 12px; color: var(--muted); line-height: 1.35; }
+  .num b { display: block; font-size: 26px; color: var(--ink); letter-spacing: -.02em; font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .note { margin-top: 10px; font-size: 13px; color: var(--low-ink); }
+  .tile.down .note { color: var(--down); }
+
+  .foot { margin-top: 16px; font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .foot .err { color: var(--down); font-weight: 600; }
+  .skeleton { height: 96px; border-radius: 14px; background: var(--card); border: 1px solid var(--line); opacity: .7; }
+  @media (prefers-reduced-motion: no-preference) {
+    .skeleton { animation: pulse 1.4s ease-in-out infinite; }
+    @keyframes pulse { 50% { opacity: .35; } }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Kiosk Pulse<span class="ver" id="appVersion" title="Kiosk Pulse version">v1.0</span></h1>
+    <button id="refreshBtn" type="button" aria-label="Refresh kiosk data">Refresh</button>
+  </header>
+
+  <section id="banner" class="banner off" aria-live="polite">
+    <div class="big">Checking kiosks&hellip;</div>
+    <div class="sub">Loading the latest responses.</div>
+  </section>
+
+  <section id="tiles" class="tiles" aria-label="Kiosks">
+    <div class="skeleton"></div><div class="skeleton"></div>
+  </section>
+
+  <p class="foot" id="foot"></p>
+</div>
+
+<script src="shared-mood-data.js"></script>
+<script>
+(function () {
+  "use strict";
+  var SHEETS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSHrL-P3Xgs96UdKWcso5UhIVl891t211CWYRaAC1PhG0Twm8_ybBtjbSa8Tsx7SEHPF7d1OwpaQoMh/pub?gid=0&single=true&output=csv";
+  var FETCH_EVERY_MS = 2 * 60 * 1000;     // re-download the sheet
+  var REDRAW_EVERY_MS = 30 * 1000;        // re-judge status as the clock moves
+
+  function $(id) { return document.getElementById(id); }
+  function pad2(n) { return (n < 10 ? "0" : "") + n; }
+  function isoDate(d) { return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()); }
+  function esc(x) { return String(x).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[c]; }); }
+
+  var allRows = [];
+  var loadedAt = null;     // when the sheet was last fetched successfully
+  var fetchError = "";
+
+  /* Judge each kiosk against its own history for the same weekday and time
+     of day, so closed hours don't read as outages. (Same rules as the Dashboard.) */
+  function compute() {
+    var dated = allRows.filter(function (r) { return r.date && !isNaN(r.date.getTime()); });
+    if (!dated.length) return null;
+    var now = new Date(), nowMs = now.getTime(), HOUR = 3600000;
+    var todayKey = isoDate(now), nowMin = now.getHours() * 60 + now.getMinutes();
+    var newest = Math.max.apply(null, dated.map(function (r) { return r.date.getTime(); }));
+    var stale = nowMs - newest > 3 * HOUR;
+    var kiosks = {};
+    dated.forEach(function (r) { var k = r.session || "(none)"; (kiosks[k] = kiosks[k] || []).push(r); });
+
+    var list = Object.keys(kiosks).sort().map(function (k) {
+      var rows = kiosks[k], dow = now.getDay(), byDay = {};
+      rows.forEach(function (r) { var d = isoDate(r.date); (byDay[d] = byDay[d] || []).push(r); });
+      var past = Object.keys(byDay).filter(function (d) { return d < todayKey; }).sort();
+      var same = past.filter(function (d) { return new Date(d + "T12:00:00").getDay() === dow; }).slice(-6);
+      if (same.length < 2) same = past.slice(-6);
+      var typToday = 0, typHour = 0;
+      same.forEach(function (d) {
+        byDay[d].forEach(function (r) {
+          var m = r.date.getHours() * 60 + r.date.getMinutes();
+          if (m <= nowMin) typToday++;
+          if (m <= nowMin && m > nowMin - 60) typHour++;
+        });
+      });
+      if (same.length) { typToday /= same.length; typHour /= same.length; }
+      var today = (byDay[todayKey] || []).filter(function (r) { return r.date.getTime() <= nowMs; }).length;
+      var hour = rows.filter(function (r) { var t = r.date.getTime(); return t <= nowMs && t > nowMs - HOUR; }).length;
+      var upTo = rows.filter(function (r) { return r.date.getTime() <= nowMs; });
+      var last = Math.max.apply(null, (upTo.length ? upTo : rows).map(function (r) { return r.date.getTime(); }));
+      var state, label, note = "";
+      if (stale) { state = "off"; label = "No current data"; }
+      else if (typHour < 0.5 && typToday < 0.5) { state = (hour || today) ? "ok" : "off"; label = (hour || today) ? "Reporting" : "Outside usual hours"; }
+      else if (hour === 0 && typHour >= 1 && typHour < 2) { state = "low"; label = "Quiet this hour"; }
+      else if (hour === 0 && typHour >= 2) { state = "down"; label = "Silent"; note = "Usually about " + typHour.toFixed(1) + " responses in this hour."; }
+      else if ((typHour >= 2 && hour < 0.5 * typHour) || (typToday >= 4 && today < 0.5 * typToday)) { state = "low"; label = "Quieter than usual"; }
+      else { state = "ok"; label = "Reporting"; }
+      return { name: k, state: state, label: label, note: note, today: today, hour: hour, typToday: typToday, typHour: typHour,
+               hasHistory: same.length > 0, last: last, lastIsToday: isoDate(new Date(last)) === todayKey };
+    });
+    return { list: list, stale: stale, newest: newest, now: now, nowMs: nowMs };
+  }
+
+  function ago(ms) {
+    var m = Math.round(ms / 60000);
+    if (m < 1) return "just now";
+    if (m < 60) return m + " min ago";
+    var h = Math.floor(m / 60); return h + " h " + (m % 60) + " min ago";
+  }
+  function typ(v, has) { return has ? "typical " + (Math.round(v * 10) / 10) : "no history"; }
+  function clock(d) { return d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }); }
+
+  function render() {
+    var c = compute(), banner = $("banner"), tiles = $("tiles");
+    if (!c) {
+      if (!loadedAt && !fetchError) return;   // still loading the first time
+      banner.className = "banner off";
+      banner.innerHTML = '<div class="big">No data yet</div><div class="sub">' + (fetchError ? "Could not reach the kiosk data. Check the connection and tap Refresh." : "The sheet has no usable responses.") + '</div>';
+      tiles.innerHTML = "";
+    } else {
+      var inHours = c.list.filter(function (k) { return k.state !== "off"; });
+      var reporting = c.list.filter(function (k) { return k.state === "ok"; }).length;
+      var worst = c.list.some(function (k) { return k.state === "down"; }) ? "down"
+                : c.list.some(function (k) { return k.state === "low"; }) ? "low"
+                : inHours.length ? "ok" : "off";
+      if (c.stale) {
+        banner.className = "banner off";
+        banner.innerHTML = '<div class="big">Status unavailable</div><div class="sub">Newest response: ' +
+          esc(new Date(c.newest).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })) +
+          '. The sheet has nothing recent, so live status can’t be judged.</div>';
+      } else {
+        banner.className = "banner " + worst;
+        banner.innerHTML = '<div class="big">' + (inHours.length ? reporting + " of " + inHours.length + " kiosks reporting normally" : "No kiosks in their usual hours") + '</div>' +
+          '<div class="sub">As of ' + esc(clock(c.now)) + ' · compared with the same weekday and time in past weeks</div>';
+      }
+      tiles.innerHTML = c.list.map(function (k) {
+        var lastTxt = k.lastIsToday ? "Last response " + ago(c.nowMs - k.last)
+          : "No responses today (last: " + new Date(k.last).toLocaleDateString(undefined, { month: "short", day: "numeric" }) + ")";
+        return '<article class="tile ' + k.state + '"><div class="name"><span class="dot ' + k.state + '"></span>' + esc(k.name) +
+          '<span class="state">' + esc(k.label) + '</span></div><div class="last">' + esc(lastTxt) + '</div>' +
+          '<div class="nums"><div class="num"><b>' + k.today + '</b>today<br>' + typ(k.typToday, k.hasHistory) + ' by now</div>' +
+          '<div class="num"><b>' + k.hour + '</b>last hour<br>' + typ(k.typHour, k.hasHistory) + '</div></div>' +
+          (k.note ? '<div class="note">' + esc(k.note) + '</div>' : "") + '</article>';
+      }).join("");
+    }
+    var foot = [];
+    if (fetchError) foot.push('<span class="err">Couldn’t refresh just now' + (loadedAt ? " — showing data from " + esc(clock(loadedAt)) : "") + '.</span>');
+    else if (loadedAt) foot.push("Data fetched at " + esc(clock(loadedAt)) + ". Updates itself every couple of minutes.");
+    foot.push("Google Sheets publishes with a short delay, so the newest response can lag a few minutes.");
+    $("foot").innerHTML = foot.join("<br>");
+  }
+
+  var fetching = false;
+  function load() {
+    if (fetching) return;
+    fetching = true; $("refreshBtn").disabled = true;
+    fetch(SHEETS_CSV_URL, { cache: "no-store" }).then(function (resp) {
+      if (!resp.ok) throw new Error("HTTP " + resp.status);
+      return resp.text();
+    }).then(function (text) {
+      var result = MoodData.rowsFromCsvText(text);
+      if (result.error) throw new Error(result.error);
+      allRows = result.rows; loadedAt = new Date(); fetchError = "";
+    }).catch(function (e) {
+      fetchError = String(e && e.message || e);
+    }).then(function () {
+      fetching = false; $("refreshBtn").disabled = false; render();
+    });
+  }
+
+  $("refreshBtn").addEventListener("click", load);
+  // Re-check when the phone wakes the page back up.
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "visible") { render(); if (!loadedAt || Date.now() - loadedAt.getTime() > 60000) load(); }
+  });
+  setInterval(function () { if (document.visibilityState === "visible") load(); }, FETCH_EVERY_MS);
+  setInterval(function () { if (document.visibilityState === "visible") render(); }, REDRAW_EVERY_MS);
+  load();
+})();
+</script>
+</body>
+</html>
