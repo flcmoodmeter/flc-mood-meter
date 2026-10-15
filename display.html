@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<!-- Display version: v2.2 (shown in the top-left corner, #appVersion). Bump by 0.1 on every change. -->
+<!-- Display version: v2.3 (shown in the top-left corner, #appVersion). Bump by 0.1 on every change. -->
 <title>Mood Meter — Display</title>
 <style>
   :root {
@@ -221,7 +221,7 @@
     <div class="src-indicator">
       <span class="dot"></span>
       <span class="src-indicator-label">Mood Meter</span>
-      <span class="hud-version" id="appVersion" title="Display version">v2.2</span>
+      <span class="hud-version" id="appVersion" title="Display version">v2.3</span>
     </div>
     <div class="hud-cog empty" id="cog">
       <h3 id="cogTitle">How do we feel?</h3>
@@ -285,6 +285,7 @@
     var QUAD_INFO = MoodData.QUAD_INFO;
     var TRANSITION_LERP = 0.06;  // per-frame smoothing toward target bar heights
     var MAX_BAR_HEIGHT = 6.2;
+    var BARE_BEAT_MS = 500;   // empty-board pause before the first drop of a new stretch
     var BAR_SCALE_FLOOR = 20;   // responses a cell needs before the scale starts stepping up (bars only ever grow within a day)
 
     // Build speeds: how long it takes a mode's rows to finish stacking up,
@@ -851,8 +852,11 @@
       if (!playback || paused) return;
       // Nothing new appears until the previous picture has fully cleared.
       if (playback.phase === "clearing") {
-        if (activeEffects.length || tronQueue.length || !boardIsClear()) return;
-        playback.phase = "building"; playback.elapsedMs = 0;
+        if (activeEffects.length || tronQueue.length || !boardIsClear()) { playback.bareMs = 0; return; }
+        // A short beat of bare board so the wipe reads as finished.
+        playback.bareMs = (playback.bareMs || 0) + dt * 1000;
+        if (playback.bareMs < BARE_BEAT_MS) return;
+        playback.phase = "building"; playback.elapsedMs = 0; playback.bareMs = 0;
       }
       playback.elapsedMs += dt * 1000;
 
@@ -873,7 +877,10 @@
               barsDirty = false;
             }
             // Hold the next day's first response until the board is bare.
-            if (!boardIsClear()) break;
+            if (!boardIsClear()) { playback.bareMs = 0; break; }
+            playback.bareMs = (playback.bareMs || 0) + dt * 1000;
+            if (playback.bareMs < BARE_BEAT_MS) break;
+            playback.bareMs = 0;
             playback.wiping = false;
             var lag = playback.elapsedMs - playback.revealTimes[playback.revealedIdx];
             for (var j = playback.revealedIdx; j < playback.total; j++) playback.revealTimes[j] += lag;
@@ -1740,6 +1747,7 @@
         for (var i = 0; i < b.segs.length; i++) {
           var s = b.segs[i];
           s.current += (s.target - s.current) * (1 - Math.pow(1 - TRANSITION_LERP, dt * 60));
+          if (s.target === 0 && s.current < 0.03) s.current = 0;   // no lingering slivers
           var h = s.current;
           var lit = s.target > 0 || h > 0.002;
           s.mesh.visible = lit;
@@ -1751,6 +1759,7 @@
 
         var activeTarget = targetTotal > 0 ? 0.95 : 0;
         b.labelOpacity += (activeTarget - b.labelOpacity) * (1 - Math.pow(1 - TRANSITION_LERP, dt * 60));
+        if (activeTarget === 0 && b.labelOpacity < 0.03) b.labelOpacity = 0;
         b.label.material.opacity = b.labelOpacity;
         b.label.position.y = cum + 0.34;
       });
