@@ -248,6 +248,30 @@
   .cmp-hbar-t { height: 12px; border-radius: 4px; background: var(--line); overflow: hidden; }
   .cmp-hbar-t span { display: block; height: 100%; border-radius: 4px; }
   .cmp-hbar-v { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+  /* visualization tab */
+  .viz-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; margin-bottom: 12px; }
+  .viz-seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 8px; overflow: hidden; background: #fff; }
+  .viz-seg button { border: none; background: transparent; padding: 8px 14px; font: 600 13px var(--sans); color: var(--muted); cursor: pointer; border-right: 1px solid var(--line); }
+  .viz-seg button:last-child { border-right: none; }
+  .viz-seg button.on { background: var(--accent); color: #fff; }
+  .viz-daynav { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .viz-daynav select { font-size: 13px; padding: 7px 8px; border: 1px solid var(--line-strong); border-radius: 6px; background: #fff; max-width: 260px; }
+  .viz-daynav button { border: 1px solid var(--line-strong); background: #fff; border-radius: 6px; padding: 7px 11px; font: 600 13px var(--sans); cursor: pointer; color: var(--ink); }
+  .viz-daynav button[disabled] { opacity: .4; cursor: default; }
+  #vizPlay { background: var(--accent); border-color: var(--accent); color: #fff; min-width: 86px; }
+  .viz-stage { background: #12171c; border-radius: 14px; padding: 10px; }
+  .viz-stage svg { display: block; width: 100%; max-width: 620px; height: auto; margin: 0 auto; }
+  .viz-summary { display: flex; flex-wrap: wrap; gap: 6px 22px; margin: 12px 2px 4px; font-size: 13px; color: var(--muted); }
+  .viz-summary b { color: var(--ink); font-size: 15px; }
+  .viz-key { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 12px; color: var(--muted); margin: 6px 2px 14px; line-height: 1.5; }
+  .viz-key i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; vertical-align: -1px; }
+  .viz-strip { display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px 10px; }
+  .viz-tile { flex: none; width: 108px; background: #12171c; border: 2px solid transparent; border-radius: 10px; padding: 4px 4px 6px; cursor: pointer; color: #cbd5df; font: 11px var(--sans); text-align: center; }
+  .viz-tile.on { border-color: #8fb7ff; }
+  .viz-tile svg { display: block; width: 100%; height: auto; }
+  .viz-tile small { display: block; color: #7d8a96; margin-top: 1px; }
+  @media (max-width: 640px) { .viz-seg button { padding: 8px 10px; font-size: 12px; } }
   .cmp-topgrid h4 { font-size: 13px; margin: 0 0 6px; }
   @media (max-width: 640px) {
     .cmp-slots { grid-template-columns: 1fr; gap: 8px; }
@@ -744,7 +768,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.35</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.36</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -902,6 +926,7 @@
           <button class="dashtab on" data-tab="overview" type="button">Overview</button>
           <button class="dashtab" data-tab="trends" type="button">Trends</button>
           <button class="dashtab" data-tab="compare" type="button">Compare</button>
+          <button class="dashtab" data-tab="visualization" type="button">Visualization</button>
           <button class="dashtab" data-tab="heatmap" type="button">Heat Map</button>
           <button class="dashtab" data-tab="sonification" type="button">Sonification</button>
           <button class="dashtab" data-tab="weather" type="button">Weather &amp; Air Quality</button>
@@ -1126,6 +1151,24 @@
           <p class="cmp-intro">Pick up to three kiosks and see them side by side. Everything on this tab follows your current filters (dates, hours, semester, and so on) <b>except Location</b>, which the three pickers replace. A shaded &#9733; cell is the best of the row where &ldquo;best&rdquo; means something: higher pleasantness, higher positive share, or fewer flagged entries.</p>
           <div class="cmp-slots" id="cmpSlots"></div>
           <div id="cmpBody"></div>
+        </div>
+
+        <div id="tabVisualization" class="hidden">
+          <p class="cmp-intro">Every response from one day becomes a point on one shape. <b>Softness</b> follows pleasantness: pleasant responses make rounded petals, unpleasant ones make sharp corners. In the two star layouts the point&rsquo;s <b>reach</b> from the center follows energy, and high-energy points <b>glow</b>. The shape follows your current filters, including Location.</p>
+          <div class="viz-controls">
+            <div class="viz-seg" id="vizLayoutBtns" role="group" aria-label="Layout"></div>
+            <div class="viz-daynav">
+              <button type="button" id="vizPrev" aria-label="Previous day">&lsaquo;</button>
+              <select id="vizDaySel" aria-label="Day"></select>
+              <button type="button" id="vizNext" aria-label="Next day">&rsaquo;</button>
+              <button type="button" id="vizPlay">&#9654; Play</button>
+            </div>
+          </div>
+          <div class="viz-stage" id="vizStage"></div>
+          <div class="viz-summary" id="vizSummary"></div>
+          <div class="viz-key" id="vizKey"></div>
+          <div class="cmp-intro" style="margin:8px 0 4px;font-weight:700;color:var(--ink);">Other days <span style="font-weight:400;color:var(--muted);" id="vizStripNote"></span></div>
+          <div class="viz-strip" id="vizStrip"></div>
         </div>
 
         <div id="tabHeatmap" class="hidden">
@@ -7825,6 +7868,214 @@
     drawHours();
   }
 
+
+  /* ---------------------------------------------------------- visualization tab (day shapes) */
+
+  var VIZ_LAYOUTS = [
+    { key: "compass", label: "Mood Compass", note: "Angle = which way the feeling points on the mood grid (pleasant to the right, high energy up). Distance = how intense." },
+    { key: "star",    label: "Day Star",     note: "Angle = order of arrival around the circle. Distance = energy: low near the center, high at the rim." },
+    { key: "clock",   label: "Clock Star",   note: "Angle = time of day, clockwise from the top, across the hours in your Hour of day filter. Distance = energy." }
+  ];
+  var vizLayout = "compass", vizDay = null, vizDays = [], vizAnim = null, vizRaf = 0;
+  var VIZ_MIN_POINTS = 3, VIZ_STRIP_MAX = 120;
+
+  function vizClamp01(v) { return Math.max(0, Math.min(1, v)); }
+  function vizReach(e) { return 0.12 + 0.88 * vizClamp01((e + 0.9) / 1.8); }     // energy -> reach
+  function vizSoft(pl) { return vizClamp01(0.5 + 0.5 * pl / 0.9); }               // pleasantness -> softness
+  function vizGlow(e) { return vizClamp01((e - 0.1) / 0.8); }                     // only fairly high energy glows
+  function vizDayLabel(key, long) {
+    return new Date(key + "T12:00:00").toLocaleDateString(undefined, long ? { weekday: "long", month: "long", day: "numeric", year: "numeric" } : { weekday: "short", month: "short", day: "numeric" });
+  }
+  function vizHourWindow() {
+    var h0 = filters.hourStart, h1 = filters.hourEnd + 1;
+    if (!(h1 > h0)) { h0 = 0; h1 = 24; }
+    return { h0: h0, h1: h1 };
+  }
+
+  function vizBuildDays() {
+    var by = {};
+    getFilteredRows().forEach(function (r) {
+      if (!r.date) return;
+      var k = isoDate(r.date); (by[k] = by[k] || []).push(r);
+    });
+    vizDays = Object.keys(by).sort().map(function (k) {
+      by[k].sort(function (a, b) { return a.date - b.date; });
+      return { key: k, rows: by[k] };
+    });
+    if (!vizDays.some(function (d) { return d.key === vizDay; })) {
+      // open on the most recent day with enough responses to make a shape
+      var pick = null;
+      for (var i = vizDays.length - 1; i >= 0 && !pick; i--) if (vizDays[i].rows.length >= VIZ_MIN_POINTS * 3) pick = vizDays[i];
+      if (!pick) vizDays.forEach(function (d) { if (!pick || d.rows.length >= pick.rows.length) pick = d; });   // sparse data: the busiest day
+      vizDay = pick ? pick.key : null;
+    }
+  }
+  function vizCurrent() { for (var i = 0; i < vizDays.length; i++) if (vizDays[i].key === vizDay) return vizDays[i]; return null; }
+
+  // Points for the first k responses of a day, in the order the outline joins them. Unit coordinates (x right, y up, radius 0..1).
+  function vizPoints(rows, layout, k) {
+    var n = rows.length, w = vizHourWindow(), pts = [];
+    for (var i = 0; i < Math.min(k, n); i++) {
+      var r = rows[i], pl = pleasantScore(r), en = energyScore(r), R, a;
+      if (layout === "compass") { R = Math.min(1, Math.hypot(pl, en) / 1.27); a = Math.atan2(en, pl); }
+      else if (layout === "star") { R = vizReach(en); a = Math.PI / 2 - 2 * Math.PI * i / n; }
+      else {
+        var h = r.date.getHours() + r.date.getMinutes() / 60 + r.date.getSeconds() / 3600;
+        var f = Math.max(0, Math.min(0.999, (h - w.h0) / (w.h1 - w.h0)));
+        R = vizReach(en); a = Math.PI / 2 - 2 * Math.PI * f;
+      }
+      pts.push({ x: R * Math.cos(a), y: R * Math.sin(a), a: a, row: r, soft: vizSoft(pl), glow: vizGlow(en), en: en,
+                 color: QUAD_INFO[r.quad] ? QUAD_INFO[r.quad].color : "#9aa5b1" });
+    }
+    if (layout === "compass") pts.sort(function (p, q) { return p.a - q.a; });
+    return pts;
+  }
+
+  // Closed outline through the points: each corner's handles scale with its softness, so soft corners flow and sharp ones stay pointed.
+  function vizOutline(P, S, cx, cy) {
+    var n = P.length;
+    if (n < VIZ_MIN_POINTS) return "";
+    var X = P.map(function (p) { return cx + p.x * S; }), Y = P.map(function (p) { return cy - p.y * S; });
+    var TX = [], TY = [];
+    for (var i = 0; i < n; i++) {
+      var pi = (i + n - 1) % n, ni = (i + 1) % n, tx = X[ni] - X[pi], ty = Y[ni] - Y[pi], L = Math.hypot(tx, ty);
+      TX.push(L > 1e-6 ? tx / L : 0); TY.push(L > 1e-6 ? ty / L : 0);
+    }
+    var d = "M" + X[0].toFixed(1) + " " + Y[0].toFixed(1);
+    for (var j = 0; j < n; j++) {
+      var nj = (j + 1) % n, dist = Math.min(Math.hypot(X[nj] - X[j], Y[nj] - Y[j]), 0.7 * S), k = 0.5;
+      d += " C" + (X[j] + TX[j] * P[j].soft * k * dist).toFixed(1) + " " + (Y[j] + TY[j] * P[j].soft * k * dist).toFixed(1) +
+           " " + (X[nj] - TX[nj] * P[nj].soft * k * dist).toFixed(1) + " " + (Y[nj] - TY[nj] * P[nj].soft * k * dist).toFixed(1) +
+           " " + X[nj].toFixed(1) + " " + Y[nj].toFixed(1);
+    }
+    return d + "Z";
+  }
+
+  function vizRenderStage(day, k, pulse) {
+    var host = $("vizStage"), W = 600, cx = 300, cy = 300, S = 250;
+    var svg = svgEl("svg", { viewBox: "0 0 " + W + " " + W, role: "img", "aria-label": "Mood shape for " + vizDayLabel(day.key, true) });
+    var defs = svgEl("defs", {}), flt = svgEl("filter", { id: "vizGlowBlur", x: "-50%", y: "-50%", width: "200%", height: "200%" });
+    flt.appendChild(svgEl("feGaussianBlur", { stdDeviation: 7 })); defs.appendChild(flt); svg.appendChild(defs);
+    var GRID = "#2a343d", MUTED = "#7d8a96";
+    function line(x1, y1, x2, y2) { svg.appendChild(svgEl("line", { x1: x1, y1: y1, x2: x2, y2: y2, stroke: GRID, "stroke-width": 1 })); }
+    function text(x, y, t, anchor) { var el = svgEl("text", { x: x, y: y, "text-anchor": anchor || "middle", fill: MUTED, "font-size": 11, "font-family": "system-ui, sans-serif" }); el.textContent = t; svg.appendChild(el); }
+    var rings = vizLayout === "compass" ? [0.5, 1] : [vizReach(-0.9), vizReach(0), vizReach(0.9)];
+    rings.forEach(function (r) { svg.appendChild(svgEl("circle", { cx: cx, cy: cy, r: r * S, fill: "none", stroke: GRID, "stroke-width": 1 })); });
+    if (vizLayout === "compass") {
+      line(cx - S - 8, cy, cx + S + 8, cy); line(cx, cy - S - 8, cx, cy + S + 8);
+      text(cx + S + 6, cy - 8, "pleasant", "end"); text(cx - S - 6, cy - 8, "unpleasant", "start");
+      text(cx, cy - S - 14, "high energy"); text(cx, cy + S + 24, "low energy");
+    } else if (vizLayout === "star") {
+      text(cx, cy - rings[2] * S - 6, "high energy"); text(cx, cy - rings[0] * S - 5, "low", "middle");
+    } else {
+      var w = vizHourWindow(), step = (w.h1 - w.h0) > 14 ? 4 : (w.h1 - w.h0) > 8 ? 3 : 2;
+      for (var h = w.h0; h < w.h1; h += step) {
+        var a = Math.PI / 2 - 2 * Math.PI * (h - w.h0) / (w.h1 - w.h0);
+        line(cx, cy, cx + Math.cos(a) * (S + 6), cy - Math.sin(a) * (S + 6));
+        text(cx + Math.cos(a) * (S + 24), cy - Math.sin(a) * (S + 24) + 4, hourLabel(h).replace(" ", "").toLowerCase().replace("am", "a").replace("pm", "p"));
+      }
+    }
+    var P = vizPoints(day.rows, vizLayout, k), d = vizOutline(P, S, cx, cy);
+    if (d) {
+      svg.appendChild(svgEl("path", { d: d, fill: "#8fb7ff", "fill-opacity": 0.17, stroke: "none" }));
+      svg.appendChild(svgEl("path", { d: d, fill: "none", stroke: "#e6eef8", "stroke-width": 1.6, "stroke-linejoin": "miter", "stroke-opacity": 0.95 }));
+    }
+    var glowG = svgEl("g", { filter: "url(#vizGlowBlur)" });
+    P.forEach(function (p) {
+      if (p.glow < 0.05) return;
+      glowG.appendChild(svgEl("circle", { cx: cx + p.x * S, cy: cy - p.y * S, r: 6 + 14 * p.glow, fill: p.color, "fill-opacity": (0.25 + 0.55 * p.glow).toFixed(2) }));
+    });
+    svg.appendChild(glowG);
+    P.forEach(function (p) {
+      var c = svgEl("circle", { cx: cx + p.x * S, cy: cy - p.y * S, r: 3.2 + 1.8 * p.glow, fill: p.color, stroke: "#12171c", "stroke-width": 1, "fill-opacity": (0.6 + 0.4 * vizClamp01((p.en + 0.9) / 1.8)).toFixed(2) });
+      var t = svgEl("title", {});
+      t.textContent = p.row.date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) + " · " + (p.row.labelEn || p.row.label) + " · " + (p.row.session || "(none)");
+      c.appendChild(t); svg.appendChild(c);
+    });
+    if (pulse != null && P.length) {
+      var last = vizLayout === "compass" ? P.reduce(function (b, p) { return p.row.date > b.row.date ? p : b; }, P[0]) : P[P.length - 1];
+      svg.appendChild(svgEl("circle", { cx: cx + last.x * S, cy: cy - last.y * S, r: 6 + 22 * pulse, fill: "none", stroke: "#ffffff", "stroke-width": 1.5, "stroke-opacity": (0.8 * (1 - pulse)).toFixed(2) }));
+    }
+    host.innerHTML = "";
+    host.appendChild(svg);
+  }
+
+  function vizMiniShape(day) {
+    var S = 40, cx = 50, cy = 50, P = vizPoints(day.rows, vizLayout, day.rows.length), d = vizOutline(P, S, cx, cy);
+    var svg = svgEl("svg", { viewBox: "0 0 100 100", "aria-hidden": "true" });
+    svg.appendChild(svgEl("circle", { cx: cx, cy: cy, r: S, fill: "none", stroke: "#2a343d", "stroke-width": 1 }));
+    if (d) { svg.appendChild(svgEl("path", { d: d, fill: "#8fb7ff", "fill-opacity": 0.2, stroke: "#e6eef8", "stroke-width": 1.2, "stroke-linejoin": "miter" })); }
+    else P.forEach(function (p) { svg.appendChild(svgEl("circle", { cx: cx + p.x * S, cy: cy - p.y * S, r: 2.5, fill: p.color })); });
+    return svg;
+  }
+
+  function vizStopAnim() { if (vizRaf) cancelAnimationFrame(vizRaf); vizRaf = 0; vizAnim = null; var b = $("vizPlay"); if (b) b.innerHTML = "&#9654; Play"; }
+
+  function renderVizTab() {
+    vizStopAnim();
+    vizBuildDays();
+    var seg = $("vizLayoutBtns"); seg.innerHTML = "";
+    VIZ_LAYOUTS.forEach(function (l) {
+      var b = document.createElement("button"); b.type = "button"; b.textContent = l.label; b.className = l.key === vizLayout ? "on" : ""; b.setAttribute("aria-pressed", l.key === vizLayout ? "true" : "false");
+      b.addEventListener("click", function () { vizLayout = l.key; renderVizTab(); });
+      seg.appendChild(b);
+    });
+    var sel = $("vizDaySel"); sel.innerHTML = "";
+    vizDays.slice().reverse().forEach(function (d) {
+      var o = document.createElement("option"); o.value = d.key; o.textContent = vizDayLabel(d.key) + ", " + d.key.slice(0, 4) + " · " + d.rows.length; if (d.key === vizDay) o.selected = true; sel.appendChild(o);
+    });
+    var idx = -1; vizDays.forEach(function (d, i) { if (d.key === vizDay) idx = i; });
+    $("vizPrev").disabled = idx <= 0; $("vizNext").disabled = idx < 0 || idx >= vizDays.length - 1; $("vizPlay").disabled = idx < 0;
+    var day = vizCurrent(), lay = VIZ_LAYOUTS.filter(function (l) { return l.key === vizLayout; })[0];
+    if (!day) {
+      $("vizStage").innerHTML = '<div style="color:#7d8a96;text-align:center;padding:60px 10px;font-size:13px;">No dated responses in the current filters.</div>';
+      $("vizSummary").innerHTML = ""; $("vizKey").innerHTML = ""; $("vizStrip").innerHTML = ""; $("vizStripNote").textContent = ""; return;
+    }
+    vizRenderStage(day, day.rows.length, null);
+    var pl = mean(day.rows.map(pleasantScore)), en = mean(day.rows.map(energyScore)), nw = nearestWord(pl, en);
+    $("vizSummary").innerHTML = '<span><b>' + compareEsc(vizDayLabel(day.key, true)) + '</b></span><span><b>' + day.rows.length.toLocaleString() + '</b> responses</span>' +
+      '<span>Center of gravity: <b>' + compareEsc(nw ? nw.word : "—") + '</b></span><span>Pleasantness <b>' + compareFmtSigned(pl, 2) + '</b> · Energy <b>' + compareFmtSigned(en, 2) + '</b></span>' +
+      (day.rows.length < VIZ_MIN_POINTS ? '<span>Needs at least ' + VIZ_MIN_POINTS + ' responses to draw a shape.</span>' : "");
+    $("vizKey").innerHTML = '<span>' + compareEsc(lay.note) + '</span>' +
+      MIX_QUAD_ORDER.map(function (q) { return '<span><i style="background:' + QUAD_INFO[q].color + '"></i>' + MIX_SHORT[q] + '</span>'; }).join("");
+    var strip = $("vizStrip"); strip.innerHTML = "";
+    var shown = vizDays.slice(-VIZ_STRIP_MAX), si = vizDays.indexOf(day);
+    if (si < vizDays.length - VIZ_STRIP_MAX) shown = vizDays.slice(Math.max(0, si - Math.floor(VIZ_STRIP_MAX / 2)), Math.max(0, si - Math.floor(VIZ_STRIP_MAX / 2)) + VIZ_STRIP_MAX);
+    $("vizStripNote").textContent = vizDays.length > shown.length ? "(" + shown.length + " of " + vizDays.length + " days around the selected one)" : "(" + vizDays.length + " day" + (vizDays.length === 1 ? "" : "s") + ")";
+    var onTile = null;
+    shown.forEach(function (d) {
+      var t = document.createElement("button"); t.type = "button"; t.className = "viz-tile" + (d.key === vizDay ? " on" : "");
+      t.appendChild(vizMiniShape(d));
+      var lab = document.createElement("small"); lab.textContent = vizDayLabel(d.key) + " · " + d.rows.length; t.appendChild(lab);
+      t.setAttribute("aria-label", vizDayLabel(d.key, true) + ", " + d.rows.length + " responses");
+      t.addEventListener("click", function () { vizDay = d.key; renderVizTab(); });
+      strip.appendChild(t); if (d.key === vizDay) onTile = t;
+    });
+    if (onTile) strip.scrollLeft = Math.max(0, onTile.offsetLeft - strip.clientWidth / 2 + onTile.offsetWidth / 2);
+  }
+
+  function vizPlay() {
+    var day = vizCurrent(); if (!day || day.rows.length < VIZ_MIN_POINTS) return;
+    if (vizAnim) { vizStopAnim(); vizRenderStage(day, day.rows.length, null); return; }
+    var n = day.rows.length, dur = Math.max(4000, Math.min(14000, n * 200)), t0 = null;
+    vizAnim = true; $("vizPlay").innerHTML = "&#10074;&#10074; Stop";
+    function frame(ts) {
+      if (!vizAnim) return;
+      if (t0 === null) t0 = ts;
+      var pos = Math.min(n, ((ts - t0) / dur) * n), k = Math.floor(pos) + 1;
+      if (pos >= n) { vizStopAnim(); vizRenderStage(day, n, null); return; }
+      vizRenderStage(day, k, pos - Math.floor(pos));
+      vizRaf = requestAnimationFrame(frame);
+    }
+    vizRenderStage(day, 1, 0);
+    vizRaf = requestAnimationFrame(frame);
+  }
+
+  $("vizPrev").addEventListener("click", function () { var i = vizDays.map(function (d) { return d.key; }).indexOf(vizDay); if (i > 0) { vizDay = vizDays[i - 1].key; renderVizTab(); } });
+  $("vizNext").addEventListener("click", function () { var i = vizDays.map(function (d) { return d.key; }).indexOf(vizDay); if (i >= 0 && i < vizDays.length - 1) { vizDay = vizDays[i + 1].key; renderVizTab(); } });
+  $("vizDaySel").addEventListener("change", function () { vizDay = this.value; renderVizTab(); });
+  $("vizPlay").addEventListener("click", vizPlay);
+
   /* ---------------------------------------------------------- tab switching */
 
   document.querySelectorAll(".dashtab").forEach(function (btn) {
@@ -7834,6 +8085,8 @@
       $("tabOverview").classList.toggle("hidden", tab !== "overview");
       $("tabTrends").classList.toggle("hidden", tab !== "trends");
       $("tabCompare").classList.toggle("hidden", tab !== "compare");
+      $("tabVisualization").classList.toggle("hidden", tab !== "visualization");
+      if (tab !== "visualization") vizStopAnim();
       $("tabHeatmap").classList.toggle("hidden", tab !== "heatmap");
       $("tabSonification").classList.toggle("hidden", tab !== "sonification");
       $("tabWeather").classList.toggle("hidden", tab !== "weather");
@@ -7841,6 +8094,7 @@
       // The trajectory chart sizes itself from its card, which has no width while this tab is hidden.
       if (tab === "trends") renderTrajectoryChart(getFilteredRows());
       if (tab === "compare") renderCompareTab();
+      if (tab === "visualization") renderVizTab();
       if (tab === "weather") ensureWeatherDateDefaults();
       if (tab === "spurious") { ensureQuakeDateDefaults(); ensureSpuriousDefaults(); renderSpuriousTab(); }
       if (tab === "sonification") {
@@ -9083,6 +9337,7 @@
     renderCentroidChart(rows);
     renderEnergyScatterChart(rows);
     if (!$("tabCompare").classList.contains("hidden")) renderCompareTab();
+    if (!$("tabVisualization").classList.contains("hidden")) renderVizTab();
     renderSecondsScatterChart(rows);
     renderLocationChart(rows);
     renderAcademicChart(rows);
