@@ -210,6 +210,52 @@
   .spurious-btn:hover { background: #6d28d9; border-color: #6d28d9; }
   .dashtab:hover:not(.on) { color: var(--ink); }
 
+  /* compare tab */
+  .dashtabs { overflow-x: auto; }
+  .dashtab { white-space: nowrap; }
+  .cmp-intro { font-size: 12.5px; color: var(--muted); line-height: 1.5; margin: 0 0 12px; }
+  .cmp-slots { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 16px; }
+  .cmp-slot { border: 1px solid var(--line); border-top-width: 4px; border-radius: 8px; padding: 10px 12px; background: #fff; }
+  .cmp-slot label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-bottom: 6px; }
+  .cmp-slot select { width: 100%; font-size: 14px; padding: 8px 8px; border: 1px solid var(--line-strong); border-radius: 6px; background: #fff; color: var(--ink); }
+  .cmp-tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: #fff; margin-bottom: 8px; }
+  table.cmp-table { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 520px; font-size: 13px; }
+  .cmp-table th, .cmp-table td { padding: 10px 12px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+  .cmp-table tr:last-child th, .cmp-table tr:last-child td { border-bottom: none; }
+  .cmp-table th.cmp-rowlabel { position: sticky; left: 0; background: #fff; z-index: 1; width: 148px; min-width: 120px; font-size: 12px; font-weight: 700; color: var(--muted); }
+  .cmp-table th.cmp-rowlabel small { display: block; font-weight: 400; margin-top: 2px; line-height: 1.35; }
+  .cmp-table thead th { border-top: 4px solid var(--c, var(--line)); background: #fff; }
+  .cmp-table thead th.cmp-rowlabel { border-top-color: transparent; }
+  .cmp-hname { font-size: 15px; font-weight: 700; color: var(--ink); }
+  .cmp-hsub { font-size: 11.5px; color: var(--muted); font-weight: 400; margin-top: 2px; }
+  .cmp-badge { display: inline-block; margin-top: 4px; padding: 1px 7px; border-radius: 999px; background: var(--warn-soft); color: var(--warn-ink); font-size: 10.5px; font-weight: 700; }
+  .cmp-val { font-size: 17px; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+  .cmp-val.word { font-size: 16px; }
+  .cmp-sub { font-size: 11.5px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+  .cmp-delta { display: inline-block; margin-top: 3px; font-size: 11.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  td.cmp-best { background: var(--accent-soft); }
+  td.cmp-best .cmp-val::after { content: " \2605"; font-size: 12px; color: var(--accent); }
+  .cmp-none { color: var(--muted); font-size: 12.5px; }
+  .cmp-mixbar { display: flex; height: 14px; border-radius: 4px; overflow: hidden; background: var(--line); min-width: 110px; }
+  .cmp-mixbar span { display: block; height: 100%; }
+  .cmp-top { margin: 0; padding: 0; list-style: none; font-size: 12.5px; line-height: 1.55; }
+  .cmp-top li b { font-variant-numeric: tabular-nums; color: var(--muted); font-weight: 600; margin-left: 4px; }
+  .cmp-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--muted); margin: 2px 0 10px; }
+  .cmp-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; vertical-align: -1px; }
+  .cmp-topgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+  .cmp-hbar { display: grid; grid-template-columns: 96px 1fr 38px; align-items: center; gap: 8px; padding: 3px 0; font-size: 12.5px; }
+  .cmp-hbar-l { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cmp-hbar-t { height: 12px; border-radius: 4px; background: var(--line); overflow: hidden; }
+  .cmp-hbar-t span { display: block; height: 100%; border-radius: 4px; }
+  .cmp-hbar-v { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .cmp-topgrid h4 { font-size: 13px; margin: 0 0 6px; }
+  @media (max-width: 640px) {
+    .cmp-slots { grid-template-columns: 1fr; gap: 8px; }
+    .cmp-table th, .cmp-table td { padding: 9px 9px; }
+    .cmp-table th.cmp-rowlabel { width: 104px; min-width: 96px; }
+    .cmp-chartcard { padding: 12px !important; }
+  }
+
   /* kiosk pulse */
   .pulse-wrap { margin-bottom: 18px; }
   .pulse-head { display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:8px; }
@@ -698,7 +744,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.34</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.35</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -855,6 +901,7 @@
         <div class="dashtabs no-print">
           <button class="dashtab on" data-tab="overview" type="button">Overview</button>
           <button class="dashtab" data-tab="trends" type="button">Trends</button>
+          <button class="dashtab" data-tab="compare" type="button">Compare</button>
           <button class="dashtab" data-tab="heatmap" type="button">Heat Map</button>
           <button class="dashtab" data-tab="sonification" type="button">Sonification</button>
           <button class="dashtab" data-tab="weather" type="button">Weather &amp; Air Quality</button>
@@ -1073,6 +1120,12 @@
             <div class="chart-svg-wrap" id="chartSecondsScatter"></div>
           </div>
         </div>
+        </div>
+
+        <div id="tabCompare" class="hidden">
+          <p class="cmp-intro">Pick up to three kiosks and see them side by side. Everything on this tab follows your current filters (dates, hours, semester, and so on) <b>except Location</b>, which the three pickers replace. A shaded &#9733; cell is the best of the row where &ldquo;best&rdquo; means something: higher pleasantness, higher positive share, or fewer flagged entries.</p>
+          <div class="cmp-slots" id="cmpSlots"></div>
+          <div id="cmpBody"></div>
         </div>
 
         <div id="tabHeatmap" class="hidden">
@@ -7488,6 +7541,290 @@
     startSonifyFrom(frac * sonifyScore.totalSec);
   });
 
+
+  /* ---------------------------------------------------------- compare tab (kiosks side by side) */
+
+  var COMPARE_COLORS = ["#7c3aed", "#db2777", "#475569"];
+  var COMPARE_SMALL_N = 30;
+  var compareSlots = [null, null, null];     // kiosk names for slots A, B, C
+  var compareTouched = false;                // true once the person has picked something themselves
+  var compareHourMetric = "share";
+
+  function compareKioskCounts() {
+    var counts = {};
+    allRows.forEach(function (r) { var k = r.session || "(none)"; counts[k] = (counts[k] || 0) + 1; });
+    return Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a] || (a < b ? -1 : 1); })
+      .map(function (k) { return { name: k, n: counts[k] }; });
+  }
+
+  // Rows for one kiosk, honoring every filter except Location. Returns the rows
+  // before the suspicious-entry filter too, so "flagged" can be reported fairly.
+  function compareBaseRows() {
+    var savedLoc = Array.from(filters.locations), savedSusp = filters.excludeSuspicious;
+    filters.locations.clear(); filters.excludeSuspicious = false;
+    var rows;
+    try { rows = getFilteredRows(); }
+    finally { savedLoc.forEach(function (v) { filters.locations.add(v); }); filters.excludeSuspicious = savedSusp; }
+    return rows;
+  }
+
+  function compareStats(base) {
+    var rows = filters.excludeSuspicious ? base.filter(function (r) { return !r._suspicious; }) : base;
+    var n = rows.length, o = { n: n, rows: rows, flagged: base.length ? base.filter(function (r) { return r._suspicious; }).length / base.length : 0, baseN: base.length };
+    if (!n) return o;
+    var ps = rows.map(pleasantScore), es = rows.map(energyScore);
+    o.pleasant = mean(ps); o.energy = mean(es);
+    var near = nearestWord(o.pleasant, o.energy);
+    o.word = near ? near.word : "—";
+    var spread = Math.sqrt(mean(rows.map(function (r, i) { var dx = ps[i] - o.pleasant, dy = es[i] - o.energy; return dx * dx + dy * dy; })));
+    o.spread = spreadLabel(spread);
+    o.posShare = rows.filter(function (r) { return r.pleasant === "Pleasant"; }).length / n;
+    o.highShare = rows.filter(function (r) { return r.energy === "High"; }).length / n;
+    o.quad = MIX_QUAD_ORDER.map(function (q) { return rows.filter(function (r) { return r.quad === q; }).length / n; });
+    var words = {};
+    rows.forEach(function (r) { var w = r.labelEn || r.label; if (w) words[w] = (words[w] || 0) + 1; });
+    o.top = Object.keys(words).sort(function (a, b) { return words[b] - words[a] || (a < b ? -1 : 1); })
+      .slice(0, 5).map(function (w) { return { word: w, n: words[w], pct: words[w] / n }; });
+    var hours = {}, dows = {}, days = {}, dated = 0;
+    rows.forEach(function (r) {
+      if (!r.date) return;
+      dated++;
+      hours[r.date.getHours()] = (hours[r.date.getHours()] || 0) + 1;
+      dows[r.date.getDay()] = (dows[r.date.getDay()] || 0) + 1;
+      days[isoDate(r.date)] = 1;
+    });
+    function peak(map) { var best = null; Object.keys(map).forEach(function (k) { if (best === null || map[k] > map[best]) best = k; }); return best === null ? null : Number(best); }
+    o.peakHour = peak(hours); o.peakDow = peak(dows);
+    o.activeDays = Object.keys(days).length;
+    o.perDay = o.activeDays ? dated / o.activeDays : null;
+    var secs = rows.map(function (r) { return r.seconds; }).filter(function (v) { return v != null && !isNaN(v); });
+    o.medianSecs = secs.length ? median(secs) : null;
+    o.hours = hours;
+    return o;
+  }
+
+  function compareFmtSigned(v, digits) { return (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toFixed(digits); }
+  function compareEsc(x) { return String(x).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[c]; }); }
+  var COMPARE_DOW = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+  function compareRowDefs() {
+    return [
+      { label: "Responses", hint: "Within the current filters",
+        val: function (s) { return '<div class="cmp-val">' + s.n.toLocaleString() + '</div>'; },
+        num: function (s) { return s.n; }, delta: function (d) { return (d > 0 ? "+" : d < 0 ? "−" : "") + Math.abs(d).toLocaleString(); } },
+      { label: "Average pleasantness", hint: "−1 unpleasant to +1 pleasant", best: "high",
+        val: function (s) { return '<div class="cmp-val">' + compareFmtSigned(s.pleasant, 2) + '</div>'; },
+        num: function (s) { return s.pleasant; }, delta: function (d) { return compareFmtSigned(d, 2); } },
+      { label: "Average energy", hint: "−1 low to +1 high",
+        val: function (s) { return '<div class="cmp-val">' + compareFmtSigned(s.energy, 2) + '</div>'; },
+        num: function (s) { return s.energy; }, delta: function (d) { return compareFmtSigned(d, 2); } },
+      { label: "Center of gravity", hint: "The emotion word closest to the average",
+        val: function (s) { return '<div class="cmp-val word">' + compareEsc(s.word) + '</div><div class="cmp-sub">' + s.spread + '</div>'; } },
+      { label: "Positive share", hint: "Responses on the pleasant side", best: "high",
+        val: function (s) { return '<div class="cmp-val">' + Math.round(s.posShare * 100) + '%</div>'; },
+        num: function (s) { return s.posShare * 100; }, delta: function (d) { return compareFmtSigned(d, 0) + " pts"; } },
+      { label: "High-energy share", hint: "Responses on the high-energy side",
+        val: function (s) { return '<div class="cmp-val">' + Math.round(s.highShare * 100) + '%</div>'; },
+        num: function (s) { return s.highShare * 100; }, delta: function (d) { return compareFmtSigned(d, 0) + " pts"; } },
+      { label: "Mood mix", hint: "Share of each quadrant",
+        val: function (s) {
+          return '<div class="cmp-mixbar" role="img" aria-label="Quadrant mix">' + MIX_QUAD_ORDER.map(function (q, i) {
+            return '<span style="width:' + (s.quad[i] * 100).toFixed(1) + '%;background:' + QUAD_INFO[q].color + '" title="' + MIX_SHORT[q] + ': ' + Math.round(s.quad[i] * 100) + '%"></span>';
+          }).join("") + '</div>';
+        } },
+      { label: "Top emotions", hint: "Most chosen words",
+        val: function (s) {
+          return '<ul class="cmp-top">' + s.top.slice(0, 3).map(function (t) { return '<li>' + compareEsc(t.word) + '<b>' + Math.round(t.pct * 100) + '%</b></li>'; }).join("") + '</ul>';
+        } },
+      { label: "Busiest hour", hint: "Most responses",
+        val: function (s) { return s.peakHour == null ? '<div class="cmp-none">—</div>' : '<div class="cmp-val">' + hourLabel(s.peakHour) + '</div>'; } },
+      { label: "Busiest day", hint: "Day of the week",
+        val: function (s) { return s.peakDow == null ? '<div class="cmp-none">—</div>' : '<div class="cmp-val">' + COMPARE_DOW[s.peakDow] + '</div>'; } },
+      { label: "Active days", hint: "Days with at least one response",
+        val: function (s) { return '<div class="cmp-val">' + s.activeDays.toLocaleString() + '</div>' + (s.perDay != null ? '<div class="cmp-sub">' + s.perDay.toFixed(1) + ' per active day</div>' : ""); },
+        num: function (s) { return s.activeDays; }, delta: function (d) { return (d > 0 ? "+" : d < 0 ? "−" : "") + Math.abs(d).toLocaleString(); } },
+      { label: "Typical decision time", hint: "Median seconds on the grid",
+        val: function (s) { return s.medianSecs == null ? '<div class="cmp-none">—</div>' : '<div class="cmp-val">' + s.medianSecs.toFixed(1) + ' s</div>'; },
+        num: function (s) { return s.medianSecs; }, delta: function (d) { return compareFmtSigned(d, 1) + " s"; } },
+      { label: "Flagged suspicious", hint: "Share of entries flagged (before any exclusion)", best: "low",
+        val: function (s) { return '<div class="cmp-val">' + (s.flagged * 100).toFixed(1) + '%</div>'; },
+        num: function (s) { return s.flagged * 100; }, delta: function (d) { return compareFmtSigned(d, 1) + " pts"; }, always: true }
+    ];
+  }
+
+  function renderCompareSlots(names) {
+    var host = $("cmpSlots");
+    host.innerHTML = "";
+    for (var i = 0; i < 3; i++) {
+      (function (i) {
+        var wrap = document.createElement("div");
+        wrap.className = "cmp-slot";
+        wrap.style.borderTopColor = COMPARE_COLORS[i];
+        var id = "cmpSlot" + i;
+        var opts = '<option value="">— none —</option>';
+        names.forEach(function (k) {
+          var takenElsewhere = compareSlots.some(function (v, j) { return j !== i && v === k.name; });
+          if (takenElsewhere) return;
+          opts += '<option value="' + compareEsc(k.name) + '"' + (compareSlots[i] === k.name ? " selected" : "") + '>' + compareEsc(k.name) + ' (' + k.n.toLocaleString() + ')</option>';
+        });
+        wrap.innerHTML = '<label for="' + id + '">Kiosk ' + "ABC".charAt(i) + '</label><select id="' + id + '">' + opts + '</select>';
+        host.appendChild(wrap);
+        wrap.querySelector("select").addEventListener("change", function () {
+          compareSlots[i] = this.value || null; compareTouched = true; renderCompareTab();
+        });
+      })(i);
+    }
+  }
+
+  function drawCompareLines(container, hours, series, opts) {
+    container.innerHTML = "";
+    var W = 640, H = 270, padL = 46, padR = 16, padT = 14, padB = 30;
+    var vals = [];
+    series.forEach(function (s) { s.values.forEach(function (v) { if (v != null) vals.push(v); }); });
+    if (!vals.length || hours.length < 2) { container.innerHTML = '<div class="chart-empty">Not enough data for the current filters.</div>'; return; }
+    var yMin = opts.yMin != null ? opts.yMin : Math.min(0, Math.min.apply(null, vals));
+    var yMax = opts.yMax != null ? opts.yMax : Math.max.apply(null, vals) * 1.1 || 1;
+    if (yMax === yMin) yMax = yMin + 1;
+    var plotW = W - padL - padR, plotH = H - padT - padB;
+    function gx(i) { return padL + (hours.length === 1 ? plotW / 2 : (i / (hours.length - 1)) * plotW); }
+    function gy(v) { return padT + plotH - ((v - yMin) / (yMax - yMin)) * plotH; }
+    var svg = svgEl("svg", { viewBox: "0 0 " + W + " " + H, width: "100%", height: H, style: "min-width:" + Math.min(W, 460) + "px" });
+    var ticks = 4;
+    for (var t = 0; t <= ticks; t++) {
+      var v = yMin + ((yMax - yMin) * t) / ticks, y = gy(v);
+      svg.appendChild(svgEl("line", { x1: padL, y1: y, x2: W - padR, y2: y, stroke: "var(--line)", "stroke-width": 1 }));
+      var tl = svgEl("text", { x: padL - 6, y: y + 3.5, class: "bar-label", "text-anchor": "end" });
+      tl.textContent = opts.fmt(v);
+      svg.appendChild(tl);
+    }
+    if (yMin < 0 && yMax > 0) svg.appendChild(svgEl("line", { x1: padL, y1: gy(0), x2: W - padR, y2: gy(0), class: "axis-line-svg" }));
+    var step = hours.length > 12 ? 2 : 1;
+    hours.forEach(function (h, i) {
+      if (i % step) return;
+      var xl = svgEl("text", { x: gx(i), y: H - padB + 16, class: "bar-label", "text-anchor": "middle" });
+      xl.textContent = hourLabel(h).replace(" ", "").toLowerCase().replace("am", "a").replace("pm", "p");
+      svg.appendChild(xl);
+    });
+    series.forEach(function (s) {
+      var path = "", pen = false;
+      s.values.forEach(function (v, i) {
+        if (v == null) { pen = false; return; }
+        path += (pen ? "L" : "M") + gx(i).toFixed(1) + " " + gy(v).toFixed(1) + " "; pen = true;
+      });
+      if (path) svg.appendChild(svgEl("path", { d: path, fill: "none", stroke: s.color, "stroke-width": 2.5, "stroke-linejoin": "round", "stroke-linecap": "round" }));
+      s.values.forEach(function (v, i) {
+        if (v == null) return;
+        var c = svgEl("circle", { cx: gx(i), cy: gy(v), r: 3.5, fill: s.color, stroke: "#fff", "stroke-width": 1.2 });
+        var ti = svgEl("title", {}); ti.textContent = s.name + " · " + hourLabel(hours[i]) + ": " + opts.fmt(v) + (s.counts ? " (" + s.counts[i] + " responses)" : "");
+        c.appendChild(ti); svg.appendChild(c);
+      });
+    });
+    container.appendChild(svg);
+  }
+
+  function renderCompareTab() {
+    var names = compareKioskCounts();
+    // keep only kiosks that still exist; on first visit, start with the busiest three
+    compareSlots = compareSlots.map(function (k) { return names.some(function (x) { return x.name === k; }) ? k : null; });
+    if (!compareTouched && !compareSlots.some(Boolean)) names.slice(0, 3).forEach(function (k, i) { compareSlots[i] = k.name; });
+    renderCompareSlots(names);
+    var body = $("cmpBody");
+    var chosen = [];
+    compareSlots.forEach(function (k, i) { if (k) chosen.push({ name: k, color: COMPARE_COLORS[i], slot: i }); });
+    if (names.length < 2) { body.innerHTML = '<div class="chart-card"><div class="chart-empty">Compare needs at least two kiosks in the loaded data (found ' + names.length + ').</div></div>'; return; }
+    if (chosen.length < 2) { body.innerHTML = '<div class="chart-card"><div class="chart-empty">Choose at least two kiosks above to compare them.</div></div>'; return; }
+
+    var base = compareBaseRows();
+    chosen.forEach(function (c) {
+      c.base = base.filter(function (r) { return (r.session || "(none)") === c.name; });
+      c.s = compareStats(c.base);
+    });
+    var totalShown = chosen.reduce(function (a, c) { return a + c.s.n; }, 0);
+
+    /* --- table */
+    var defs = compareRowDefs();
+    var html = '<div class="cmp-tablewrap"><table class="cmp-table"><thead><tr><th class="cmp-rowlabel" scope="col"></th>';
+    chosen.forEach(function (c) {
+      html += '<th scope="col" style="--c:' + c.color + '"><div class="cmp-hname">' + compareEsc(c.name) + '</div><div class="cmp-hsub">' + c.s.n.toLocaleString() + ' response' + (c.s.n === 1 ? "" : "s") +
+        (totalShown ? ' · ' + Math.round(c.s.n / totalShown * 100) + '% of these ' + chosen.length : "") + '</div>' +
+        (c.s.n > 0 && c.s.n < COMPARE_SMALL_N ? '<span class="cmp-badge" title="Averages from so few responses can swing a lot">Small sample</span>' : "") + '</th>';
+    });
+    html += '</tr></thead><tbody>';
+    defs.forEach(function (d) {
+      var nums = chosen.map(function (c) { return (c.s.n || d.always) && d.num ? d.num(c.s) : null; });
+      var bestIdx = -1;
+      if (d.best) {
+        var valid = nums.map(function (v, i) { return v == null || isNaN(v) ? null : i; }).filter(function (i) { return i !== null; });
+        if (valid.length >= 2) {
+          var target = valid.reduce(function (b, i) { return (d.best === "high" ? nums[i] > nums[b] : nums[i] < nums[b]) ? i : b; }, valid[0]);
+          var ties = valid.filter(function (i) { return Math.abs(nums[i] - nums[target]) < 1e-9; }).length;
+          if (ties === 1) bestIdx = target;
+        }
+      }
+      html += '<tr><th class="cmp-rowlabel" scope="row">' + d.label + '<small>' + d.hint + '</small></th>';
+      chosen.forEach(function (c, i) {
+        if (!c.s.n && !d.always) { html += '<td>' + (d === defs[0] ? '<div class="cmp-val">0</div>' : '<div class="cmp-none">No responses</div>') + '</td>'; return; }
+        var cell = d.val(c.s);
+        if (i > 0 && d.delta && nums[0] != null && nums[i] != null && !isNaN(nums[0]) && !isNaN(nums[i])) {
+          var diff = nums[i] - nums[0];
+          if (Math.abs(diff) > 1e-9) cell += '<div class="cmp-delta">' + (diff > 0 ? "▲ " : "▼ ") + d.delta(diff) + ' vs. ' + "ABC".charAt(chosen[0].slot) + '</div>';
+        }
+        html += '<td' + (i === bestIdx ? ' class="cmp-best" title="Best in this row"' : "") + '>' + cell + '</td>';
+      });
+      html += '</tr>';
+    });
+    html += '</tbody></table></div><p class="table-note" style="margin:0 0 20px;">Differences are measured against the first kiosk chosen (' + compareEsc(chosen[0].name) + '). Averages use each word’s place on the 5×5 grid, the same scoring as the Emotional center of gravity chart.</p>';
+
+    /* --- charts */
+    html += '<div class="chart-card cmp-chartcard" style="margin-bottom:18px;"><div class="chart-card-head"><h3>Mood mix</h3></div><div class="chart-svg-wrap" id="cmpMix"></div></div>';
+    html += '<div class="chart-card cmp-chartcard" style="margin-bottom:18px;"><div class="chart-card-head"><h3>By hour of day</h3>' +
+      '<select id="cmpHourMetric" aria-label="Hour chart measure"><option value="share">Share of responses</option><option value="pleasant">Average pleasantness</option><option value="energy">Average energy</option></select></div>' +
+      '<div class="cmp-legend">' + chosen.map(function (c) { return '<span><i style="background:' + c.color + '"></i>' + compareEsc(c.name) + '</span>'; }).join("") + '</div>' +
+      '<div class="chart-svg-wrap" id="cmpHours"></div><p class="table-note" id="cmpHourNote" style="margin:6px 0 0;"></p></div>';
+    html += '<div class="chart-card cmp-chartcard" style="margin-bottom:18px;"><div class="chart-card-head"><h3>Top emotions</h3></div><div class="cmp-topgrid">' +
+      chosen.map(function (c, i) { return '<div><h4 style="color:' + c.color + '">' + compareEsc(c.name) + '</h4><div class="chart-svg-wrap" id="cmpTop' + i + '"></div></div>'; }).join("") + '</div></div>';
+    body.innerHTML = html;
+
+    var groups = chosen.map(function (c) { return mixGroup(c.name, c.s.rows); });
+    drawMixGroups($("cmpMix"), groups, { height: 260 });
+    enableMixDrill($("cmpMix"), groups);
+
+    chosen.forEach(function (c, i) {
+      var host = $("cmpTop" + i);
+      if (!c.s.n) { host.innerHTML = '<div class="chart-empty">No responses.</div>'; return; }
+      var maxPct = c.s.top[0].pct || 1;
+      host.innerHTML = c.s.top.map(function (t) {
+        return '<div class="cmp-hbar"><span class="cmp-hbar-l">' + compareEsc(t.word) + '</span><span class="cmp-hbar-t"><span style="width:' + Math.max(2, t.pct / maxPct * 100).toFixed(1) + '%;background:' + c.color + '"></span></span><span class="cmp-hbar-v">' + Math.round(t.pct * 100) + '%</span></div>';
+      }).join("");
+    });
+
+    function drawHours() {
+      var metric = compareHourMetric, MIN_PER_HOUR = 3;
+      var all = [];
+      chosen.forEach(function (c) { Object.keys(c.s.hours || {}).forEach(function (h) { all.push(Number(h)); }); });
+      var lo = Math.min.apply(null, all), hi = Math.max.apply(null, all), hours = [];
+      for (var h = lo; h <= hi; h++) hours.push(h);
+      var series = chosen.map(function (c) {
+        var counts = hours.map(function (h) { return c.s.hours && c.s.hours[h] ? c.s.hours[h] : 0; });
+        var values = hours.map(function (h, i) {
+          if (metric === "share") return c.s.n ? counts[i] / c.s.n * 100 : null;
+          if (counts[i] < MIN_PER_HOUR) return null;
+          var rs = c.s.rows.filter(function (r) { return r.date && r.date.getHours() === h; });
+          return mean(rs.map(metric === "pleasant" ? pleasantScore : energyScore));
+        });
+        return { name: c.name, color: c.color, values: values, counts: counts };
+      });
+      var fmt = metric === "share" ? function (v) { return Math.round(v) + "%"; } : function (v) { return compareFmtSigned(v, 2); };
+      drawCompareLines($("cmpHours"), hours, series, metric === "share" ? { yMin: 0, fmt: fmt } : { yMin: -1, yMax: 1, fmt: fmt });
+      $("cmpHourNote").textContent = metric === "share"
+        ? "Each line shows how that kiosk’s own responses are spread across the day, so busy and quiet kiosks compare fairly."
+        : "Hours with fewer than " + MIN_PER_HOUR + " responses are left blank for that kiosk.";
+    }
+    $("cmpHourMetric").value = compareHourMetric;
+    $("cmpHourMetric").addEventListener("change", function () { compareHourMetric = this.value; drawHours(); });
+    drawHours();
+  }
+
   /* ---------------------------------------------------------- tab switching */
 
   document.querySelectorAll(".dashtab").forEach(function (btn) {
@@ -7496,12 +7833,14 @@
       var tab = btn.dataset.tab;
       $("tabOverview").classList.toggle("hidden", tab !== "overview");
       $("tabTrends").classList.toggle("hidden", tab !== "trends");
+      $("tabCompare").classList.toggle("hidden", tab !== "compare");
       $("tabHeatmap").classList.toggle("hidden", tab !== "heatmap");
       $("tabSonification").classList.toggle("hidden", tab !== "sonification");
       $("tabWeather").classList.toggle("hidden", tab !== "weather");
       $("tabSpurious").classList.toggle("hidden", tab !== "spurious");
       // The trajectory chart sizes itself from its card, which has no width while this tab is hidden.
       if (tab === "trends") renderTrajectoryChart(getFilteredRows());
+      if (tab === "compare") renderCompareTab();
       if (tab === "weather") ensureWeatherDateDefaults();
       if (tab === "spurious") { ensureQuakeDateDefaults(); ensureSpuriousDefaults(); renderSpuriousTab(); }
       if (tab === "sonification") {
@@ -8743,6 +9082,7 @@
     renderTrajectoryChart(rows);
     renderCentroidChart(rows);
     renderEnergyScatterChart(rows);
+    if (!$("tabCompare").classList.contains("hidden")) renderCompareTab();
     renderSecondsScatterChart(rows);
     renderLocationChart(rows);
     renderAcademicChart(rows);
