@@ -768,7 +768,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.36</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.37</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -7874,7 +7874,7 @@
   var VIZ_LAYOUTS = [
     { key: "compass", label: "Mood Compass", note: "Angle = which way the feeling points on the mood grid (pleasant to the right, high energy up). Distance = how intense." },
     { key: "star",    label: "Day Star",     note: "Angle = order of arrival around the circle. Distance = energy: low near the center, high at the rim." },
-    { key: "clock",   label: "Clock Star",   note: "Angle = time of day, clockwise from the top, across the hours in your Hour of day filter. Distance = energy." }
+    { key: "clock",   label: "Clock Star",   note: "Angle = time of day, clockwise from the top, from 8 AM to 8 PM (earlier or later responses sit at the edge). Distance = energy." }
   ];
   var vizLayout = "compass", vizDay = null, vizDays = [], vizAnim = null, vizRaf = 0;
   var VIZ_MIN_POINTS = 3, VIZ_STRIP_MAX = 120;
@@ -7886,11 +7886,8 @@
   function vizDayLabel(key, long) {
     return new Date(key + "T12:00:00").toLocaleDateString(undefined, long ? { weekday: "long", month: "long", day: "numeric", year: "numeric" } : { weekday: "short", month: "short", day: "numeric" });
   }
-  function vizHourWindow() {
-    var h0 = filters.hourStart, h1 = filters.hourEnd + 1;
-    if (!(h1 > h0)) { h0 = 0; h1 = 24; }
-    return { h0: h0, h1: h1 };
-  }
+  // The college is never officially open before 8 AM or after 8 PM, so the clock face is fixed to that window.
+  function vizHourWindow() { return { h0: 8, h1: 20 }; }
 
   function vizBuildDays() {
     var by = {};
@@ -7968,7 +7965,7 @@
     } else if (vizLayout === "star") {
       text(cx, cy - rings[2] * S - 6, "high energy"); text(cx, cy - rings[0] * S - 5, "low", "middle");
     } else {
-      var w = vizHourWindow(), step = (w.h1 - w.h0) > 14 ? 4 : (w.h1 - w.h0) > 8 ? 3 : 2;
+      var w = vizHourWindow(), step = 2;
       for (var h = w.h0; h < w.h1; h += step) {
         var a = Math.PI / 2 - 2 * Math.PI * (h - w.h0) / (w.h1 - w.h0);
         line(cx, cy, cx + Math.cos(a) * (S + 6), cy - Math.sin(a) * (S + 6));
