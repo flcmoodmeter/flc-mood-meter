@@ -768,7 +768,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.37</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.38</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -7984,7 +7984,7 @@
     });
     svg.appendChild(glowG);
     P.forEach(function (p) {
-      var c = svgEl("circle", { cx: cx + p.x * S, cy: cy - p.y * S, r: 3.2 + 1.8 * p.glow, fill: p.color, stroke: "#12171c", "stroke-width": 1, "fill-opacity": (0.6 + 0.4 * vizClamp01((p.en + 0.9) / 1.8)).toFixed(2) });
+      var c = svgEl("circle", { cx: cx + p.x * S, cy: cy - p.y * S, r: 3.2 + 1.8 * p.glow, fill: p.color, stroke: "none", "fill-opacity": (0.6 + 0.4 * vizClamp01((p.en + 0.9) / 1.8)).toFixed(2) });
       var t = svgEl("title", {});
       t.textContent = p.row.date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) + " · " + (p.row.labelEn || p.row.label) + " · " + (p.row.session || "(none)");
       c.appendChild(t); svg.appendChild(c);
