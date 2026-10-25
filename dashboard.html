@@ -768,7 +768,7 @@
 
   <header class="topbar no-print">
     <div>
-      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.38</span></h1>
+      <h1>Mood Meter Dashboard <span id="appVersion" class="app-version" title="Dashboard version">v1.39</span></h1>
       <div class="sub">Import CSV files exported from any kiosk, filter, and review</div>
     </div>
     <div class="topbar-spacer"></div>
@@ -1148,7 +1148,7 @@
         </div>
 
         <div id="tabCompare" class="hidden">
-          <p class="cmp-intro">Pick up to three kiosks and see them side by side. Everything on this tab follows your current filters (dates, hours, semester, and so on) <b>except Location</b>, which the three pickers replace. A shaded &#9733; cell is the best of the row where &ldquo;best&rdquo; means something: higher pleasantness, higher positive share, or fewer flagged entries.</p>
+          <p class="cmp-intro">Pick up to three kiosks and see them side by side. Everything on this tab follows your current filters (dates, hours, semester, and so on) <b>except Location</b>, which the three pickers replace. A shaded &#9733; cell is the best of the row where &ldquo;best&rdquo; means something: higher pleasantness, higher valence, or fewer flagged entries.</p>
           <div class="cmp-slots" id="cmpSlots"></div>
           <div id="cmpBody"></div>
         </div>
@@ -7663,7 +7663,7 @@
         num: function (s) { return s.energy; }, delta: function (d) { return compareFmtSigned(d, 2); } },
       { label: "Center of gravity", hint: "The emotion word closest to the average",
         val: function (s) { return '<div class="cmp-val word">' + compareEsc(s.word) + '</div><div class="cmp-sub">' + s.spread + '</div>'; } },
-      { label: "Positive share", hint: "Responses on the pleasant side", best: "high",
+      { label: "Valence", hint: "Share of responses on the pleasant side", best: "high",
         val: function (s) { return '<div class="cmp-val">' + Math.round(s.posShare * 100) + '%</div>'; },
         num: function (s) { return s.posShare * 100; }, delta: function (d) { return compareFmtSigned(d, 0) + " pts"; } },
       { label: "High-energy share", hint: "Responses on the high-energy side",
